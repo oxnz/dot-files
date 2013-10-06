@@ -19,6 +19,7 @@ pathmunge() {
 			fi
 	esac
 }
+
 #[ -d "/usr/local/mysql" ] && pathmunge "/usr/local/mysql/bin" "after"
 #[ -d "/Users/xinyi/Workspace/android-sdks/platform-tools" ] && pathmunge "/Users/xinyi/Workspace/android-sdks/platform-tools" "after"
 [ -d "/Applications/Qt/Qt5.1.1/5.1.1/clang_64/bin" ] && pathmunge "/Applications/Qt/Qt5.1.1/5.1.1/clang_64/bin" "after"
