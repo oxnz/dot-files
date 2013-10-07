@@ -21,3 +21,17 @@
 *.la
 *.a
 
+# Vim swap files
+*.swp
+
+# LaTeX generated files
+*.aux
+*.log
+*.pdf
+
+# Package Files
+*.jar
+*.rar
+*.war
+*.ear
+*.zip
