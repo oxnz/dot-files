@@ -42,9 +42,13 @@ fi
 HISTFILESIZE=2000
 HISTIGNORE="&:ls:[bf]g:exit:reset:clear:cd:cd..:cd.."
 HISTCONTROL=ignoreboth
-#shopt -s histappend
+# shopt command is only available for bash shell
+if [ -n "$BASH_VERSION" ]; then
+	shopt -s histappend
+fi
 HISTSIZE=1000
 
+# Colorful man
 man () {
 	env \
 	LESS_TERMCAP_mb=$(printf "\e[1;31m") \

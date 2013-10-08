@@ -13,3 +13,21 @@
 	default = simple
 [color]
 	ui = true
+[alias]
+	st = status
+	ci = commit
+	br = branch
+	co = checkout
+	df = diff
+	dc = diff --cached
+#	lg = log -p
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset \
+		%s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit \
+		--date=relative
+	who = shortlog -s --
+
+	undo = reset --HEAD
+	llog = log --date=local
+	lc = log ORIG_HEAD.. --stat --no-merges
+	changes = diff --name-status -r
+	diffstat = diff --stat -r
