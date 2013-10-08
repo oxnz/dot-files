@@ -24,6 +24,11 @@ dot files for linux, unix & os x.
 
 dotfm.pl used to manage the dot files under user's home directory, ie(~).
 
+##References
+
+* [Shell Special Variables](./sh-spec-var.md)
+* [Test if is interactive shell](./test-sh-interact.md)
+
 ##Contact
 
 0xnz(@oxzn) <yunxinyi AT gmail DOT com>

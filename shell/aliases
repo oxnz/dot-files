@@ -1,5 +1,3 @@
-#!/bin/bash
-
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
@@ -20,3 +18,11 @@ alias du='du -h'
 alias gdb='gdb --quiet'
 
 alias date='date +"%Z %F %T"'
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

@@ -101,7 +101,7 @@ zstyle ':completion:*' completer _expand _complete _correct _approximate
 zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' menu select=2
-eval "$(dircolors -b)"
+#eval "$(dircolors -b)"
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
@@ -112,7 +112,7 @@ zstyle ':completion:*' use-compctl false
 zstyle ':completion:*' verbose true
 
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
-zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,%mem,tty,cputime,command'
 #自动补全缓存
 #zstyle ':complete::complete:*' use-cache on
 #zstyle ':complete::complete:*' cache-path .zcache
@@ -151,8 +151,11 @@ zstyle ':completion:*:approximate:*' max-errors 1 numeric
 
 # Kill completion
 zstyle ':completion:*:*:kill' menu yes select
+zstyle ':completion:*:*:*:*:processes' menu yes select
 zstyle ':completion:*:*:*:*:processes' force-list always
 zstyle ':completion:*:processes' command 'ps -au$USER'
+compdef pkill=kill
+compdef killall=kill
 
 #补全类型提示分组
 zstyle ':completion:*:matches' group 'yes'
@@ -308,3 +311,10 @@ if [ -f ~/.shrc ]; then
 	. ~/.shrc
 fi
 
+
+for file in ~/.shell/*
+do
+	if [ -r $file ]; then
+		. $file
+	fi
+done
