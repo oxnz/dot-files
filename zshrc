@@ -237,7 +237,7 @@ bindkey "^[[11~" arith-eval-echo
 #}}}
  
 ####{{{
-function timeconv { date -d @$1 +"%Y-%m-%d %T" }
+#function timeconv { date -d @$1 +"%Y-%m-%d %T" }
 # }}}
 
 zmodload zsh/mathfunc
