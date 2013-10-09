@@ -28,23 +28,62 @@ if exists("loaded_OxnzToolkit")
 endif
 let loaded_OxnzToolkit = '0.1.1'
 
+function! <SID>OxnzInsertGuardFunc()
+	exec "normal G"
+	let l:fname = expand("%:t")
+	let l:fname = toupper(l:fname)
+	let l:fname = substitute(l:fname, "\\.", "_", "g")
+	let l:fname = "_" . l:fname . "_"
+	call append(line("$"), ["\#ifndef " . l:fname,
+				\ "\#define " . l:fname,
+				\ "",
+				\ "\#endif//" . l:fname
+				\ ])
+endfunction
+
+""""""""""""""""""""""""""""""""""""""""""""
+" Insert Header by Filetype
+""""""""""""""""""""""""""""""""""""""""""""
 function! <SID>OxnzInsertHeaderFunc()
 	if &filetype == 'sh'
 		call setline(1, "\#!/bin/bash")
 		call append(line("."), "\# Author: Oxnz")
 		call append(line(".")+1, "")
 	endif
-	if &filetype == 'c'
-		call setline(1, "\/*******")
+	if (&filetype == 'c' || &filetype == 'cpp' || &filetype == 'java' ||
+				\ &filetype == 'php')
+		call setline(1, [
+					\ "/*",
+					\ "     Filename: " . expand("%:t"),
+					\ "  Description: ",
+					\ "",
+					\ "      Version: 0.1",
+					\ "      Created: " . strftime("%F %T"),
+					\ "  Last-update: " . strftime("%F %T"),
+					\ "     Revision: None",
+					\ "",
+					\ "       Author: " . g:OxnzToolkit_Author,
+					\ "        Email: yunxinyi@gmail.com",
+					\ "",
+					\ "Revision-history:",
+					\ "\tDate Author Remarks",
+					\ "*/",
+					\ ])
+		exec "normal G"
 	endif
 	if &filetype == 'python'
-		call setline(1, "\#!/usr/bin/env python")
-		call append(line("."), "\#coding: utf-8")
-		call append(line(".")+1, "\#Author: Oxnz")
-		call append(line(".")+2, "")
-		let l:timestamp = printf("\#Last-update: %s",
-					\ strftime("%F %T"))
-		call append(line(".")+3, l:timestamp)
+		call setline(1, ["\#!/usr/bin/env python",
+					\ "\#coding: utf-8",
+					\ "",
+					\ "\"\"\"one line abstract",
+					\ "",
+					\ "detail:\"\"\"",
+					\ "",
+					\ "__author__ = \"" . g:OxnzToolkit_Author . "\"",
+					\ "__version__ = 0.1",
+					\ "",
+					\ "",
+					\ ])
 	endif
 	exec "normal G"
 endfunction
@@ -146,3 +185,8 @@ command! -nargs=0 OxnzTrim		:call <SID>OxnzTrimFunc()
 command! -nargs=0 OxnzTest		:call <SID>OxnzTestFunc()
 "按\ml,自动插入modeline
 "nnoremap <silent> <Leader>ml	:call OxnzModeLine() <CR>
+
+if has("autocmd")
+	autocmd BufNewFile * call <SID>OxnzInsertHeaderFunc()
+	autocmd BufNewFile *.h call <SID>OxnzInsertGuardFunc()
+endif
