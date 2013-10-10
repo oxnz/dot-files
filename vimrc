@@ -1,11 +1,14 @@
 "===============================================================================
 " Filename	: .vimrc
 " Author	: 0xnz
-" Version	: 0.1
+" Version	: 0.2
 " Email		: <yunxinyi AT gmail DOT com>
+" Created	: 2010-03-20 18:00:12
 " Copying	: Copyright (C) 2013 0xnz, All rights reserved.
-" Last-update	: 2010年08月02日 15时13分
-" Description	: vimrc for Linux/Windows/OSX, GUI/Console
+"
+" Last-update: 2013-10-10 22:29:10
+"
+" Description: vimrc compatible for Linux/Windows/OSX, GUI/Console
 "-------------------------------------------------------------------------------
 
 
@@ -132,7 +135,6 @@ if !exists(":DiffOrig")
 		  \ | wincmd p | diffthis
 endif
 
-" Added by xinyi
 " setlocal使set的效果只对当前buffer有效，不会影响到打开的其它文件。
 " expandtab = et smarttab=sta sw=shiftwidth sts=softtabstop
 set sw=4
