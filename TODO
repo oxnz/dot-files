@@ -1,4 +1,0 @@
-update shrc, bash_profile, zshrc action correctly
-bash_profile -> shrc -|
-zshrc		-> shrc  -|
-					  |----> sh_aliases
