@@ -7,8 +7,7 @@ HISTFILESIZE=2000
 HISTSIZE=1000
 
 # bash shell settings
-SHOPT=`which shopt`
-if [ -z $SHOPT ]; then
+if [ -n "$BASH_VERSION" ]; then
 	shopt -s histappend		# Append instead of overwrite
 	shopt -s cdspell		# Correct minor misspelling
 	shopt -s dotglob		# Includes dotfiles in path expansion
@@ -16,7 +15,6 @@ if [ -z $SHOPT ]; then
 	shopt -s cmdhist		# Multiline cmd records as one cmd in history
 	shopt -s extglob		# Allow basic regexps in bash
 fi
-unset SHOPT
 
 
 # Local variables:
