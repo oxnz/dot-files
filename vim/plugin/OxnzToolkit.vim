@@ -35,7 +35,9 @@
 " - unique blank lines
 "
 " TODO:
+" 0. SEE help template
 " 1. add control option for autocmds
+" 2. Split file header into single template file, and crated a tempaltes dir
 " 3. use dict to save user config
 "
 " Use:
@@ -76,6 +78,24 @@ function! <SID>OxnzInsertHeaderFunc()
 		call setline(1, "\#!/bin/bash")
 		call append(line("."), "\# Author: Oxnz")
 		call append(line(".")+1, "")
+	endif
+	if &filetype == 'awk'
+		call setline(1, [
+					\ "\#!/usr/bin/awk -f",
+					\ "\#=================================================",
+					\ "\#",
+					\ "\#       Filename: " . expand('%:t'),
+					\ "\#",
+					\ "\#    Description:",
+					\ "\#",
+					\ "\#         Author: " . g:OxnzToolkit_Author,
+					\ "\#        Version: ",
+					\ "\#        Created: " . strftime("%F %T"),
+					\ "\#    Last-update: " . strftime("%F %T"),
+					\ "\#       Revision: ---",
+					\ "\#        License: Copyright (c) 2013, Oxnz",
+					\ "\#-------------------------------------------------",
+					\ ])
 	endif
 	if &filetype == 'zsh'
 		echo "unimplished yet"
@@ -214,8 +234,12 @@ endfunction
 " Test Function
 """"""""""""""""""""""""""""""
 function! <SID>OxnzTestFunc()
-	call <SID>OxnzUniqueBlankLinesFunc()
-	call <SID>OxnzDeleteBlankLinesFunc()
+	let l:dict = (
+				\ "awk" : template.awk,
+				\ "zsh" : template.zsh,
+				\ )
+	let l:tmp = readfile($HOME . "/.vim/template/template.awk")
+	call setline(1, l:tmp)
 endfunction
 
 """""""""""""""""
