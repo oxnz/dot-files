@@ -15,21 +15,27 @@
 " - unique blank lines
 "
 " TODO:
-" 1. add config option for author, email, etc.
+" 1. add control option for autocmds
+" 3. use dict to save user config
 "
 " Use:
 " - Type OxnzHeader to generate header by filetype
 " - Type OxnzModeLine to generate vim mode line
 
+
+
+if v:version < 700
+	finish
+endif
+
 " Verify if already loaded
-if exists("loaded_OxnzToolkit")
+if exists("g:loaded_OxnzToolkit")
 	echo 'OxnzToolkit Already Loaded.'
 	finish
 endif
-let loaded_OxnzToolkit = '0.1.1'
+let g:loaded_OxnzToolkit = '0.1.1'
 
 function! <SID>OxnzInsertGuardFunc()
-	exec "normal G"
 	let l:fname = expand("%:t")
 	let l:fname = toupper(l:fname)
 	let l:fname = substitute(l:fname, "\\.", "_", "g")
@@ -63,9 +69,9 @@ function! <SID>OxnzInsertHeaderFunc()
 					\ "     Revision: None",
 					\ "",
 					\ "       Author: " . g:OxnzToolkit_Author,
-					\ "        Email: yunxinyi@gmail.com",
+					\ "        Email: " . g:OxnzToolkit_Email,
 					\ "",
-					\ "Revision-history:",
+					\ "Revision history:",
 					\ "\tDate Author Remarks",
 					\ "*/",
 					\ ])
@@ -88,11 +94,26 @@ function! <SID>OxnzInsertHeaderFunc()
 	exec "normal G"
 endfunction
 """""""""""""""""""""""""""""""""""""""""""""""
+" Update time stamp
+"""""""""""""""""""""""""""""""""""""""""""""""
+function! <SID>OxnzUpdateTimeStampFunc()
+	let l:lineno = search("Last-update:", "n")
+	if l:lineno
+		let l:line = getline(l:lineno)
+		echom l:lineno
+		let l:line = substitute(l:line,
+					\ "\\d\\{4\\}-\\d\\{2\\}-\\d\\d \\d\\d:\\d\\d:\\d\\d$",
+					\ strftime("%F %T"), "")
+					\ "  Last-update: " . strftime("%F %T"),
+		call setline(l:lineno, l:line)
+	endif
+endfunction
+"""""""""""""""""""""""""""""""""""""""""""""""
 " Append Vim Mode Line
 """""""""""""""""""""""""""""""""""""""""""""""
 function! <SID>OxnzAppendModeLineFunc()
-	let l:modeline = printf("vim: set ts=%d sw=%d tw=%d :",
-				\ &tabstop, &shiftwidth, &textwidth)
+	let l:modeline = printf(" vim: set ts=%d sw=%d tw=%d %set :",
+				\ &tabstop, &shiftwidth, &textwidth, &expandtab ? '' : 'no')
 	let l:modeline = substitute(&commentstring, "%s", l:modeline, "")
 	call append(line("$"), l:modeline)
 endfunction
@@ -135,7 +156,6 @@ function! <SID>OxnzDeleteLeadingSpacesFunc()
 	catch /^Vim\%((\a\+)\)\=:E486/
 		echo "No more leading space exists"
 	endtry
-	":silent! %s/^\s\+//
 endfunction
 """"""""""""""""""""""""""""""""""""""""""""""""
 " Delete Trailing White Spaces
@@ -151,10 +171,15 @@ endfunction
 " Remove Extra Blank Lines, Only Leave One
 """"""""""""""""""""""""""""""""""""""""""""
 function! <SID>OxnzUniqueBlankLinesFunc()
-	":silent! g/^\n\{2,}/d
-	:g/^\n\{2,}/d
+	:silent! g/^\n\{2,}/d
 endfunction
 
+""""""""""""""""""""""""""""""""""""""""""""""
+" Delete Blank Lines
+""""""""""""""""""""""""""""""""""""""""""""""
+function! <SID>OxnzDeleteBlankLinesFunc()
+	:silent! g/^\s*$/d
+endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Trim Leading, Trailing Spaces and Also Unique Blank Lines
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -167,11 +192,14 @@ endfunction
 " Test Function
 """"""""""""""""""""""""""""""
 function! <SID>OxnzTestFunc()
+	call <SID>OxnzUniqueBlankLinesFunc()
+	call <SID>OxnzDeleteBlankLinesFunc()
 endfunction
 
 """""""""""""""""
 " Shortcuts...
 """""""""""""""""
+""" commands {{{
 command! -nargs=0 OxnzModeLine	:call <SID>OxnzAppendModeLineFunc()
 command! -nargs=0 OxnzHeader	:call <SID>OxnzInsertHeaderFunc()
 command! -nargs=0 OxnzInsertLineNumbers	:call <SID>OxnzInsertLineNumbersFunc()
@@ -181,12 +209,18 @@ command! -nargs=0 OxnzDeleteLeadingSpaces
 command! -nargs=0 OxnzDeleteTrailingSpaces
 			\ :call <SID>OxnzDeleteTrailingSpacesFunc()
 command! -nargs=0 OxnzUniqueBlankLines	:call <SID>OxnzUniqueBlankLinesFunc()
+command! -nargs=0 OxnzDeleteBlankLines	:call <SID>OxnzDeleteBlankLinesFunc()
 command! -nargs=0 OxnzTrim		:call <SID>OxnzTrimFunc()
 command! -nargs=0 OxnzTest		:call <SID>OxnzTestFunc()
+" }}}
 "按\ml,自动插入modeline
 "nnoremap <silent> <Leader>ml	:call OxnzModeLine() <CR>
 
 if has("autocmd")
-	autocmd BufNewFile * call <SID>OxnzInsertHeaderFunc()
-	autocmd BufNewFile *.h call <SID>OxnzInsertGuardFunc()
+	augroup OxnzToolkitEx
+	au!
+		autocmd BufNewFile * call <SID>OxnzInsertHeaderFunc()
+		autocmd BufNewFile *.h call <SID>OxnzInsertGuardFunc()
+		autocmd BufWrite *.* call <SID>OxnzUpdateTimeStampFunc()
+	augroup END
 endif

@@ -1,0 +1,60 @@
+*OxnzToolkit.txt*
+
+File: OxnzToolkit.txt
+Version: 0.1.1
+Author: Oxnz
+Maintainer: Oxnz
+Created: 2013-10-10 13:00:27
+Last-update: 2013-10-10 13:38:20
+Homepage: https://github.com/oxnz
+
+License:
+	Copyright (C) 2013 Oxnz
+
+	This file is part of OxnzToolkit.
+
+CONTENTS~
+*OxnzToolkit*
+==============================================================================
+1. Overview					|OxnzToolkit-overview|
+2. Installation				|OxnzToolkit-installation|
+3. Commands					|OxnzToolkit-commands|
+4. Settings					|OxnzToolkit-settings|
+5. Key-mappings				|OxnzToolkit-key-mapping|
+6. Supporting plugins		|OxnzToolkit-supporting-plugins|
+7. Advanced					|OxnzToolkit-advanced|
+8. Credits					|OxnzToolkit-credits|
+9. Todo						|OxnzToolkit-todo|
+
+
+OVERVIEW~
+*OxnzToolkit-overview*
+==============================================================================
+This plugin is aimed at making it more convient to do daily stuff.
+
+INSTALLATION~
+*OxnzToolkit-installation*
+==============================================================================
+copy OxnzToolkit.vim to ~/.vim/plugin
+copy OxnzToolkit.txt to ~/.vim/doc
+helptags ~/.vim/doc
+
+COMMANDS~
+										*OxnzToolkit-commands*
+==============================================================================
+
+										*:OxnzHeader*
+Command:
+	:OxnzHeader
+If you are editing a source file, this command will generate a formated header
+contains such as author, created time, last modified date and so on.
+
+Also, even you just edit an plain text, you could also call this command:
+>
+	:OxnzHeader
+<
+to generate some personal info.
+
+										*:OxnzModeLine*
+Command:
+Insert a vim conf line as a comment line in your source file.
