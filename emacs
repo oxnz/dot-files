@@ -11,7 +11,11 @@
 
 ;----------------basic config---------------
 ;Load_path
-(add-to-list 'load-path' "~/.emacs.d/plugins")
+(add-to-list 'load-path' "~/.emacs.d")
+(require 'color-theme)
+(color-theme-initialize)
+(color-theme-blackboard)
+;(color-theme-matrix)
 ; todo_path
 (setq todo-file-do "~/.emacs.d/todo/do")
 (setq todo-file-done "~/.emacs.d/todo/done")
@@ -72,8 +76,10 @@ scroll-conservatively 10000)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 ;--------------font-----------
-(set-default-font "Droid Sans Mono-10")
+;(set-default-font "Monospace-12")
+;(set-default-font "Bitstream Vera Sans Mono-12")
 
+(set-language-environment 'UTF-8)
 ;------------------------file encoding-----------------------
 (set-buffer-file-coding-system 'utf-8)
 (setq default-buffer-file-coding-system 'utf-8)
@@ -196,3 +202,45 @@ scroll-conservatively 10000)
 (setq hs-minor-mode t)
 (setq abbrev-mode t)
 
+;;auto-complete
+(add-to-list 'load-path "~/.emacs.d/plugins/auto-complete")
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/plugins/auto-complete/ac-dict")
+(ac-config-default)
+
+;;-----------------------cc mode---------------------
+(require 'cc-mode)
+(c-set-offset 'inline-open 0)
+(c-set-offset 'friend '-)
+(c-set-offset 'substatement-open 0)
+
+
+;; auto format Ctrl-Alt-\
+(dolist (command '(yank yank-pop))
+  (eval
+   `(defadvice ,command (after indent-region activate)
+      (and (not current-prefix-arg)
+           (member major-mode
+                   '(emacs-list-mode
+                     list-mode
+                     clojure-mode
+                     scheme-mode
+                     haskell-mode
+                     ruby-mode
+                     rspec-mode
+                     python-mode
+                     c-mode
+                     c++-mode
+                     objc-mode
+                     latex-mode
+                     js-mode
+                     plain-TeX-mode))
+           (let ((mark-even-if-inactive transient-mark-mode))
+             (indent-region (region-beginning) (region-end) nil))))))
+                     
+;;semantic
+;(setq semantic-default-submodes '(global-semantic-idle-scheduler-mode
+;                                  global-semanticdb-minor-mode
+;                                  global-semantic-idle-summary-mode
+;                                  global-semantic-mru-bookmark-mode))
+;(semantic-mode 1)

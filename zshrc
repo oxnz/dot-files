@@ -1,8 +1,11 @@
 #!/bin/zsh
+# File	: .zshrc
 #
-# Written by 0xnz<yunxinyi@gmail.com>
-#
-# Last updated: 2013-10-05 02:18:01
+# Created: 2013-06-25 12:20:00
+# Last-update: 2013-10-10 20:41:40
+# Version: 0.1
+# Author: Oxnz
+# License: Copyright (C) 2013 Oxnz
 
 # Skip all this for non-interactive shells
 [[ -z "$PS1" ]] && return

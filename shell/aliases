@@ -7,17 +7,20 @@ alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
 
+# specify format
 alias ll='ls -aFhl'
+alias date='date +"%F %T"'
+alias df='df -h'
+alias du='du -h'
+alias gdb='gdb --quiet'
 
 # typing errors...
 alias ..='cd ..'
 alias ...='cd ../..'
 
-alias df='df -h'
-alias du='du -h'
-alias gdb='gdb --quiet'
-
-alias date='date +"%Z %F %T"'
+#short cuts
+alias h='history'
+alias j='jobs -l'
 
 # Local variables:
 # mode: shell-script
