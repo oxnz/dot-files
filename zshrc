@@ -2,7 +2,7 @@
 # File	: .zshrc
 #
 # Created: 2013-06-25 12:20:00
-# Last-update: 2013-10-10 20:41:40
+# Last-update: 2013-10-12 18:35:03
 # Version: 0.1
 # Author: Oxnz
 # License: Copyright (C) 2013 Oxnz
@@ -31,7 +31,7 @@ FINISH="%{$terminfo[sgr0]%}"
 #autoload -Uz promptinit
 #promptinit
 #prompt redhat
-PROMPT=$(echo "[$CYAN%n@$YELLOW%M:$GREEN%.$_YELLOW$FINISH]%# ")
+PROMPT=$(echo "[$CYAN%n@$YELLOW%m:$GREEN%.$_YELLOW$FINISH]%# ")
 
 #标题栏、任务栏样式{{{
 case $TERM in (*xterm|*rxvt*|(dt|k|E)term)

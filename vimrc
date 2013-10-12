@@ -6,7 +6,7 @@
 " Created	: 2010-03-20 18:00:12
 " Copying	: Copyright (C) 2013 0xnz, All rights reserved.
 "
-" Last-update: 2013-10-10 22:29:10
+" Last-update: 2013-10-12 18:29:31
 "
 " Description: vimrc compatible for Linux/Windows/OSX, GUI/Console
 "-------------------------------------------------------------------------------
@@ -149,8 +149,8 @@ set modeline
 " If using a dark background within the editing area and syntax highlighting
 " turn on this option as well
 set background=dark
-"colorscheme default
-colorscheme molokai
+colorscheme default
+"colorscheme molokai
 
 "-----------------------------------------------------------------
 " plugin - DoxygenToolkit.vim 由注释生成文档，并且能够快速生成函数标准注释
