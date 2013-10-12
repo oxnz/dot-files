@@ -2,7 +2,7 @@
 # File	: .zshrc
 #
 # Created: 2013-06-25 12:20:00
-# Last-update: 2013-10-12 18:35:03
+# Last-update: 2013-10-12 21:26:49
 # Version: 0.1
 # Author: Oxnz
 # License: Copyright (C) 2013 Oxnz
@@ -80,11 +80,17 @@ setopt complete_in_word
 # disable core dumps
 limit coredumpsize 0
 
+###################################################
+# Key bindings
 # Use emacs keybindings even if our EDITOR is set to vi
 bindkey -e
+#bindkey "\e[1~" beginning-of-line # Home
+#bindkey "\e[4~" end-of-line # End
 #bindkey -v
-# set [DEL] to delete forward
-bindkey "\e[3~"	delete-char
+#bindkey "\e[2~" quoted-insert # Ins
+bindkey "\e[3~"	delete-char	# Del
+# completion in the middle of a line
+bindkey '^i' expand-or-complete-prefix
 
 #following chars are regareds as part of the word
 WORDCHARS='*?_-[]~=&;!#$%^(){}<>'
@@ -93,8 +99,11 @@ WORDCHARS='*?_-[]~=&;!#$%^(){}<>'
 # completion {{{
 setopt AUTO_LIST
 setopt AUTO_MENU
+#with AUTO_LIST set, when the completion is ambiguous you get a list without
+#having to type ^D
+setopt AUTO_LIST
 #开启此选项，补全时会直接选中菜单项
-setopt MENU_COMPLETE
+#setopt MENU_COMPLETE
 # Use modern completion system
 autoload -Uz compinit
 compinit
@@ -122,7 +131,7 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,%mem,tty,cputime,
 #zstyle ':complete:*:cd:*' ignore-parents parent pwd
 
 #自动补全选项
-zstyle ':completion:*' verbose yes
+#zstyle ':completion:*' verbose yes
 zstyle ':completion:*' menu select
 zstyle ':completion:*:*:default' force-list always
 zstyle ':completion:*' select-prompt '%SSelect: lines: %L matches: %M [%p]'
@@ -149,7 +158,6 @@ zstyle ':completion::complete:*' '\\'
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}'
 # correction
 zstyle ':completion:*' completer _complete _match _approximate
-zstyle ':completion:*:match:*' original only
 zstyle ':completion:*:approximate:*' max-errors 1 numeric
 
 # Kill completion
@@ -238,12 +246,6 @@ autoload run-help
 #alias top10='print -l  ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
 #}}}
 
-#路径别名 {{{
-#进入相应的路径时只要 cd ~xxx
-	hash -d E="/etc/"
-	hash -d WORK="/Users/xinyi/Documents/workspace"
-#}}}
-
         
 #自定义补全{{{
 #补全 ping
@@ -271,7 +273,7 @@ autoload -U zsh-mime-setup
 zsh-mime-setup
 setopt EXTENDED_GLOB
     
-setopt correctall
+#setopt correctall
 autoload compinstall
      
 #漂亮又实用的命令高亮界面

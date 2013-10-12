@@ -14,12 +14,14 @@ use Archive::Tar;
 sub update() {
 	my $sf = shift;
 	my $df = shift;
-	if (! -e $sf) {
-		print "File: $sf does not exist\n";
-		return 1;
-	} elsif (! -r $sf) {
-		print "File: $sf can not be read\n";
-		return 1;
+	for my $f ($sf, $df) {
+		if (! -e $sf) {
+			print "File: $sf does not exist\n";
+			return 1;
+		} elsif (! -r $sf) {
+			print "File: $sf can not be read\n";
+			return 1;
+		}
 	}
 	if ( (-e $sf) && (-r $sf) ) {
 		if (compare($sf, $df)) {

@@ -22,6 +22,15 @@ alias ...='cd ../..'
 alias h='history'
 alias j='jobs -l'
 
+#路径别名 {{{
+#进入相应的路径时只要 cd ~xxx
+if [ -n $ZSH_VERSION ]; then
+	hash -d E="/etc/"
+	hash -d WORK="/Users/oxnz/Developer"
+fi
+#}}}
+
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
