@@ -47,7 +47,7 @@ BEGIN {
 		"vimrc",
 		"emacs",
 		"gitconfig",
-		"gitignore_global",
+		"gitignore",
 		"bash_profile",
 		"vim/plugin/OxnzToolkit.vim",
 		"vim/plugin/DoxygenToolkit.vim",

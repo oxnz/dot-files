@@ -2,7 +2,7 @@
 # File	: .zshrc
 #
 # Created: 2013-06-25 12:20:00
-# Last-update: 2013-10-13 15:19:04
+# Last-update: 2013-10-13 17:00:50
 # Version: 0.1
 # Author: Oxnz
 # License: Copyright (C) 2013 Oxnz
@@ -78,8 +78,7 @@ WORDCHARS='*?_-[]~=&;!#$%^(){}<>'
 #}}}
 
 # completion {{{
-setopt AUTO_LIST
-setopt AUTO_MENU
+#setopt AUTO_MENU
 #with AUTO_LIST set, when the completion is ambiguous you get a list without
 #having to type ^D
 setopt AUTO_LIST
@@ -167,7 +166,7 @@ zstyle ':completion:*:-tilde-:*' group-order 'named-directories' 'path-directori
 #setopt CORRECT
 
 # prompt for confirmation after 'rm *', etc.
-setopt RM_STAR_WAIT
+#setopt RM_STAR_WAIT
 
 # don't write over existing files with >, use >! instead
 setopt NOCLOBBER
@@ -253,12 +252,11 @@ zmodload zsh/mathfunc
 autoload -U zsh-mime-setup
 zsh-mime-setup
 setopt EXTENDED_GLOB
-    
+
 #setopt correctall
 autoload compinstall
      
 #漂亮又实用的命令高亮界面
-setopt extended_glob
 TOKENS_FOLLOWED_BY_COMMANDS=('|' '||' ';' '&' '&&' 'sudo' 'do' 'time' 'strace')
 
 recolor-cmd() {

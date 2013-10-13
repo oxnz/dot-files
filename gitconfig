@@ -2,7 +2,7 @@
 	name = oxnz
 	email = yunxinyi@gmail.com
 [core]
-	excludesfile = /Users/xinyi/.gitignore_global
+	excludesfile = /Users/oxnz/.gitignore
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
