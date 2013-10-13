@@ -2,7 +2,7 @@
 # File	: .zshrc
 #
 # Created: 2013-06-25 12:20:00
-# Last-update: 2013-10-13 17:00:50
+# Last-update: 2013-10-13 22:16:50
 # Version: 0.1
 # Author: Oxnz
 # License: Copyright (C) 2013 Oxnz
@@ -251,6 +251,11 @@ bindkey "^[[11~" arith-eval-echo
 zmodload zsh/mathfunc
 autoload -U zsh-mime-setup
 zsh-mime-setup
+
+# If the EXTENDED_GLOB option is set, the ^, ~, and # characters also denote
+# a pattern, some command depends on this special characters need to escape
+# slash, like `git reset HEAD\^`, U can also `alias git="noglob git"`, a 3rd
+# option: % noglob git show HEAD^
 setopt EXTENDED_GLOB
 
 #setopt correctall
