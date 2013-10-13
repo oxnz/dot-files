@@ -2,7 +2,7 @@
 # File	: .zshrc
 #
 # Created: 2013-06-25 12:20:00
-# Last-update: 2013-10-13 22:16:50
+# Last-update: 2013-10-13 23:35:25
 # Version: 0.1
 # Author: Oxnz
 # License: Copyright (C) 2013 Oxnz

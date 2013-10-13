@@ -33,11 +33,19 @@ sub update() {
 }
 
 # packup dotfiles to a tar.gz file
+# @arguments:
+# 	tarfile: archive file name
+# 	flistref: ref to file list
 sub pack() {
 	my $tarfile = shift;
-	print "packing to: [$tarfile]\n";
+	my $h = shift;
+	print "start packing\n";
 	my $tar = Archive::Tar->new;
-	$tar->add_files('zshrc', 'vimrc');
+	for (@{$h}) {
+		print "adding=> [$_]\n";
+	}
+	$tar->add_files(@{$h});
+	print "write to file => [$tarfile]\n";
 	$tar->write($tarfile, COMPRESS_GZIP);
 }
 
@@ -64,8 +72,7 @@ BEGIN {
 	) or pod2usage(2);
 
 	if (defined($pfile)) {
-		print "pack...\n";
-		&pack($pfile);
+		&pack($pfile, \@flist);
 	} else {
 		for my $f (@flist) {
 		&update(glob("~/.$f"), $f);
