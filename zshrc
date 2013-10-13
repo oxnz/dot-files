@@ -2,7 +2,7 @@
 # File	: .zshrc
 #
 # Created: 2013-06-25 12:20:00
-# Last-update: 2013-10-12 21:26:49
+# Last-update: 2013-10-13 15:19:04
 # Version: 0.1
 # Author: Oxnz
 # License: Copyright (C) 2013 Oxnz
@@ -48,25 +48,6 @@ export EDITOR=vim
 #export XMODIFIER$="@im=ibus"
 #export QT_MODULE=ibus
 #export GTK_MODULE=ibus
-
-# history settings {{{
-HISTIGNORE="&:ls:[bf]g:exit:reset:clear:cd:cd..:cd.."
-HISTSIZE=1000
-SAVEHIST=1000
-HISTFILE=~/.zsh_history
-setopt histignorealldups sharehistory
-setopt INC_APPEND_HISTORY
-setopt HIST_IGNORE_SPACE
-setopt HIST_REDUCE_BLANKS
-#为历史纪录中的命令添加时间戳
-setopt EXTENDED_HISTORY
-#启用 cd 命令的历史纪录，cd -[TAB]进入历史路径
-setopt AUTO_PUSHD
-#相同的历史路径只保留一个
-setopt PUSHD_IGNORE_DUPS
-#在命令前添加空格，不将此命令添加到纪录文件中
-setopt HIST_IGNORE_SPACE
-#}}}
 
 # Utils settings {{{
 #允许在交互模式中使用注释  例如：
