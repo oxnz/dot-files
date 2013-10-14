@@ -60,6 +60,7 @@ BEGIN {
 		"vim/plugin/OxnzToolkit.vim",
 		"vim/plugin/DoxygenToolkit.vim",
 		"vim/doc/OxnzToolkit.txt",
+		"emacs.d/init.el",
 		"shell/aliases",
 		"shell/functions",
 		"shell/switches",
