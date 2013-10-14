@@ -2,7 +2,7 @@
 # File	: .zshrc
 #
 # Created: 2013-06-25 12:20:00
-# Last-update: 2013-10-13 23:35:25
+# Last-update: 2013-10-14 15:12:49
 # Version: 0.1
 # Author: Oxnz
 # License: Copyright (C) 2013 Oxnz
@@ -10,7 +10,6 @@
 # Skip all this for non-interactive shells
 [[ -z "$PS1" ]] && return
 
-export CLICOLOR=1
 export LC_ALL=en_US.UTF-8
 
 # color{{{
@@ -92,8 +91,12 @@ zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete _correct _approximate
 zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' group-name ''
-zstyle ':completion:*' menu select=2
-#eval "$(dircolors -b)"
+#zstyle ':completion:*' menu select=2
+if whence dircolors >/dev/null; then
+	eval "$(dircolors -b)"
+else
+	export CLICOLOR=1
+fi
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s

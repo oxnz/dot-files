@@ -22,6 +22,9 @@ alias ...='cd ../..'
 alias h='history'
 alias j='jobs -l'
 
+#new command
+#alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
+
 #路径别名 {{{
 #进入相应的路径时只要 cd ~xxx
 if [ -n $ZSH_VERSION ]; then

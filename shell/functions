@@ -91,6 +91,8 @@ extract() {
 				;;
 			*.Z)			uncompress $1
 				;;
+			*.xz)			xz --decompress $1
+				;;
 			*)				echo "'$1' cannot be extracted via extract"
 				;;
 		esac
