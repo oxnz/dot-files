@@ -102,6 +102,64 @@ extract() {
 }
 compdef '_files -g "*.gz *.tgz *.bz2 *.tbz *.zip *.rar *.tar *.lha"' extract
 
+# History accepts a range in zsh entries as [first] [last] arguments, so to
+# get them all run history 1.
+# Note that the history list starts at 1 and not 0
+# print top command in history
+function histop() {
+	local FNAME='histop'
+	local n=10
+	while [ $# -ne 0 ]; do
+		case $1 in
+			-h|-help|--help)
+				echo "Usage: $FNAME -n <num>"
+				echo "num: print num lines of most used command"
+				return 0
+				;;
+			-n)
+				if [ $# -ge 2 ]; then
+					if [ $2 -ge 1 -a $2 -le $HISTSIZE ]; then
+						n=$2
+						shift
+						shift
+					else
+						echo "number needed by option -n, but given is $2"
+						$FNAME --help
+						return 1
+					fi
+				else
+					echo "option -n needs an number"
+					$FNAME --help
+					return 1
+				fi
+				;;
+			*)
+				echo "$FNAME: Unknown option $1"
+				$FNAME --help
+				return 1
+				;;
+		esac
+	done
+
+
+	print "Number\tTimes\tFrequency\tCommand"
+	history 1 | awk -v num=$n 'BEGIN {
+	}
+	{
+		cmds[$2]++;
+	}
+	END {
+		i = 1;
+		for (cmd in cmds) {
+			if (i++ <= num)
+				printf("%-8d%8.2f%%\t%-16s\n", cmds[cmd],
+					cmds[cmd]/NR*100, cmd);
+			else
+				break;
+		}
+	}' | sort -nr | nl
+}
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
