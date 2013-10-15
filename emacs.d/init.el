@@ -22,6 +22,7 @@
 (setq todo-file-done "~/.emacs.d/todo/done")
 (setq todo-file-top "~/.emacs.d/todo/top")
 ;}
+;(setq default-directory "/Users/oxnz/Developer/")
 
 ;----------------backup------------------
 (setq
@@ -100,21 +101,21 @@
 ;}
 ;-------------------------------theme or color---------------- 
 ;theme{
-;(require 'color-theme)
-;(color-theme-initialize)
-;(color-theme-blackboard)
-;(color-theme-matrix)
+(custom-set-variables
+ '(custom-enabled-themes (quote (light-blue))))
+(custom-set-faces
+ )
 ;}
 ;color{
-(set-cursor-color "purple")
-(set-mouse-color "white")
-(set-background-color "black")
-;(set-background-color "darkblue")
-(set-foreground-color "white")
-(set-face-foreground 'region "cyan")
-(set-face-background 'region "blue")
-(set-face-foreground 'secondary-selection "skyblue")
-(set-face-background 'secondary-selection "darkblue")
+;(set-cursor-color "purple")
+;(set-mouse-color "white")
+;(set-background-color "black")
+;;(set-background-color "darkblue")
+;(set-foreground-color "white")
+;(set-face-foreground 'region "cyan")
+;(set-face-background 'region "blue")
+;(set-face-foreground 'secondary-selection "skyblue")
+;(set-face-background 'secondary-selection "darkblue")
 ;}
 ;Shell 使用 ansi color{
 ;(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
