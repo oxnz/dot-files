@@ -28,7 +28,7 @@
 (setq
  backup-by-coping t ;don't clobber symlinks
  backup-directory-alist
- '(("." . "~/.saves")) ;don't litter my fs tree
+ '(("." . "~/.emacs.d/saves")) ;don't litter my fs tree
  delete-old-versions t
  kept-new-versions 6
  kept-old-versions 2
@@ -48,9 +48,16 @@
 (set-keyboard-coding-system 'utf-8)
 (setq file-name-coding-system 'utf-8)
 
+;---------------------component toggle----------------
+;disable tool-bar-mode
+;disable scroll bar
+;start speedbar if we're using a window system
+(when window-system
+	(tool-bar-mode -1)
+	(scroll-bar-mode -1)
+	(speedbar t)
+)
 ;-----------------------------speed bar--------------------------------
-;(when window-system	; start speedbar if we're using a window system
-;  (speedbar t))
 
 ;--------------------frame-----------------------
 ;title{
@@ -59,12 +66,8 @@
 ;}
 
 ;---------------------tool-bar-mode---------------
-;disable tool-bar-mode
-(tool-bar-mode -1)
 
 ;------------------scroll-bar--------------------
-;disable scroll bar
-(scroll-bar-mode -1)
 ;;滚动条在右侧
 ;(set-scroll-bar-mode 'right)
  ;滚动页面时比较舒服，不要整页的滚动
@@ -93,7 +96,7 @@
  'default nil :font "Monaco 12")
 ;(set-default-font "Bitstream Vera Sans Mono-12")
 ;}
-;Chinese font{
+Chinese font{
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font (frame-parameter nil 'font)
 		    charset
