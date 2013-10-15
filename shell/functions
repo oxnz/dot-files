@@ -1,3 +1,6 @@
+# Functions:
+# [pathmunge man dict ips rename extract histop itunes]
+
 pathmunge() {
 	case ":${PATH}:" in
 		*:"$1":* | "$1:${PATH}:")
