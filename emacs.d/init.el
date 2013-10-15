@@ -33,6 +33,12 @@
  kept-old-versions 2
  version-control t)
 
+;---------------auto-save----------------
+; close auto save
+(setq auto-save-mode nil)
+; don't generate #filename# temp file
+(setq auto-save-default nil)
+
 ;----------------------encoding---------------------
 (set-language-environment 'UTF-8)
 (set-buffer-file-coding-system 'utf-8)
@@ -41,10 +47,14 @@
 (set-keyboard-coding-system 'utf-8)
 (setq file-name-coding-system 'utf-8)
 
+;-----------------------------speed bar--------------------------------
+;(when window-system	; start speedbar if we're using a window system
+;  (speedbar t))
+
 ;--------------------frame-----------------------
 ;title{
 ;在标题栏显示buffer的名字(默认不显示)
-(setq frame-title-format "%b@emacs")
+(setq frame-title-format "[%b]")
 ;}
 
 ;---------------------tool-bar-mode---------------
@@ -70,6 +80,8 @@
 (setq display-time-use-mail-icon t)
 (setq display-time-interval 10)
 ;}
+;在模式栏中显示当前光标所在函数
+;(which-function-mode)
 
 ;-----------------echo-area-----------------
 
@@ -127,45 +139,81 @@
 ;(set-face-foreground 'holiday-face "white")))
 ;}
 
-;-----------------------------------CEDET-----------------------------------
-;Collection of Emacs Development Environment Tools
-;(see [http://www.randomsample.de/cedetdocs/ede/] for more details.)
-;semantic mode{
-(setq semantic-default-submodes '(global-semantic-idle-scheduler-mode
-                                  global-semanticdb-minor-mode
-                                  global-semantic-idle-summary-mode
-                                  global-semantic-mru-bookmark-mode))
-(global-ede-mode 1)
-;(require 'semantic/sb)
-(semantic-mode 1)
-;}
-;------------------------------------------------------------------------------
-
-;---------------------------set apperance--------------------------
+;------------------------------behavior---------------------------------
+;支持emacs和外部程序的粘贴
+(setq x-select-enable-clipboard t)
+;自动的在文件末增加一新行
+;(setq require-final-newline t)
+;当光标在行尾上下移动的时候，始终保持在行尾。
+(setq track-eol t)
 ;show matching brackets{
-;(show-paren-mode t)
+;(setq show-paren-delay 0)
 ;(setq show-paren-style 'parentheses)
+(show-paren-mode t)
 ;}
 ;highlight current line{
-;(require 'hl-line)
 ;(global-hl-line-mode t)
 ;}
-
-;------------------set indent------------------
-;(setq-default indent-tabs-mode nil)
-;(setq tab-width 4 c-basic-offset 4)
-;;打开就启用 text 模式
-;(setq default-major-mode 'text-mode)
-;;语法高亮
-;(global-font-lock-mode t)
+;;显示行列号
+;(column-number-mode t)
 ;;把这些缺省禁用的功能打开
 ;(put 'set-goal-column 'disabled nil)
 ;(put 'narrow-to-region 'disabled nil)
 ;(put 'upcase-region 'disabled nil)
 ;(put 'downcase-region 'disabled nil)
 ;(put 'LaTeX-hide-environment 'disabled nil)
-;;显示行列号
-;(column-number-mode t)
+
+;-----------------------------------CEDET-----------------------------------
+;Collection of Emacs Development Environment Tools
+;(see [http://www.randomsample.de/cedetdocs/ede/] for more details.)
+;semantic mode{
+(setq semantic-default-submodes '(global-semantic-idle-completions-mode
+                                  global-semantic-idle-summary-mode
+								  global-semantic-idle-scheduler-mode
+								  global-semantic-decoration-mode
+								  global-semantic-highlight-func-mode
+								  global-semantic-show-unmatched-syntax-mode
+                                  global-semanticdb-minor-mode
+                                  global-semantic-mru-bookmark-mode))
+(global-ede-mode 1)
+(require 'semantic/sb)	; semantic speedbar
+(semantic-mode 1)
+;}
+;(setq hs-minor-mode t)
+;(setq abbrev-mode t)
+;------------------indent------------------
+;(setq-default indent-tabs-mode nil)
+;(setq tab-width 4 c-basic-offset 4)
+;打开就启用 text 模式
+;(setq default-major-mode 'text-mode)
+(electric-indent-mode t)
+;;-----------------------cc mode---------------------
+(setq-default c-basic-offset 4
+			  tab-width 4
+			  indent-tabs-mode t)
+;(c-set-style "K&R")
+;自动缩进的宽度设置为4
+;(setq c-basic-offset 4)
+;;;预处理设置
+;(setq c-macro-shrink-window-flag t)
+;(setq c-macro-preprocessor "cpp")
+;(setq c-macro-cppflags " ")
+;(setq c-macro-prompt-flag t)
+;(require 'cc-mode)
+;(c-set-offset 'inline-open 0)
+;(c-set-offset 'friend '-)
+;(c-set-offset 'substatement-open 0)
+
+;(setq-default c-indent-tabs-mode t; Press TAB should cause indentation
+;	      c-indent-level 4; A TAB is equivilent to four spaces
+;	      c-argdecl-indent 0; Do not indent argument decl's extra
+;	      c-tab-always-indent t
+;	      c-basic-offset 4
+;	      backward-delete-function nil); DO NOT expand tabs when deleting
+;
+;-----------------highlight----------------
+;语法高亮
+(global-font-lock-mode t)
 ;;在buffer左侧显示行号
 ;(dolist (hook (list
 ;'c-mode-hook
@@ -183,32 +231,34 @@
 ;))
 ;(add-hook hook (lambda () (linum-mode 1))))
 
+;------------------------programming related----------------------
+;打开代码折叠功能
+(add-hook 'c-mode-hook' 'hs-minor-mode)
+(add-hook 'c++-mode-hook 'hs-minor-mode)
+;------------------------auto complete------------------------
+;(require 'auto-complete)
+;(global-auto-complete-mode t)
+;;auto-complete
+;(add-to-list 'load-path "~/.emacs.d/plugins/auto-complete")
+;(require 'auto-complete-config)
+;(add-to-list 'ac-dictionary-directories "~/.emacs.d/plugins/auto-complete/ac-dict")
+;(ac-config-default)
 
 
-;;支持emacs和外部程序的粘贴
-;(setq x-select-enable-clipboard t)
-
-; close auto save
-;(setq auto-save-mode nil)
-; don't generate #filename# temp file
-;(setq auto-save-default nil)
-
-;;自动的在文件末增加一新行
-;(setq require-final-newline t)
-;;当光标在行尾上下移动的时候，始终保持在行尾。
-;(setq track-eol t)
-
-;
-;(setq-default c-indent-tabs-mode t; Press TAB should cause indentation
-;	      c-indent-level 4; A TAB is equivilent to four spaces
-;	      c-argdecl-indent 0; Do not indent argument decl's extra
-;	      c-tab-always-indent t
-;	      c-basic-offset 4
-;	      backward-delete-function nil); DO NOT expand tabs when deleting
-;
+;---------------------------action--------------------------
+; auto-indent yanked (pasted) code
+(dolist (command '(yank yank-pop))
+ (eval `(defadvice ,command (after indent-region activate)
+	(and (not current-prefix-arg)
+		(member major-mode '(emacs-lisp-mode lisp-mode clojure-mode
+			scheme-mode haskell-mode ruby-mode rspec-mode python-mode
+			c-mode c++-mode objc-mode latex-mode plain-tex-mode js-mode
+			html-mode))
+		(let ((mark-even-if-inactive transient-mark-mode))
+			(indent-region (region-beginning) (region-end) nil))))))
 
 
-;-----------------------key-sequences---------------------
+;-----------------------key-sequence---------------------
 ; compile and debug{
 ;(global-set-key [f5] 'compile);compile
 ;(global-set-key [C-f7] 'gdb);debug
@@ -226,73 +276,11 @@
 ;;F11:粘贴寄存器内容
 ;(global-set-key [f11] 'insert-register)
 ;}
-
-
 ;;撤消
 ;(global-set-key (kbd "C-z") 'undo)
 ;;;全选
 ;;(global-set-key (kbd "C-a") 'mark-whole-buffer)
 ;;;保存
 ;(global-set-key (kbd "C-s") 'save-buffer)
-;
 ;;;跳转到某行
 ;(global-set-key [(meta g)] 'goto-line)
-;;;Tab补全或缩进
-;;(global-set-key [(tab)] 'my-indent-or-complete)
-;
-;;------------------------programming related----------------------
-;;;打开代码折叠功能
-;(add-hook 'c-mode-hook' 'hs-minor-mode)
-;(add-hook 'c++-mode-hook 'hs-minor-mode)
-;
-;;(c-set-style "K&R")
-;
-;;;在模式栏中显示当前光标所在函数
-;(which-function-mode)
-;;;自动缩进的宽度设置为4
-;(setq c-basic-offset 4)
-;
-;;;预处理设置
-;(setq c-macro-shrink-window-flag t)
-;(setq c-macro-preprocessor "cpp")
-;(setq c-macro-cppflags " ")
-;(setq c-macro-prompt-flag t)
-;(setq hs-minor-mode t)
-;(setq abbrev-mode t)
-;
-;;auto-complete
-;(add-to-list 'load-path "~/.emacs.d/plugins/auto-complete")
-;(require 'auto-complete-config)
-;(add-to-list 'ac-dictionary-directories "~/.emacs.d/plugins/auto-complete/ac-dict")
-;(ac-config-default)
-
-;;-----------------------cc mode---------------------
-;(require 'cc-mode)
-;(c-set-offset 'inline-open 0)
-;(c-set-offset 'friend '-)
-;(c-set-offset 'substatement-open 0)
-
-
-;; auto format Ctrl-Alt-\
-;(dolist (command '(yank yank-pop))
-;  (eval
-;   `(defadvice ,command (after indent-region activate)
-;      (and (not current-prefix-arg)
-;           (member major-mode
-;                   '(emacs-list-mode
-;                     list-mode
-;                     clojure-mode
-;                     scheme-mode
-;                     haskell-mode
-;                     ruby-mode
-;                     rspec-mode
-;                     python-mode
-;                     c-mode
-;                     c++-mode
-;                     objc-mode
-;                     latex-mode
-;                     js-mode
-;                     plain-TeX-mode))
-;           (let ((mark-even-if-inactive transient-mark-mode))
-;             (indent-region (region-beginning) (region-end) nil))))))
-                     
