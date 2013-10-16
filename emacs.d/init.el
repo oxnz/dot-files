@@ -92,15 +92,15 @@
 ;--------------set font---------------------
 ;English font{
 ;(set-default-font "Monospace-12")
-(set-face-attribute
- 'default nil :font "Monaco 12")
+;(set-face-attribute
+; 'default nil :font "Monaco 12")
 ;(set-default-font "Bitstream Vera Sans Mono-12")
 ;}
-Chinese font{
-(dolist (charset '(kana han symbol cjk-misc bopomofo))
-  (set-fontset-font (frame-parameter nil 'font)
-		    charset
-		    (font-spec :family "Hiragino Sans GB W3" :size 12)))
+;Chinese font{
+;(dolist (charset '(kana han symbol cjk-misc bopomofo))
+;  (set-fontset-font (frame-parameter nil 'font)
+;		    charset
+;		    (font-spec :family "Hiragino Sans GB W3" :size 12)))
 ;}
 ;-------------------------------theme or color---------------- 
 ;theme{
