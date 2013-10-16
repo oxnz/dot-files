@@ -22,6 +22,10 @@ alias ...='cd ../..'
 alias h='history'
 alias j='jobs -l'
 
+# override default vesion or default path command
+alias emacs='emacs-24.3'
+alias emacs-nox='emacs-24.3 -nw'
+alias emacsclient='/usr/local/bin/emacsclient'
 #new command
 #alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
 
