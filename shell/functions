@@ -112,55 +112,34 @@ compdef '_files -g "*.gz *.tgz *.bz2 *.tbz *.zip *.rar *.tar *.lha"' extract
 function histop() {
 	local FNAME='histop'
 	local n=10
-	while [ $# -ne 0 ]; do
+	if [[ $# -ne 0 ]]; then
 		case $1 in
-			-h|-help|--help)
+			-h|--help)
 				echo "Usage: $FNAME -n <num>"
 				echo "num: print num lines of most used command"
 				return 0
 				;;
 			-n)
-				if [ $# -ge 2 ]; then
-					if [ $2 -ge 1 -a $2 -le $HISTSIZE ]; then
-						n=$2
-						shift
-						shift
-					else
-						echo "number needed by option -n, but given is $2"
-						$FNAME --help
-						return 1
-					fi
+				if [ $# -eq 2 -a $2 -ge 1 -a $2 -le $HISTSIZE ]; then
+					n=$2
+					shift
 				else
 					echo "option -n needs an number"
-					$FNAME --help
 					return 1
 				fi
 				;;
 			*)
-				echo "$FNAME: Unknown option $1"
+				echo "$FNAME: Unknown option: $1"
 				$FNAME --help
 				return 1
 				;;
 		esac
-	done
-
-
+		shift
+	fi
 	print "Number\tTimes\tFrequency\tCommand"
-	history 1 | awk -v num=$n 'BEGIN {
-	}
-	{
-		cmds[$2]++;
-	}
-	END {
-		i = 1;
-		for (cmd in cmds) {
-			if (i++ <= num)
-				printf("%-8d%8.2f%%\t%-16s\n", cmds[cmd],
-					cmds[cmd]/NR*100, cmd);
-			else
-				break;
-		}
-	}' | sort -nr | nl
+	history 1 | awk -v n=$n '{ cmds[$2]++; } END { i = 1; for (cmd in cmds) {
+		if (i++ <= n) printf("%-8d%8.2f%%\t%-16s\n", cmds[cmd],
+			(100*cmds[cmd])/NR, cmd); else break; }}' | sort -nr | nl
 }
 
 # iTunes control function
@@ -179,7 +158,7 @@ function itunes() {
 		next|previous)
 			opt="$opt track"
 			;;
-		""|help)
+		""|-h|--help)
 			echo "Usage: itunes <option>"
 			echo "option:"
 			echo "\tlaunch|play|pause|stop|rewind|resume|quit"

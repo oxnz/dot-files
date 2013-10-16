@@ -238,11 +238,11 @@ command! -nargs=0 OxnzTest		:call <SID>OxnzTestFunc()
 "按\ml,自动插入modeline
 "nnoremap <silent> <Leader>ml	:call OxnzModeLine() <CR>
 
-if has("autocmd")
-	augroup OxnzToolkitEx
-	au!
-		autocmd BufNewFile * call <SID>OxnzInsertHeaderFunc()
-		autocmd BufNewFile *.h call <SID>OxnzInsertGuardFunc()
-		autocmd BufWrite *.* call <SID>OxnzUpdateTimeStampFunc()
-	augroup END
-endif
+"if has("autocmd")
+"	augroup OxnzToolkitEx
+"	au!
+"		autocmd BufNewFile * call <SID>OxnzInsertHeaderFunc()
+"		autocmd BufNewFile *.h call <SID>OxnzInsertGuardFunc()
+"		autocmd BufWrite *.* call <SID>OxnzUpdateTimeStampFunc()
+"	augroup END
+"endif

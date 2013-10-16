@@ -6,7 +6,7 @@
 " Created	: 2010-03-20 18:00:12
 " Copying	: Copyright (C) 2013 0xnz, All rights reserved.
 "
-" Last-update: 2013-10-12 18:29:31
+" Last-update: 2013-10-16 15:06:30
 "
 " Description: vimrc compatible for Linux/Windows/OSX, GUI/Console
 "-------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ set incsearch		" do incremental searching
 "set ignorecase		" Do case insensitive matching
 set smartcase		" Do smart case matching
 set smarttab		" Be smart when using tabs
-set nowrap			" Don't wrap lines
+"set nowrap			" Don't wrap lines
 "set spell			" Do spell check, type `z=` to see advice
 set lazyredraw		" Don't redraw while executing macros (for good performance)
 
@@ -51,13 +51,13 @@ set lazyredraw		" Don't redraw while executing macros (for good performance)
 "set mouse=a		" Enable mouse usage (all modes)
 
 " Set font according to system
-if has("unix")
-	set gfn=Menlo:h15
-elseif has("win16") || has("win32")
-	set gfn=Bitstream\ Vera\ Sans\ Mono:h11
-elseif has("linux")
-	set gfn=Monospace\ 11
-endif
+"if has("unix")
+"	set gfn=Menlo:h15
+"elseif has("win16") || has("win32")
+"	set gfn=Bitstream\ Vera\ Sans\ Mono:h11
+"elseif has("linux")
+"	set gfn=Monospace\ 11
+"endif
 " 状态行颜色 
 highlight StatusLine guifg=SlateBlue guibg=Yellow 
 highlight StatusLineNC guifg=Gray guibg=White 
