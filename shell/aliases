@@ -13,14 +13,17 @@ alias date='date +"%F %T"'
 alias df='df -h'
 alias du='du -h'
 alias gdb='gdb --quiet'
+alias bc='bc --quiet'
 
 # typing errors...
-alias ..='cd ..'
-alias ...='cd ../..'
+alias cd..='cd ..'
+#alias sl='ls'
 
 #short cuts
 alias h='history'
 alias j='jobs -l'
+alias ..='cd ..'
+alias ...='cd ../..'
 
 # override default vesion or default path command
 alias emacs='emacs-24.3'
