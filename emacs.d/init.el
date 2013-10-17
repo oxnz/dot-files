@@ -6,16 +6,19 @@
 ; Author:	0xnz <yunxinyi AT gmail DOT com>
 ; Last-update:  2013-10-06 23:37
 ;
-; Description:  0xnz's dot emacs file
-; Howto:	copy this file to ~/.emacs or ~/.emacs.d/init.el
+; Note:         This file is NOT part of GNU Emacs
+; Description:  0xnz's dot emacs file, fixing weird quirks and poor defaults
+; Use:          copy this file to ~/.emacs or ~/.emacs.d/init.el
 ;______________________________________________________________________________
-
+;(evil-mode 1)
+(setq viper-inhibit-startup-message 't)
+(setq viper-expert-level '3)
 ;-------------save personal info------------
 (setq user-full-name "oxnz")
 (setq user-mail-address "yunxinyi@gmail.com")
 ;-----------------path config---------------
 ;Load_path{
-(add-to-list 'load-path' "~/.emacs.d")
+(add-to-list 'load-path user-emacs-directory)
 ;}
 ;todo path{
 (setq todo-file-do "~/.emacs.d/todo/do")
@@ -24,21 +27,52 @@
 ;}
 ;(setq default-directory "/Users/oxnz/Developer/")
 
-;----------------backup------------------
-(setq
- backup-by-coping t ;don't clobber symlinks
- backup-directory-alist
- '(("." . "~/.emacs.d/saves")) ;don't litter my fs tree
- delete-old-versions t
- kept-new-versions 6
- kept-old-versions 2
- version-control t)
+;--------------------version check---------------
+(cond
+  ((> emacs-major-version 21)
+   (ido-mode t)
+   (setq ido-enable-prefix nil
+         ido-enable-flex-matching t
+         ido-create-new-buffer 'always
+         ido-use-filename-at-point t
+         ido-max-prospects 10))
+  ((>= emacs-major-version 23)
+   (electric-indent-mode t))
+)
+;-----------------set default---------------
+
+(setq-default
+  default-frame-alist
+  '(
+    (save-interprogram-paste-before-kill t)
+    (apropos-do-all t)
+    (recentf-mode 1)
+    (show-paren-mode 1)
+    (require 'saveplace)
+    (save-place t)
+    (save-palce-file (concat user-emacs-directory "places"))
+    (backup-directory-alist `(("." . , (concat user-emacs-directory
+                                               "backups"))))
+    (language-environment 'UTF-8)
+    (find-file-existing-other-name t) ;avoid problem with symbolic links
+;    (curosr-color . "white")
+;    (mouse-color . "white")
+;    (foreground-color . "white")
+;    (background-color . "DoggerBlue4")
+;    (cursor-type . bar)
+    (tool-bar-lines . 0)
+    (menu-bar-lines . 1)
+    (width . 80)
+;    (height . 58)
+    (font .
+	  "Courier New")
+    ))
 
 ;---------------auto-save----------------
 ; close auto save
-(setq auto-save-mode nil)
+;(setq auto-save-mode nil)
 ; don't generate #filename# temp file
-(setq auto-save-default nil)
+;(setq auto-save-default nil)
 
 ;----------------------commen---------------------
 ;打开就启用 text 模式
@@ -52,11 +86,27 @@
 ;(set-keyboard-coding-system 'utf-8)
 ;(setq file-name-coding-system 'utf-8)
 
+(setq echo-keystrokes 0.1
+      font-lock-maximum-decoration t
+      inhibit-startup-message t
+      transient-mark-mode t
+      color-theme-is-global t
+      delete-by-moving-to-trash t
+      shift-select-mode nil
+      truncate-partial-width-windows nil
+      uniquify-buffer-name-style 'forward
+      whitespace-style '(trailing lines space-before-tab
+                                  indentation space-after-tab)
+      whitespace-line-column 100
+      )
 ;---------------------component toggle----------------
 ;disable tool-bar-mode
 ;disable scroll bar
 ;start speedbar if we're using a window system
 (if window-system (progn
+                    (set-frame-title-format '(buffer-file-name "%f" ("%b")))
+                    (tooltip-mode -1)
+                    (blink-cursor-mode -1)
 	(tool-bar-mode -1)
 	(scroll-bar-mode -1)
 ;	(speedbar t)
@@ -66,6 +116,36 @@
 	(menu-bar-mode -1)
 )
 ;------------------mode-line------------------
+(setq-default mode-line-format
+              (quote
+               (#("-" 0 1
+                  (help-echo
+                   "mouse-1: select window, mouse-2: delete others ..."))
+                mode-line-mute-info
+                mode-line-frame-identification
+                "    "
+                mode-line-buffer-identification
+                "    "
+                (:eval (substring
+                        (system-name) 0 (string-match "\\..+" (system-name))))
+                ":"
+                default-directory
+                #(" " 0 1
+                  (help-echo
+                   "mouse-1: select window, mouse-2: delete others ..."))
+                (line-number- " Line %1 ")
+                global-mode-string
+                #("     %[(" 0 6
+                  (help-echo
+                   "mouse-1: selection window, mouse-2: delete others ..."))
+                (:eval (mode-line-mode-name))
+                mode-line-process
+                minor-mode-alist
+                #("%n" 0 2 (help-echo "mouse-2: widen" local-map (keymap ...)))
+                ")%] "
+                (-3 . "%P")
+                                        ; "-%-"
+                )))
 ; show time{
 ;(display-time-mode t)
 ; 24-hour
@@ -176,9 +256,11 @@
 ;(setq hs-minor-mode t)
 ;(setq abbrev-mode t)
 ;------------------indent------------------
-;(setq-default indent-tabs-mode nil)
+(setq-default indent-tabs-mode nil)
+(set-default 'indent-empty-lines t)
+(set-default 'imenu-auto-rescan t)
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
 ;(setq tab-width 4 c-basic-offset 4)
-(electric-indent-mode t)
 ;;-----------------------cc mode---------------------
 ;(setq-default c-basic-offset 4
 ;			  tab-width 4
