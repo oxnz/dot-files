@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; Filename: init.el
 ;
 ; Copying:	Copyright (C) 2013 0xnz, All rights reserved.
@@ -8,14 +8,14 @@
 ;
 ; Description:  0xnz's dot emacs file
 ; Howto:	copy this file to ~/.emacs or ~/.emacs.d/init.el
-;_______________________________________________________________________________
+;______________________________________________________________________________
 
 ;-------------save personal info------------
 (setq user-full-name "oxnz")
 (setq user-mail-address "yunxinyi@gmail.com")
 ;-----------------path config---------------
 ;Load_path{
-;(add-to-list 'load-path' "~/.emacs.d")
+(add-to-list 'load-path' "~/.emacs.d")
 ;}
 ;todo path{
 (setq todo-file-do "~/.emacs.d/todo/do")
@@ -40,56 +40,46 @@
 ; don't generate #filename# temp file
 (setq auto-save-default nil)
 
-;----------------------encoding---------------------
+;----------------------commen---------------------
+;打开就启用 text 模式
+(setq default-major-mode 'text-mode)
+(add-hook 'text-mode-hook 'auto-fill-mode)
 (set-language-environment 'UTF-8)
-(set-buffer-file-coding-system 'utf-8)
-(setq default-buffer-file-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(setq file-name-coding-system 'utf-8)
+;----------------------encoding---------------------
+;(set-buffer-file-coding-system 'utf-8)
+;(setq default-buffer-file-coding-system 'utf-8)
+;(set-terminal-coding-system 'utf-8)
+;(set-keyboard-coding-system 'utf-8)
+;(setq file-name-coding-system 'utf-8)
 
 ;---------------------component toggle----------------
 ;disable tool-bar-mode
 ;disable scroll bar
 ;start speedbar if we're using a window system
-(when window-system
+(if window-system (progn
 	(tool-bar-mode -1)
 	(scroll-bar-mode -1)
-	(speedbar t)
+;	(speedbar t)
+	(setq frame-title-format "[%b]")	;在标题栏显示buffer的名字(默认不显示)
+	(set-scroll-bar-mode 'right))	;滚动条在右侧
+  ;disable menu-bar in console
+	(menu-bar-mode -1)
 )
-;-----------------------------speed bar--------------------------------
-
-;--------------------frame-----------------------
-;title{
-;在标题栏显示buffer的名字(默认不显示)
-(setq frame-title-format "[%b]")
-;}
-
-;---------------------tool-bar-mode---------------
-
-;------------------scroll-bar--------------------
-;;滚动条在右侧
-;(set-scroll-bar-mode 'right)
- ;滚动页面时比较舒服，不要整页的滚动
-;(setq scroll-step 1
-;scroll-margin 3
-;scroll-conservatively 10000)
-
 ;------------------mode-line------------------
 ; show time{
-(display-time-mode t)
+;(display-time-mode t)
 ; 24-hour
-(setq display-time-24hr-format t)
-(setq display-time-day-and-date t)
-(setq display-time-use-mail-icon t)
-(setq display-time-interval 10)
+;(setq display-time-24hr-format t)
+;(setq display-time-day-and-date t)
+;(setq display-time-use-mail-icon t)
+;(setq display-time-interval 10)
 ;}
 ;在模式栏中显示当前光标所在函数
 ;(which-function-mode)
 
 ;-----------------echo-area-----------------
 
-;--------------set font---------------------
+;--------------se tont---------------------
 ;English font{
 ;(set-default-font "Monospace-12")
 ;(set-face-attribute
@@ -106,8 +96,8 @@
 ;theme{
 (custom-set-variables
  '(custom-enabled-themes (quote (light-blue))))
-(custom-set-faces
- )
+;(custom-set-faces
+; )
 ;}
 ;color{
 ;(set-cursor-color "purple")
@@ -131,10 +121,10 @@
 ;M-x calender
 ;display the 'celestial-stem’ (天干) and the ‘terrestrial-branch’ (地支)
 ;in Chinese:
-(setq chinese-calendar-celestial-stem
-	  ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"]
-	  chinese-calendar-terrestrial-branch
-	  ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])
+;(setq chinese-calendar-celestial-stem
+;	  ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"]
+;	  chinese-calendar-terrestrial-branch
+;	  ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])
 ;设置日历的一些颜色{
 ;(setq calendar-load-hook
 ;'(lambda ()
@@ -147,12 +137,12 @@
 ;支持emacs和外部程序的粘贴
 (setq x-select-enable-clipboard t)
 ;自动的在文件末增加一新行
-;(setq require-final-newline t)
+(setq require-final-newline t)
 ;当光标在行尾上下移动的时候，始终保持在行尾。
 (setq track-eol t)
 ;show matching brackets{
 ;(setq show-paren-delay 0)
-;(setq show-paren-style 'parentheses)
+(setq show-paren-style 'parentheses)
 (show-paren-mode t)
 ;}
 ;highlight current line{
@@ -171,30 +161,28 @@
 ;Collection of Emacs Development Environment Tools
 ;(see [http://www.randomsample.de/cedetdocs/ede/] for more details.)
 ;semantic mode{
-(setq semantic-default-submodes '(global-semantic-idle-completions-mode
-                                  global-semantic-idle-summary-mode
-								  global-semantic-idle-scheduler-mode
-								  global-semantic-decoration-mode
-								  global-semantic-highlight-func-mode
-								  global-semantic-show-unmatched-syntax-mode
-                                  global-semanticdb-minor-mode
-                                  global-semantic-mru-bookmark-mode))
-(global-ede-mode 1)
-(require 'semantic/sb)	; semantic speedbar
-(semantic-mode 1)
+;(setq semantic-default-submodes '(global-semantic-idle-completions-mode
+;                                  global-semantic-idle-summary-mode
+;								  global-semantic-idle-scheduler-mode
+;								  global-semantic-decoration-mode
+;								  global-semantic-highlight-func-mode
+;								  global-semantic-show-unmatched-syntax-mode
+;                                  global-semanticdb-minor-mode
+;                                  global-semantic-mru-bookmark-mode))
+;(global-ede-mode 1)
+;(require 'semantic/sb)	; semantic speedbar
+;(semantic-mode 1)
 ;}
 ;(setq hs-minor-mode t)
 ;(setq abbrev-mode t)
 ;------------------indent------------------
 ;(setq-default indent-tabs-mode nil)
 ;(setq tab-width 4 c-basic-offset 4)
-;打开就启用 text 模式
-;(setq default-major-mode 'text-mode)
 (electric-indent-mode t)
 ;;-----------------------cc mode---------------------
-(setq-default c-basic-offset 4
-			  tab-width 4
-			  indent-tabs-mode t)
+;(setq-default c-basic-offset 4
+;			  tab-width 4
+;			  indent-tabs-mode t)
 ;(c-set-style "K&R")
 ;自动缩进的宽度设置为4
 ;(setq c-basic-offset 4)
@@ -217,7 +205,7 @@
 ;
 ;-----------------highlight----------------
 ;语法高亮
-(global-font-lock-mode t)
+;(global-font-lock-mode t)
 ;;在buffer左侧显示行号
 ;(dolist (hook (list
 ;'c-mode-hook
@@ -237,9 +225,13 @@
 
 ;------------------------programming related----------------------
 ;打开代码折叠功能
-(add-hook 'c-mode-hook' 'hs-minor-mode)
-(add-hook 'c++-mode-hook 'hs-minor-mode)
+;(add-hook 'c-mode-hook' 'hs-minor-mode)
+;(add-hook 'c++-mode-hook 'hs-minor-mode)
 ;------------------------auto complete------------------------
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
+(ac-config-default)
+
 ;(require 'auto-complete)
 ;(global-auto-complete-mode t)
 ;;auto-complete
@@ -251,16 +243,16 @@
 
 ;---------------------------action--------------------------
 ; auto-indent yanked (pasted) code
-(dolist (command '(yank yank-pop))
- (eval `(defadvice ,command (after indent-region activate)
-	(and (not current-prefix-arg)
-		(member major-mode '(emacs-lisp-mode lisp-mode clojure-mode
-			scheme-mode haskell-mode ruby-mode rspec-mode python-mode
-			c-mode c++-mode objc-mode latex-mode plain-tex-mode js-mode
-			html-mode))
-		(let ((mark-even-if-inactive transient-mark-mode))
-			(indent-region (region-beginning) (region-end) nil))))))
-
+;(dolist (command '(yank yank-pop))
+; (eval `(defadvice ,command (after indent-region activate)
+;	(and (not current-prefix-arg)
+;		(member major-mode '(emacs-lisp-mode lisp-mode clojure-mode
+;			scheme-mode haskell-mode ruby-mode rspec-mode python-mode
+;			c-mode c++-mode objc-mode latex-mode plain-tex-mode js-mode
+;			html-mode))
+;		(let ((mark-even-if-inactive transient-mark-mode))
+;			(indent-region (region-beginning) (region-end) nil))))))
+;
 
 ;-----------------------key-sequence---------------------
 ; compile and debug{
