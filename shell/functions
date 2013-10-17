@@ -71,12 +71,22 @@ function rename() {
 }
 
 # extract files from compressed status
+# TODO: test if the extract binary exists
+# 	case $1 in
+# 		*.tar.gz)	prog=tar args=xzf ;;
+#	esac
+#	if whence $prog
+#		$prog $args $1
+#	else
+#		echo "extract needs $prog, but not exist"
+#	fi
 extract() {
 	if [ -f $1 ]; then
 		case $1 in
-			*.tar.bz2)		tar xjf $1
+			*.tar.bz2|*.tbz|*.tbz2)
+				tar xjf $1
 				;;
-			*.tar.gz)		tar xzf $1
+			*.tar.gz|*.tgz)	tar xzf $1
 				;;
 			*.bz2)			bunzip2 $1
 				;;
@@ -86,11 +96,8 @@ extract() {
 				;;
 			*.tar)			tar xf $1
 				;;
-			*.tbz2)			tar xfj $1
-				;;
-			*.tgz)			tar xzf $1
-				;;
-			*.zip)			unzip $1
+			*.zip|*.war|*.jar)
+				unzip $1
 				;;
 			*.Z)			uncompress $1
 				;;
@@ -100,7 +107,7 @@ extract() {
 				;;
 		esac
 	else
-		echo "'$1' is not a valid file"
+		echo "extract: '$1' is not a valid file"
 	fi
 }
 compdef '_files -g "*.gz *.tgz *.bz2 *.tbz *.zip *.rar *.tar *.lha"' extract
