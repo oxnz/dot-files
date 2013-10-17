@@ -40,6 +40,8 @@
    (electric-indent-mode t))
 )
 ;-----------------set default---------------
+(require 'saveplace)
+(setq-default save-place t)
 
 (setq-default
   default-frame-alist
@@ -48,9 +50,7 @@
     (apropos-do-all t)
     (recentf-mode 1)
     (show-paren-mode 1)
-    (require 'saveplace)
-    (save-place t)
-    (save-palce-file (concat user-emacs-directory "places"))
+    (setq save-place-file (concat user-emacs-directory "places"))
     (backup-directory-alist `(("." . , (concat user-emacs-directory
                                                "backups"))))
     (language-environment 'UTF-8)
@@ -64,9 +64,9 @@
     (menu-bar-lines . 1)
     (width . 80)
 ;    (height . 58)
-    (font .
-	  "Courier New")
-    ))
+    (font . "Monaco")
+    )
+)
 
 ;---------------auto-save----------------
 ; close auto save
@@ -104,48 +104,45 @@
 ;disable scroll bar
 ;start speedbar if we're using a window system
 (if window-system (progn
-                    (set-frame-title-format '(buffer-file-name "%f" ("%b")))
-                    (tooltip-mode -1)
-                    (blink-cursor-mode -1)
+	(tooltip-mode -1)
+	(blink-cursor-mode -1)
 	(tool-bar-mode -1)
 	(scroll-bar-mode -1)
 ;	(speedbar t)
-	(setq frame-title-format "[%b]")	;在标题栏显示buffer的名字(默认不显示)
-	(set-scroll-bar-mode 'right))	;滚动条在右侧
-  ;disable menu-bar in console
+	(setq frame-title-format (concat user-login-name "@" system-name "->%b"))
+	(set-scroll-bar-mode 'right)	;滚动条在右侧
+	)
+	; disable menu-bar in console
 	(menu-bar-mode -1)
 )
 ;------------------mode-line------------------
 (setq-default mode-line-format
-              (quote
-               (#("-" 0 1
-                  (help-echo
-                   "mouse-1: select window, mouse-2: delete others ..."))
-                mode-line-mute-info
-                mode-line-frame-identification
-                "    "
-                mode-line-buffer-identification
-                "    "
-                (:eval (substring
-                        (system-name) 0 (string-match "\\..+" (system-name))))
-                ":"
-                default-directory
-                #(" " 0 1
-                  (help-echo
-                   "mouse-1: select window, mouse-2: delete others ..."))
-                (line-number- " Line %1 ")
-                global-mode-string
-                #("     %[(" 0 6
-                  (help-echo
-                   "mouse-1: selection window, mouse-2: delete others ..."))
-                (:eval (mode-line-mode-name))
-                mode-line-process
-                minor-mode-alist
-                #("%n" 0 2 (help-echo "mouse-2: widen" local-map (keymap ...)))
-                ")%] "
-                (-3 . "%P")
-                                        ; "-%-"
-                )))
+			  (list "-"
+                                'mode-line-mule-info
+                                'mode-line-modified
+                                'mode-line-frame-identification
+                                "%b--"
+; Note that this is evaluated while making the list.
+; It makes a mode line construct which is just a string.
+                                (system-name)
+                                ":"
+                                'default-directory
+                                "    "
+                                'global-mode-string
+                                "    "
+                                "    %[("
+                                '(:eval (mode-line-mode-name))
+                                'mode-line-process
+                                'minor-mode-alist
+                                "%n"
+                                ")%]--"
+                                '(which-func-mode ("" which-func-format "--"))
+                                '(line-number-mode "L%l--")
+                                '(column-number-mode "C%c--")
+                                '(-3 "%p"))
+)
+(setq column-number-mode t)
+
 ; show time{
 ;(display-time-mode t)
 ; 24-hour
@@ -286,8 +283,6 @@
 ;	      backward-delete-function nil); DO NOT expand tabs when deleting
 ;
 ;-----------------highlight----------------
-;语法高亮
-;(global-font-lock-mode t)
 ;;在buffer左侧显示行号
 ;(dolist (hook (list
 ;'c-mode-hook
@@ -362,3 +357,16 @@
 ;(global-set-key (kbd "C-s") 'save-buffer)
 ;;;跳转到某行
 ;(global-set-key [(meta g)] 'goto-line)
+
+;---------------------------mode----------------------------------------
+; uncomment the following line to override the default scratch messsage
+(setq initial-scratch-message (concat
+";                  /)\n"
+";                 //\n"
+";   .------------| |---------------------------------------------.__\n"
+";   |   OXNZ     | |>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>:>\n"
+";   `------------| |----------------------------------------------'^^\n"
+";                 \\\\\n"
+";                  \\)\n"
+	)
+)
