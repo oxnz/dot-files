@@ -6,6 +6,7 @@ alias fgrep='fgrep --color=auto'
 alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
+alias ln='ln -i'
 
 # specify format
 alias ll='ls -aFhl'
@@ -29,6 +30,8 @@ alias ...='cd ../..'
 alias emacs='emacs-24.3'
 alias emacs-nox='emacs-24.3 -nw'
 alias emacsclient='/usr/local/bin/emacsclient'
+alias edit='emacs-24.3 -nw'
+alias now='/bin/date +"%F %T"'
 #new command
 #alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
 
