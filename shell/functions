@@ -175,6 +175,42 @@ function itunes() {
 	osascript -e "tell application \"iTunes\" to $opt"
 }
 
+# use alias rm='trash' to play safer
+function trash() {
+	local TRASH
+	case "`uname -s`" in
+		Darwin)
+			TRASH=~/.Trash
+			;;
+		Linux)
+			TRASH=~/.trash
+			;;
+		*)
+			echo "Unsupported system" && return 0
+			;;
+	esac
+	case "$1" in
+		""|-h|--help)
+			echo "Usage: trash [files or directories]"
+			;;
+		*)
+			for item in "$@"; do
+				if [[ ! -e $item ]]; then
+					echo "$item :No such file or directory, skipped"
+					# uncomment the following line to abort if non-exists
+					#return 1
+					continue
+				fi
+				local dst=${TRASH}/$(basename $item)
+				while [[ -e $dst ]]; do
+					dst="${dst}+"
+				done
+				mv $item $dst
+			done
+			;;
+	esac
+}
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
