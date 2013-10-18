@@ -1,3 +1,4 @@
+; -*-mode: Emacs-Lisp-*-
 ;==============================================================================
 ; Filename: init.el
 ;
@@ -10,9 +11,6 @@
 ; Description:  0xnz's dot emacs file, fixing weird quirks and poor defaults
 ; Use:          copy this file to ~/.emacs or ~/.emacs.d/init.el
 ;______________________________________________________________________________
-;(evil-mode 1)
-(setq viper-inhibit-startup-message 't)
-(setq viper-expert-level '3)
 ;-------------save personal info------------
 (setq user-full-name "oxnz")
 (setq user-mail-address "yunxinyi@gmail.com")
@@ -29,20 +27,41 @@
 
 ;--------------------version check---------------
 (cond
+  ((require 'desktop)
+   (desktop-load-default)
+   (desktop-read)
+   )
   ((> emacs-major-version 21)
-   (ido-mode t)
+   (ido-mode t); or change t to both for buffers and files
    (setq ido-enable-prefix nil
+         ido-save-directory-list-file "~/.emacs.d/ido.last"
+         ido-work-directory-list '("~/Developer" "~/Desktop")
          ido-enable-flex-matching t
          ido-create-new-buffer 'always
          ido-use-filename-at-point t
+         ido-confirm-unique-completion t
+         ido-enable-last-directory-history t; remember last used dirs
+         ido-use-url-at-point nil; don't use url at point (annoying)
          ido-max-prospects 10))
   ((>= emacs-major-version 23)
-   (electric-indent-mode t))
+;   (electric-indent-mode t)
+   )
 )
+;------------------------vi mode-------------------
+;(evil-mode 1)
+;(setq viper-inhibit-startup-message 't)
+;(setq viper-expert-level '3)
 ;-----------------set default---------------
 (require 'saveplace)
 (setq-default save-place t)
-
+(setq save-place-file (concat user-emacs-directory "places"))
+(setq version-control t)
+(setq kept-new-versions 3)
+(setq delete-old-versions t)
+(setq kept-old-versions 2)
+(setq dired-kept-versions 1)
+(setq backup-directory-alist `(("." . , (concat user-emacs-directory
+											   "backups"))))
 (setq-default
   default-frame-alist
   '(
@@ -50,9 +69,6 @@
     (apropos-do-all t)
     (recentf-mode 1)
     (show-paren-mode 1)
-    (setq save-place-file (concat user-emacs-directory "places"))
-    (backup-directory-alist `(("." . , (concat user-emacs-directory
-                                               "backups"))))
     (language-environment 'UTF-8)
     (find-file-existing-other-name t) ;avoid problem with symbolic links
 ;    (curosr-color . "white")
@@ -79,6 +95,7 @@
 (setq default-major-mode 'text-mode)
 (add-hook 'text-mode-hook 'auto-fill-mode)
 (set-language-environment 'UTF-8)
+(set-input-method nil); no funky input or normal editing;
 ;----------------------encoding---------------------
 ;(set-buffer-file-coding-system 'utf-8)
 ;(setq default-buffer-file-coding-system 'utf-8)
@@ -98,6 +115,8 @@
       whitespace-style '(trailing lines space-before-tab
                                   indentation space-after-tab)
       whitespace-line-column 100
+      search-highlight t;highlight when searching...
+      query-replace-highlight t; ...and replacing
       )
 ;---------------------component toggle----------------
 ;disable tool-bar-mode
@@ -109,8 +128,18 @@
 	(tool-bar-mode -1)
 	(scroll-bar-mode -1)
 ;	(speedbar t)
-	(setq frame-title-format (concat user-login-name "@" system-name "->%b"))
+        (setq frame-title-format '(:eval (format "%s@%s:%s"
+                                                 (or (file-remote-p default-directory 'user) user-login-name)
+                                                 (or (file-remote-p default-directory 'host) system-name)
+                                                 (file-name-nondirectory (or (buffer-name) default-directory)))))
 	(set-scroll-bar-mode 'right)	;滚动条在右侧
+        ; do smooth scrolling
+        (setq scroll-margin 0
+              scroll-conservatively 100000
+              scroll-up-aggressively 0
+              scroll-down-aggressively 0
+              scroll-preserve-screen-position t; preserve screen pos with C-v/M-v
+              )
 	)
 	; disable menu-bar in console
 	(menu-bar-mode -1)
@@ -228,11 +257,11 @@
 ;;显示行列号
 ;(column-number-mode t)
 ;;把这些缺省禁用的功能打开
-;(put 'set-goal-column 'disabled nil)
-;(put 'narrow-to-region 'disabled nil)
-;(put 'upcase-region 'disabled nil)
-;(put 'downcase-region 'disabled nil)
-;(put 'LaTeX-hide-environment 'disabled nil)
+(put 'set-goal-column 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'LaTeX-hide-environment 'disabled nil)
 
 ;-----------------------------------CEDET-----------------------------------
 ;Collection of Emacs Development Environment Tools
@@ -357,7 +386,7 @@
 ;(global-set-key (kbd "C-s") 'save-buffer)
 ;;;跳转到某行
 ;(global-set-key [(meta g)] 'goto-line)
-
+(global-set-key (kbd "RET") 'newline-and-indent)
 ;---------------------------mode----------------------------------------
 ; uncomment the following line to override the default scratch messsage
 (setq initial-scratch-message (concat
@@ -370,3 +399,19 @@
 ";                  \\)\n"
 	)
 )
+
+;-----------------shell mode---------------
+(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on t)
+
+;-------------------compile mode------------------
+(add-hook 'java-mode-hook
+          (lambda()
+            (set (make-local-variable 'compile-command) (concat "javac " (buffer-name)))))
+; safe locals
+; we mark these as 'safe', so emacs22+ won't give us annoying warnings
+;(setq safe-local-variable-values
+;      (quote ((auto-recompile . t)
+;              (folding-mode . t)
+;              (outline-minor-mode . t)
+;              auto-recompile outline-minor-mode)))
