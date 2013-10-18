@@ -32,6 +32,10 @@
    (desktop-read)
    )
   ((> emacs-major-version 21)
+   (cua-mode t)
+   (setq cua-auto-tabify-rectangles nil); Don't tabify after rectangle commands
+   (transient-mark-mode 1); No region when it is not highlighted
+   (setq cua-keep-region-after-copy t); Standard Windows behavior
    (ido-mode t); or change t to both for buffers and files
    (setq ido-enable-prefix nil
          ido-save-directory-list-file "~/.emacs.d/ido.last"
@@ -117,7 +121,10 @@
       whitespace-line-column 100
       search-highlight t;highlight when searching...
       query-replace-highlight t; ...and replacing
-      )
+)
+
+; a bit more intelligent copy-paste: emacswiki.org/emacs/SlickCopy
+
 ;---------------------component toggle----------------
 ;disable tool-bar-mode
 ;disable scroll bar
@@ -171,6 +178,7 @@
                                 '(-3 "%p"))
 )
 (setq column-number-mode t)
+
 
 ; show time{
 ;(display-time-mode t)
@@ -241,7 +249,9 @@
 
 ;------------------------------behavior---------------------------------
 ;支持emacs和外部程序的粘贴
-(setq x-select-enable-clipboard t)
+(setq x-select-enable-clipboard t;copy-paste should work ...
+      interprogram-paste-function; ...with...
+      'x-cut-buffer-or-selection-value); ...other X clients
 ;自动的在文件末增加一新行
 (setq require-final-newline t)
 ;当光标在行尾上下移动的时候，始终保持在行尾。
