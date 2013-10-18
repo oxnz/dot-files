@@ -23,6 +23,7 @@ do
 	(( count = $count + 1))
 done
 FINISH="%{$terminfo[sgr0]%}"
+
 #}}}
 
 #命令提示符
