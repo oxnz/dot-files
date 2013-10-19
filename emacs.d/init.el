@@ -64,8 +64,8 @@
 (setq delete-old-versions t)
 (setq kept-old-versions 2)
 (setq dired-kept-versions 1)
-(setq backup-directory-alist `(("." . , (concat user-emacs-directory
-											   "backups"))))
+(setq backup-directory-alist `(("." . ,
+                                (concat user-emacs-directory "backups"))))
 (setq-default
   default-frame-alist
   '(
@@ -84,7 +84,7 @@
     (menu-bar-lines . 1)
     (width . 80)
 ;    (height . 58)
-    (font . "Monaco")
+;    (font . "Monaco")
     )
 )
 
@@ -113,7 +113,7 @@
       transient-mark-mode t
       color-theme-is-global t
       delete-by-moving-to-trash t
-      shift-select-mode nil
+;      shift-select-mode nil
       truncate-partial-width-windows nil
       uniquify-buffer-name-style 'forward
       whitespace-style '(trailing lines space-before-tab
@@ -130,7 +130,7 @@
 ;disable scroll bar
 ;start speedbar if we're using a window system
 (if window-system (progn
-	(tooltip-mode -1)
+                    (tooltip-mode -1)
 	(blink-cursor-mode -1)
 	(tool-bar-mode -1)
 	(scroll-bar-mode -1)
@@ -158,8 +158,9 @@
                                 'mode-line-modified
                                 'mode-line-frame-identification
                                 "%b--"
-; Note that this is evaluated while making the list.
-; It makes a mode line construct which is just a string.
+                                        ; Note that this is evaluated while
+                                        ; making the list. It makes a mode line
+                                        ; construct which is just a string.
                                 (system-name)
                                 ":"
                                 'default-directory
@@ -179,45 +180,67 @@
 )
 (setq column-number-mode t)
 
-
-; show time{
-;(display-time-mode t)
-; 24-hour
-;(setq display-time-24hr-format t)
-;(setq display-time-day-and-date t)
-;(setq display-time-use-mail-icon t)
-;(setq display-time-interval 10)
-;}
 ;在模式栏中显示当前光标所在函数
 ;(which-function-mode)
 
 ;-----------------echo-area-----------------
 
-;--------------se tont---------------------
-;English font{
-;(set-default-font "Monospace-12")
-;(set-face-attribute
-; 'default nil :font "Monaco 12")
-;(set-default-font "Bitstream Vera Sans Mono-12")
+
+;--------------set font---------------------
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+
+ ;;English font{
+                                        ;(set-default-font "Monospace-12")
+                                        ;(set-face-attribute
+                                        ; 'default nil :font "Monaco 12")
+ ;(set-default-font "Bitstream Vera Sans Mono-12")
 ;}
-;Chinese font{
+                                        ;Chinese font{
 ;(dolist (charset '(kana han symbol cjk-misc bopomofo))
 ;  (set-fontset-font (frame-parameter nil 'font)
 ;		    charset
 ;		    (font-spec :family "Hiragino Sans GB W3" :size 12)))
-;}
+ ;; 中文测试
+ ;;}
+ )
 ;-------------------------------theme or color---------------- 
 ;theme{
 (custom-set-variables
- '(custom-enabled-themes (quote (light-blue))))
-;(custom-set-faces
-; )
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(auto-insert-mode t)
+ '(backup-directory-alist (quote (("." . "~/.emacs.d/backups"))))
+ '(c-default-style (quote ((c-mode . "") (c++-mode . "") (objc-mode . "") (java-mode . "java") (awk-mode . "awk") (other . "gnu"))))
+ '(c-echo-syntactic-information-p t)
+ '(calendar-chinese-all-holidays-flag t)
+ '(column-number-mode t)
+ '(compile-command "make")
+ '(custom-enabled-themes (quote (light-blue)))
+ '(delete-old-versions t)
+ '(echo-keystrokes 0.5)
+ '(electric-indent-mode t)
+ '(global-ede-mode t)
+ '(global-highlight-changes-mode t)
+ '(history-delete-duplicates t)
+ '(indent-tabs-mode t)
+ '(inhibit-default-init t)
+ '(perl-tab-always-indent t)
+ '(perl-tab-to-comment t)
+ '(tab-always-indent (quote complete))
+ '(tab-width 4)
+ '(version-control t))
 ;}
 ;color{
 ;(set-cursor-color "purple")
 ;(set-mouse-color "white")
 ;(set-background-color "black")
-;;(set-background-color "darkblue")
+;(set-background-color "darkblue")
 ;(set-foreground-color "white")
 ;(set-face-foreground 'region "cyan")
 ;(set-face-background 'region "blue")
@@ -230,23 +253,6 @@
 ;}
 ;---------------------------------------------------------------------
 
-;---------------------------calendar--------------------------
-;to start and display your calendar, just do the following:
-;M-x calender
-;display the 'celestial-stem’ (天干) and the ‘terrestrial-branch’ (地支)
-;in Chinese:
-;(setq chinese-calendar-celestial-stem
-;	  ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"]
-;	  chinese-calendar-terrestrial-branch
-;	  ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])
-;设置日历的一些颜色{
-;(setq calendar-load-hook
-;'(lambda ()
-;(set-face-foreground 'diary-face "skyblue")
-;(set-face-background 'holiday-face "slate blue")
-;(set-face-foreground 'holiday-face "white")))
-;}
-
 ;------------------------------behavior---------------------------------
 ;支持emacs和外部程序的粘贴
 (setq x-select-enable-clipboard t;copy-paste should work ...
@@ -257,15 +263,13 @@
 ;当光标在行尾上下移动的时候，始终保持在行尾。
 (setq track-eol t)
 ;show matching brackets{
-;(setq show-paren-delay 0)
+(setq show-paren-delay 0)
 (setq show-paren-style 'parentheses)
 (show-paren-mode t)
 ;}
 ;highlight current line{
 ;(global-hl-line-mode t)
 ;}
-;;显示行列号
-;(column-number-mode t)
 ;;把这些缺省禁用的功能打开
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
@@ -289,55 +293,35 @@
 ;(require 'semantic/sb)	; semantic speedbar
 ;(semantic-mode 1)
 ;}
-;(setq hs-minor-mode t)
-;(setq abbrev-mode t)
+(setq hs-minor-mode t)
+(setq abbrev-mode t)
 ;------------------indent------------------
-(setq-default indent-tabs-mode nil)
-(set-default 'indent-empty-lines t)
-(set-default 'imenu-auto-rescan t)
+(setq-default indent-tabs-mode nil
+              tab-width 4
+              indent-empty-lines t
+              imenu-auto-rescan t
+              backward-delete-function nil; DO NOT expand tabs when deleting
+              ;---------cc mode-----------
+              c-basic-offset 4
+              c-indent-tabs-mode t ; Press tab should cause indent
+              c-tab-always-indent t
+              c-argdecl-indent 0; Do not indent argument decl's extra
+              c-indent-level 4 ; A Tab is equivilent to 4 spaces
+              ; preprocessor
+              c-macro-shrink-window-flag t
+              c-macro-preprocessor "cpp"
+              c-macro-cppflags " "
+              c-macro-prompt-flag t
+              )
+
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
-;(setq tab-width 4 c-basic-offset 4)
+
 ;;-----------------------cc mode---------------------
-;(setq-default c-basic-offset 4
-;			  tab-width 4
-;			  indent-tabs-mode t)
-;(c-set-style "K&R")
-;自动缩进的宽度设置为4
-;(setq c-basic-offset 4)
 ;;;预处理设置
-;(setq c-macro-shrink-window-flag t)
-;(setq c-macro-preprocessor "cpp")
-;(setq c-macro-cppflags " ")
-;(setq c-macro-prompt-flag t)
 ;(require 'cc-mode)
 ;(c-set-offset 'inline-open 0)
 ;(c-set-offset 'friend '-)
 ;(c-set-offset 'substatement-open 0)
-
-;(setq-default c-indent-tabs-mode t; Press TAB should cause indentation
-;	      c-indent-level 4; A TAB is equivilent to four spaces
-;	      c-argdecl-indent 0; Do not indent argument decl's extra
-;	      c-tab-always-indent t
-;	      c-basic-offset 4
-;	      backward-delete-function nil); DO NOT expand tabs when deleting
-;
-;-----------------highlight----------------
-;;在buffer左侧显示行号
-;(dolist (hook (list
-;'c-mode-hook
-;'c++-mode-hook
-;'emacs-list-mode-hook
-;'list-interaction-mode-hook
-;'list-mode-hook
-;'emms-playlist-mode-hook
-;'java-mode-hook
-;'asm-mode-hook
-;'haskell-mode-hook
-;'erc-mode-hook
-;'sh-mode-hook
-;'makefile-gmake-mode-hook
-;))
-;(add-hook hook (lambda () (linum-mode 1))))
 
 ;------------------------programming related----------------------
 ;打开代码折叠功能
@@ -347,15 +331,6 @@
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 (ac-config-default)
-
-;(require 'auto-complete)
-;(global-auto-complete-mode t)
-;;auto-complete
-;(add-to-list 'load-path "~/.emacs.d/plugins/auto-complete")
-;(require 'auto-complete-config)
-;(add-to-list 'ac-dictionary-directories "~/.emacs.d/plugins/auto-complete/ac-dict")
-;(ac-config-default)
-
 
 ;---------------------------action--------------------------
 ; auto-indent yanked (pasted) code
@@ -372,11 +347,11 @@
 
 ;-----------------------key-sequence---------------------
 ; compile and debug{
-;(global-set-key [f5] 'compile);compile
-;(global-set-key [C-f7] 'gdb);debug
-;(setq-default compile-command "make")
-;(global-set-key [C-f8] 'previous-error)
-;(global-set-key [f8] 'next-error)
+(global-set-key [f5] 'compile);compile
+(global-set-key [f6] 'gdb);debug
+(setq-default compile-command "make")
+(global-set-key [f7] 'previous-error)
+(global-set-key [f8] 'next-error)
 ;}
 ;format{
 ;F9:格式化代码，以使代码缩进清晰，容易阅读
@@ -397,6 +372,20 @@
 ;;;跳转到某行
 ;(global-set-key [(meta g)] 'goto-line)
 (global-set-key (kbd "RET") 'newline-and-indent)
+; mac key binding make you feel at home
+(global-set-key [?\A-a] 'mark-whole-buffer)
+(global-set-key [?\A-s] 'save-buffer)
+(global-set-key [?\A-S] 'write-file)
+(global-set-key [?\A-p] 'ps-print-buffer)
+(global-set-key [?\A-o] 'find-file)
+(global-set-key [?\A-q] 'save-buffers-kill-emacs)
+(global-set-key [?\A-w] 'kill-buffer-and-window)
+(global-set-key [?\A-z] 'undo)
+(global-set-key [?\A-f] 'isearch-forward)
+(global-set-key [?\A-g] 'query-replace)
+(global-set-key [?\A-l] 'goto-line)
+(global-set-key [?\A-m] 'iconify-frame)
+(global-set-key [?\A-n] 'new-frame)
 ;---------------------------mode----------------------------------------
 ; uncomment the following line to override the default scratch messsage
 (setq initial-scratch-message (concat
@@ -411,17 +400,29 @@
 )
 
 ;-----------------shell mode---------------
-(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on t)
+;(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
+;(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on t)
 
+;--------------sh-mode-------------
+(setq
+ sh-indent-for-then 0
+ sh-indent-for-do 0
+ sh-indent-for-after-do '+
+ sh-indent-for-case-label '*
+ sh-indent-for-case-alt '+
+ sh-indent-comment t)
 ;-------------------compile mode------------------
 (add-hook 'java-mode-hook
-          (lambda()
+          (lambda(); javac or ant
             (set (make-local-variable 'compile-command) (concat "javac " (buffer-name)))))
 ; safe locals
 ; we mark these as 'safe', so emacs22+ won't give us annoying warnings
-;(setq safe-local-variable-values
-;      (quote ((auto-recompile . t)
-;              (folding-mode . t)
-;              (outline-minor-mode . t)
-;              auto-recompile outline-minor-mode)))
+(setq safe-local-variable-values
+      (quote ((auto-recompile . t)
+              (folding-mode . t)
+              (outline-minor-mode . t)
+              (sh-indent-comment . t)
+              auto-recompile outline-minor-mode sh-indent-comment
+              )
+             )
+      )
