@@ -1,3 +1,4 @@
+# make colorful grep
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
@@ -10,7 +11,7 @@ alias ln='ln -i'
 
 # specify format
 alias ll='ls -aFhl'
-alias date='date +"%F %T"'
+#alias date='date +"%F %T"'
 alias df='df -h'
 alias du='du -h'
 alias gdb='gdb --quiet'
@@ -35,7 +36,7 @@ alias now='/bin/date +"%F %T"'
 #new command
 #alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
 
-#路径别名 {{{
+# path aliases {{{
 #进入相应的路径时只要 cd ~xxx
 if [ -n $ZSH_VERSION ]; then
 	hash -d E="/etc/"
@@ -43,6 +44,11 @@ if [ -n $ZSH_VERSION ]; then
 fi
 #}}}
 
+#command not in PATH var
+alias py2applet='/System/Library/Frameworks/Python.framework/Versions/Current/Extras/bin/py2applet'
+# learn you a good emacs
+;alias vi='echo "command not found"'
+alias vi='emacs-24.3 -nw'
 
 # Local variables:
 # mode: shell-script
