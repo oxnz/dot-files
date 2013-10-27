@@ -33,6 +33,12 @@ FINISH="%{$terminfo[sgr0]%}"
 #prompt redhat
 PROMPT=$(echo "[$CYAN%n@$YELLOW%m:$GREEN%.$_YELLOW$FINISH]%# ")
 
+#zstyle ':vcs_info:*' enable git
+#zstyle ':vcs_info:git*:*' git-revision true
+#zstyle ':vcs_info:git*:*' check-for-changes false
+#zstyle ':vcs_info:git*' formats "(%s) %12.12i %c%u %b%m"
+#zstyle ':vcs_info:git*' actionformats "(%s|%a) %12.12i %c%u %b%m"
+
 #标题栏、任务栏样式{{{
 case $TERM in (*xterm|*rxvt*|(dt|k|E)term)
 	precmd() { print -Pn "\e]0;%n@%M//%/\a" }
