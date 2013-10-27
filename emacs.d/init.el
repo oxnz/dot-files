@@ -5,7 +5,7 @@
 ;; Copying:	Copyright (C) 2012, 2013 Oxnz, All rights reserved.
 ;; Version:	0.2
 ;; Author:	0xnz <yunxinyi AT gmail DOT com>
-;; Last-updated: 2013-10-20 13:50:42 CST
+;; Last-updated: 2013-10-27 18:49:47 CST
 ;;
 ;; Note:         This file is NOT part of GNU Emacs
 ;; Description:  0xnz's dot emacs file, fixing weird quirks and poor defaults
@@ -50,6 +50,7 @@
 (setq-default
  save-place t
  save-place-file "~/.emacs.d/places"
+ quickurl-url-file (convert-standard-filename "~/.emacs.d/quickurls")
   default-frame-alist
   '(
     (save-interprogram-paste-before-kill t)
@@ -68,7 +69,7 @@
     (tool-bar-lines . 0)
     (menu-bar-lines . 1)
     (width . 80)
-;    (height . 58)
+    (height . 42)
 ;    (font . "Monaco")
     )
 )
@@ -114,8 +115,8 @@
                     ;; making the list. It makes a mode line
                     ;; construct which is just a string.
                     (system-name)
-                    ":"
-                    'default-directory
+                    ;;":"
+                    ;;'default-directory
                     "    "
                     'global-mode-string
                     "    "
@@ -182,6 +183,8 @@
  '(perl-tab-to-comment t)
  '(query-replace-highlight t)
  '(require-final-newline t)
+ ;; safe locals
+ ;; mark these as 'safe', so emacs22+ won't give us annoying warnings
  '(safe-local-variable-values (quote ((auto-recompile . t) (folding-mode . t) (outline-minor-mode . t) (sh-indent-comment . t) auto-recompile outline-minor-mode sh-indent-comment)))
  '(search-highlight t)
  '(sh-indent-comment t)
