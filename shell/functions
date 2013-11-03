@@ -218,6 +218,16 @@ function trash() {
 	esac
 }
 
+function unix2dos() {
+    [[ "$#" -eq 0 ]] && echo "Usage: unix2dos <file>" ||
+    perl -i -p -e 's/\n/\r\n/' "$1"
+}
+
+function dos2unix() {
+    [[ "$#" -eq 0 ]] && echo "Usage: dos2unix <file>" ||
+    perl -i -p -e 's/\r\n/\n/' "$1"
+}
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
