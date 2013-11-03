@@ -33,6 +33,7 @@ alias emacs-nox='emacs-24.3 -nw'
 alias emacsclient='/usr/local/bin/emacsclient'
 alias edit='emacs-24.3 -nw'
 alias now='/bin/date +"%F %T"'
+alias make='/usr/local/bin/gnu-make'
 #new command
 #alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
 
