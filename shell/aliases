@@ -32,7 +32,7 @@ alias x='extract'
 alias emacs='emacs-24.3 -nw'
 alias emacs-nox='emacs-24.3 -nw'
 alias emacsclient='/usr/local/bin/emacsclient'
-alias edit='emacs-24.3 -nw'
+#alias edit='emacs-24.3 -nw'
 alias now='/bin/date +"%F %T"'
 alias make='/usr/local/bin/gnu-make'
 #new command
@@ -49,8 +49,8 @@ fi
 #command not in PATH var
 alias py2applet='/System/Library/Frameworks/Python.framework/Versions/Current/Extras/bin/py2applet'
 # learn you a good emacs
-;alias vi='echo "command not found"'
-alias vi='emacs-24.3 -nw'
+#alias vi='echo "command not found"'
+#alias vi='emacs-24.3 -nw'
 
 # Local variables:
 # mode: shell-script
