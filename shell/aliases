@@ -11,6 +11,7 @@ alias ln='ln -i'
 
 # specify format
 alias ll='ls -aFhl'
+alias l='ls -aFhl'
 #alias date='date +"%F %T"'
 alias df='df -h'
 alias du='du -h'
