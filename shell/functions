@@ -17,8 +17,8 @@ pathmunge() {
 }
 #[ -d "/usr/local/mysql" ] && pathmunge "/usr/local/mysql/bin" "after"
 #[ -d "/Users/xinyi/Workspace/android-sdks/platform-tools" ] && pathmunge "/Users/xinyi/Workspace/android-sdks/platform-tools" "after"
-[ -d "/Applications/Qt/Qt5.1.1/5.1.1/clang_64/bin" ] && pathmunge "/Applications/Qt/Qt5.1.1/5.1.1/clang_64/bin" "after"
-[[ -d "/Applications/TeX/texlive/2013basic/bin/x86_64-darwin" ]] && pathmunge "/Applications/TeX/texlive/2013basic/bin/x86_64-darwin" "after"
+#[ -d "/Applications/Qt/Qt5.1.1/5.1.1/clang_64/bin" ] && pathmunge "/Applications/Qt/Qt5.1.1/5.1.1/clang_64/bin" "after"
+#[[ -d "/Applications/TeX/texlive/2013basic/bin/x86_64-darwin" ]] && pathmunge "/Applications/TeX/texlive/2013basic/bin/x86_64-darwin" "after"
 unset pathmunge
 
 man () {
@@ -231,6 +231,25 @@ function unix2dos() {
 function dos2unix() {
     [[ "$#" -eq 0 ]] && echo "Usage: dos2unix <file>" ||
     perl -i -p -e 's/\r\n/\n/' "$1"
+}
+
+function google() {
+	local url="https://www.google.com.hk/search?hl=en#newwindow=1&q="
+	case "$1" in
+		"" | -h | --help)
+			cat << EOH
+google:
+	google "keyword" to search
+EOH
+			exit 0
+			;;
+		*)
+			while [ $# -ge 1 ]; do
+				open "$url"$(echo ${1// /+} | xxd -plain | sed 's/\(..\)/%\1/g')
+				shift
+			done
+			;;
+	esac
 }
 
 # Local variables:
