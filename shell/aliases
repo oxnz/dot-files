@@ -44,7 +44,7 @@ alias make='/usr/local/bin/gnu-make'
 #进入相应的路径时只要 cd ~xxx
 if [ -n $ZSH_VERSION ]; then
 	hash -d E="/etc/"
-	hash -d WORK="/Users/oxnz/Developer"
+	hash -d W="/Users/oxnz/Developer"
 fi
 #}}}
 
