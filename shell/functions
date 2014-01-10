@@ -31,7 +31,7 @@ man () {
 	LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
 	LESS_TERMCAP_ue=$(printf "\e[0m") \
 	LESS_TERMCAP_us=$(printf "\e[1;32m") \
-	man "$@"
+	command man "$@"
 }
 
 if [ -d "/etc/profile.d" ]
@@ -53,7 +53,7 @@ fi
 
 # look words in mac's dict
 dict() {
-	grep "$@" /usr/share/dict/words
+	/usr/bin/grep "$@" /usr/share/dict/words
 }
 
 # show ip
@@ -218,7 +218,7 @@ function trash() {
 				while [[ -e $dst ]]; do
 					dst="${dst}+"
 				done
-				mv $item $dst
+				command mv -- $item $dst
 			done
 			;;
 	esac
@@ -238,15 +238,12 @@ function google() {
 	local url="https://www.google.com.hk/search?hl=en#newwindow=1&q="
 	case "$1" in
 		"" | -h | --help)
-			cat << EOH
-google:
-	google "keyword" to search
-EOH
+			printf "google:\n\tgoogle <keyword>\n"
 			exit 0
 			;;
 		*)
 			while [ $# -ge 1 ]; do
-				open "$url"$(echo ${1// /+} | xxd -plain | sed 's/\(..\)/%\1/g')
+				/usr/bin/open "$url"$(echo ${1// /+} | xxd -plain | sed 's/\(..\)/%\1/g')
 				shift
 			done
 			;;
