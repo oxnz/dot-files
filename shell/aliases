@@ -1,15 +1,17 @@
-# make colorful grep
+# make colorful grep {{{
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
+#}}}
 
-# play safe
+# play safe {{{
 alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
 alias ln='ln -i'
+#}}}
 
-# specify format
+# specify format {{{
 alias ll='ls -aFhl'
 alias l='ls -aFhl'
 #alias date='date +"%F %T"'
@@ -17,42 +19,48 @@ alias df='df -h'
 alias du='du -h'
 alias gdb='gdb --quiet'
 alias bc='bc --quiet'
+#}}}
 
 # typing errors...
 alias cd..='cd ..'
 #alias sl='ls'
 
-#short cuts
+#short cuts {{{
 alias h='history'
 alias j='jobs -l'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias x='extract'
 alias g='google'
+#}}}
 
-# override default vesion or default path command
+# override default vesion or default path command {{{
 alias emacs='emacs-24.3 -nw'
 alias emacs-nox='emacs-24.3 -nw'
 alias emacsclient='/usr/local/bin/emacsclient'
 #alias edit='emacs-24.3 -nw'
 alias now='/bin/date +"%F %T"'
 alias make='/usr/local/bin/gnu-make'
+#}}}
 #new command
 #alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
 
 # path aliases {{{
-#进入相应的路径时只要 cd ~xxx
+# use `cd ~xxx' to access
 if [ -n $ZSH_VERSION ]; then
-	hash -d E="/etc/"
-	hash -d W="/Users/oxnz/Developer"
+	hash -d ETC="/etc/"
+	hash -d File="/Users/oxnz/Documents"
+	hash -d WORK="/Users/oxnz/Developer"
+	hash -d DOWN="/Users/oxnz/Downloads"
 fi
 #}}}
 
-#command not in PATH var
+#command not in PATH var {{{
 alias py2applet='/System/Library/Frameworks/Python.framework/Versions/Current/Extras/bin/py2applet'
 # learn you a good emacs
 #alias vi='echo "command not found"'
 #alias vi='emacs-24.3 -nw'
+#}}}
 
 # Local variables:
 # mode: shell-script
