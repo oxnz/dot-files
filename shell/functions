@@ -150,9 +150,9 @@ function histop() {
 		shift
 	fi
 	print "Number\tTimes\tFrequency\tCommand"
-	history 1 | awk -v n=$n '{ cmds[$2]++; } END { i = 1; for (cmd in cmds) {
-		if (i++ <= n) printf("%-8d%8.2f%%\t%-16s\n", cmds[cmd],
-			(100*cmds[cmd])/NR, cmd); else break; }}' | sort -nr | nl
+	print -l ${(o)history%% *} | uniq -c | sort -nr | awk -v nh=$HISTSIZE \
+		-v nl=$n '{ if (FNR <= nl) { printf("%-8d%-8d%8.2f\t%-16s\n", \
+		FNR, $1, $1*100/nh, $2); } }'
 }
 
 # iTunes control function
