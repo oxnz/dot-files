@@ -226,12 +226,12 @@ function trash() {
 
 function unix2dos() {
     [[ "$#" -eq 0 ]] && echo "Usage: unix2dos <file>" ||
-    perl -i -p -e 's/\n/\r\n/' "$1"
+    command perl -i -p -e 's/\n/\r\n/' "$1"
 }
 
 function dos2unix() {
     [[ "$#" -eq 0 ]] && echo "Usage: dos2unix <file>" ||
-    perl -i -p -e 's/\r\n/\n/' "$1"
+    command perl -i -p -e 's/\r\n/\n/' "$1"
 }
 
 function google() {
