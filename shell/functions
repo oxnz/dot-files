@@ -20,6 +20,7 @@ pathmunge() {
 #[ -d "/Applications/Qt/Qt5.1.1/5.1.1/clang_64/bin" ] && pathmunge "/Applications/Qt/Qt5.1.1/5.1.1/clang_64/bin" "after"
 #[[ -d "/Applications/TeX/texlive/2013basic/bin/x86_64-darwin" ]] && pathmunge "/Applications/TeX/texlive/2013basic/bin/x86_64-darwin" "after"
 [[ -d "/usr/local/llvm/bin" ]] && pathmunge "/usr/local/llvm/bin" "after"
+#[[ -d "/usr/local/go/bin" ]] && pathmunge "/usr/local/go/bin" "after"
 unset pathmunge
 
 man () {
