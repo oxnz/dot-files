@@ -31,8 +31,8 @@ set fenc=utf-8 		" set file encoding
 set confirm			" 在处理未保存或只读文件的时候，弹出确认 
 
 set iskeyword+=_,$,@,%,#,- " 带有如下符号的单词不要被换行分割 
-"set nobackup		" do not keep a backup file, use versions instead
-set backupdir=~/.vim/backup
+set nobackup		" do not keep a backup file, use versions instead
+"set backupdir=~/.vim/backup
 set history=50		" keep 50 lines of command line history
 set ruler		" show the cursor position all the time
 set rulerformat=%20(%2*%<%f%=\ %m%r\ %3l\ %c\ %p%%%) 
@@ -44,7 +44,7 @@ set smartcase		" Do smart case matching
 set smarttab		" Be smart when using tabs
 "set nowrap			" Don't wrap lines
 "set spell			" Do spell check, type `z=` to see advice
-set lazyredraw		" Don't redraw while executing macros (for good performance)
+"set lazyredraw		" Don't redraw while executing macros (for good performance)
 
 "set autowrite		" Automatically save before commands like :next and :make
 "set hidden             " Hide buffers when they are abandoned
@@ -105,6 +105,7 @@ if has("autocmd")
 
   " For all text files set 'textwidth' to 78 characters.
   autocmd FileType text setlocal textwidth=78
+  autocmd FileType php set cuc
 
   " Do spell check for LaTeX files
   autocmd FileType tex setlocal spell spelllang=en
