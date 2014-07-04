@@ -35,29 +35,29 @@ alias g='google'
 #}}}
 
 # override default vesion or default path command {{{
-alias emacs='emacs-24.3 -nw'
-alias emacs-nox='emacs-24.3 -nw'
-alias emacsclient='/usr/local/bin/emacsclient'
-alias bash='/usr/local/bin/bash'
-alias vi='/usr/local/bin/vim'
-alias vim='/usr/local/bin/vim'
-alias ex='/usr/local/bin/ex'
-alias view='/usr/local/bin/view'
-alias rview='/usr/local/bin/rview'
-alias rvim='/usr/local/bin/rvim'
-alias vimdiff='/usr/local/bin/vimdiff'
+#alias emacs='emacs-24.3 -nw'
+#alias emacs-nox='emacs-24.3 -nw'
+#alias emacsclient='/usr/local/bin/emacsclient'
+#alias bash='/usr/local/bin/bash'
+#alias vi='/usr/local/bin/vim'
+#alias vim='/usr/local/bin/vim'
+#alias ex='/usr/local/bin/ex'
+#alias view='/usr/local/bin/view'
+#alias rview='/usr/local/bin/rview'
+#alias rvim='/usr/local/bin/rvim'
+#alias vimdiff='/usr/local/bin/vimdiff'
 #alias edit='emacs-24.3 -nw'
-alias now='/bin/date +"%F %T"'
-alias make='/usr/local/bin/gnu-make'
+#alias make='/usr/local/bin/gnu-make'
 #}}}
 #new command
 #alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
+alias now='/bin/date +"%F %T"'
 
 # path aliases {{{
 # use `cd ~xxx' to access
 if [ -n $ZSH_VERSION ]; then
 	hash -d ETC="/etc/"
-	hash -d File="/Users/oxnz/Documents"
+	hash -d DOCS="/Users/oxnz/Documents"
 	hash -d WORK="/Users/oxnz/Developer"
 	hash -d DOWN="/Users/oxnz/Downloads"
 fi
