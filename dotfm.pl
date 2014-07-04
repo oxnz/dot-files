@@ -1,12 +1,14 @@
 #!/usr/bin/perl
 package main;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use strict;
 use warnings;
 use File::Compare;
 use File::Copy;
+use File::Basename;
+use File::Path;
 use Getopt::Long;
 use Pod::Usage;
 use Archive::Tar;
@@ -49,6 +51,22 @@ sub pack() {
 	$tar->write($tarfile, COMPRESS_GZIP);
 }
 
+sub deploy() {
+	my $sf = shift;
+	my $df = shift;
+	my $fname = basename($df);
+	my $dname = dirname($df);
+	if (! -d $dname) {
+		mkpath($dname);
+	}
+	if ( (-e $sf) && (-r $sf) ) {
+		if (compare($sf, $df)) {
+			print "deploy file: $df\n";
+			copy($sf, $df) or die $!;
+		}
+	}
+}
+
 BEGIN {
 	my @flist = (
 		"zshrc",
@@ -65,19 +83,31 @@ BEGIN {
 		"shell/functions",
 		"shell/switches",
 	);
-	my $pfile;
 	my $help;
+	my $pfile;
+	my $update;
+	my $deploy;
 	GetOptions(
-		"pack|p=s"	=> \$pfile,
 		"help|h!"	=> \$help,
+		"update|u!" => \$update,
+		"pack|p=s"	=> \$pfile,
+		"deploy|d!" => \$deploy,
 	) or pod2usage(2);
 
-	if (defined($pfile)) {
+	if (defined($help)) {
+		pod2usage(0);
+	} elsif (defined($pfile)) {
 		&pack($pfile, \@flist);
-	} else {
+	} elsif (defined($update)) {
 		for my $f (@flist) {
-		&update(glob("~/.$f"), $f);
+			&update(glob("~/.$f"), $f);
 		}
+	} elsif (defined($deploy)) {
+		for my $f (@flist) {
+			&deploy($f, glob("~/.$f"));
+		}
+	} else {
+		pod2usage(0);
 	}
 }
 
@@ -94,14 +124,25 @@ dotfm - dot files diff and copy program
 
 Options:
 	-pack	<filename>
+	-update
+	-deploy
+	-help
 	-man	full documentation
 
 =head1 OPTIONS
 
 =over 8
 
-=item B<-help>
+=item B<-p --pack>
+Pack dot-files to a tar.gz file
 
+=item B<-u --update>
+Update dot-files
+
+=item B<-d --deploy>
+Deploy dot-files to home directory
+
+=item B<-h --help>
 Print a brief help message and exits.
 
 =head1 DESCRIPTION
