@@ -68,6 +68,11 @@ sub deploy() {
 }
 
 BEGIN {
+	# signal handler
+	$SIG{TERM} = $SIG{INT} = sub {
+		my $sig = shift;
+		print "SIGNAL: $sig\n";
+	};
 	my @flist = (
 		"zshrc",
 		"vimrc",
