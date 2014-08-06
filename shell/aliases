@@ -33,6 +33,10 @@ alias ...='cd ../..'
 alias x='extract'
 alias g='google'
 #}}}
+#
+#command wrapper {{{
+alias svn='svn-color'
+#}}}
 
 # override default vesion or default path command {{{
 #alias emacs='emacs-24.3 -nw'
