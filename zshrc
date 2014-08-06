@@ -50,6 +50,9 @@ esac
 #编辑器
 export EDITOR=vim
 
+# python
+export PYTHONSTARTUP=~/.pythonrc.py
+
 #输入法
 #export XMODIFIER$="@im=ibus"
 #export QT_MODULE=ibus
