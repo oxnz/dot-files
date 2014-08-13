@@ -1,3 +1,12 @@
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+
+if [ -f ~/.bash_aliases ]; then
+	. ~/.bash_aliases
+fi
+
 # make colorful grep {{{
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
@@ -11,18 +20,31 @@ alias mv='mv -i'
 alias ln='ln -i'
 #}}}
 
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+	test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+	alias ls='ls --color=auto'
+	#alias dir='dir --color=auto'
+	#alias vdir='vdir --color=auto'
+elif [ `uname -s` = "Darwin" ]; then
+fi
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+# some more ls aliases
 # specify format {{{
-alias ls='ls --color=auto'
-alias ll='ls -aFhl'
-alias l='ls -aFhl'
-#alias date='date +"%F %T"'
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
 alias df='df -h'
 alias du='du -h'
 alias gdb='gdb --quiet'
 alias bc='bc --quiet'
 #}}}
 
-# typing errors...
+# typo...
 alias cd..='cd ..'
 #alias sl='ls'
 
@@ -61,11 +83,11 @@ alias now='/bin/date +"%F %T"'
 # path aliases {{{
 # use `cd ~xxx' to access
 if [ -n $ZSH_VERSION ]; then
-	hash -d ETC="/etc/"
-	hash -d DOCS="/Users/oxnz/Documents"
-	hash -d WORK="/Users/oxnz/Developer"
-	hash -d DOWN="/Users/oxnz/Downloads"
+	hash -d DOCS="${HOME}/Documents"
+	hash -d WORK="${HOME}/Developer"
+	hash -d DOWN="${HOME}/Downloads"
 fi
+[ -d "${HOME}/Workspace" ] && hash -d WORK="${HOME}/Workspace"
 #}}}
 
 #command not in PATH var {{{
