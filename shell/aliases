@@ -12,6 +12,7 @@ alias ln='ln -i'
 #}}}
 
 # specify format {{{
+alias ls='ls --color=auto'
 alias ll='ls -aFhl'
 alias l='ls -aFhl'
 #alias date='date +"%F %T"'
@@ -32,6 +33,10 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias x='extract'
 alias g='google'
+#}}}
+
+# command wrapper {{{
+alias svn='svn-color'
 #}}}
 
 # override default vesion or default path command {{{
