@@ -80,6 +80,7 @@ BEGIN {
 		"gitconfig",
 		"gitignore",
 		"bashrc",
+		"pythonrc",
 		"bash_profile",
 		"vim/plugin/OxnzToolkit.vim",
 		"vim/plugin/DoxygenToolkit.vim",
@@ -88,6 +89,7 @@ BEGIN {
 		"shell/aliases",
 		"shell/functions",
 		"shell/switches",
+		"shell/completions",
 	);
 	my $help;
 	my $pfile;
