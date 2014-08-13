@@ -53,6 +53,12 @@ if exists("g:loaded_OxnzToolkit")
 	echo 'OxnzToolkit Already Loaded.'
 	finish
 endif
+
+" test if "compatible" mode set
+if &cp
+	finish
+endif
+
 let g:loaded_OxnzToolkit = '0.1.1'
 
 function! <SID>OxnzInsertGuardFunc()

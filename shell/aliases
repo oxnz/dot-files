@@ -34,6 +34,10 @@ alias ...='cd ../..'
 alias x='extract'
 alias g='google'
 #}}}
+#
+#command wrapper {{{
+alias svn='svn-color'
+#}}}
 
 # command wrapper {{{
 alias svn='svn-color'

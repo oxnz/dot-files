@@ -69,8 +69,8 @@ function rename() {
 	[ -e "$1" ] || { printf "No such file or directory: $1\n"; return 1; }
 	[ -n "$2" ] || { printf "Please specify a newname\n"; return 1; }
 	local to="`dirname $1`/$2"
-	[ "$1" != "$to" ] || {printf "Newname is the same as oldname\n"; return 1;}
-	[ -e "$to" ] && {printf "File or directory already exist: $to\n"; return 1;}
+	[ "$1" != "$to" ] || { printf "Newname is the same as oldname\n"; return 1; }
+	[ -e "$to" ] && { printf "File or directory already exist: $to\n"; return 1; }
 	command mv -i -- $1 $to
 }
 
