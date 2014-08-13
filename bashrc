@@ -62,6 +62,7 @@ else
     PS1='[${debian_chroot:+($debian_chroot)}\u@\h:\W]\$ '
 fi
 unset color_prompt force_color_prompt
+PS1="\[\e[0m\][\[\e[1;33m\]\u\[\e[1;31m\]@\h\[\e[1;31m\] \[\e[1;35m\]\W\[\e[1;35m\]\[\e[0m\]]\[\e[1;37m\]$ \[\e[0m\]"
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
@@ -114,5 +115,12 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+for file in ~/.shell/*
+do
+	if [ -r $file ]; then
+		. $file
+	fi
+done
 
 PATH=$PATH:/opt/jdk/bin
