@@ -15,6 +15,9 @@ pathmunge() {
 			fi
 	esac
 }
+#[ -d "/usr/local/jdk/bin" ] && pathmunge "/usr/local/jdk/bin" "after"
+[ -d "/opt/jdk/bin" ] && pathmunge "/opt/jdk/bin" "after"
+[ -d "/usr/local/confluence/bin" ] && pathmunge "/usr/local/confluence/bin" "after"
 #[ -d "/Users/xinyi/Workspace/android-sdks/platform-tools" ] && pathmunge "/Users/xinyi/Workspace/android-sdks/platform-tools" "after"
 #[ -d "/Applications/Qt/Qt5.1.1/5.1.1/clang_64/bin" ] && pathmunge "/Applications/Qt/Qt5.1.1/5.1.1/clang_64/bin" "after"
 #[[ -d "/Applications/TeX/texlive/2013basic/bin/x86_64-darwin" ]] && pathmunge "/Applications/TeX/texlive/2013basic/bin/x86_64-darwin" "after"
@@ -114,7 +117,11 @@ extract () {
     done
 }
 
-compdef '_files -g "*.gz *.tgz *.txz *.xz *.7z *.Z *.bz2 *.tbz *.zip *.rar *.tar *.lha"' extract
+if [ -n "$BASH_VERSION" ]; then
+    :
+elif [ -n "$ZSH_VERSOIN" ]; then
+    compdef '_files -g "*.gz *.tgz *.txz *.xz *.7z *.Z *.bz2 *.tbz *.zip *.rar *.tar *.lha"' extract
+fi
 
 # History accepts a range in zsh entries as [first] [last] arguments, so to
 # get them all run history 1.
