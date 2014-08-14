@@ -48,19 +48,22 @@ if v:version < 700
 	finish
 endif
 
-" Verify if already loaded
-if exists("g:loaded_OxnzToolkit")
-	echo 'OxnzToolkit Already Loaded.'
-	finish
-endif
-
 " test if "compatible" mode set
 if &cp
 	finish
 endif
 
-let g:loaded_OxnzToolkit = '0.1.1'
+" Verify if already loaded
+if exists("g:OxnzToolkitVersion")
+	echo 'OxnzToolkit Already Loaded.'
+	finish
+endif
 
+let g:OxnzToolkitVersion = '0.1.1'
+
+""""""""""""""""""""""""""""""""""""""""""""
+" Insert C\CPP Include Guards
+""""""""""""""""""""""""""""""""""""""""""""
 function! <SID>OxnzInsertGuardFunc()
 	exec "normal G"
 	let l:fname = expand("%:t")
@@ -98,8 +101,8 @@ function! <SID>OxnzInsertHeaderFunc()
 					\ "  Last-update: " . strftime("%F %T"),
 					\ "     Revision: None",
 					\ "",
-					\ "       Author: " . g:OxnzToolkit_Author,
-					\ "        Email: " . g:OxnzToolkit_Email,
+					\ "       Author: " . g:OxnzToolkitAuthor,
+					\ "        Email: " . g:OxnzToolkitEmail,
 					\ "",
 					\ "Revision history:",
 					\ "\tDate Author Remarks",
@@ -114,13 +117,14 @@ function! <SID>OxnzInsertHeaderFunc()
 					\ "",
 					\ "detail:\"\"\"",
 					\ "",
-					\ "__author__ = \"" . g:OxnzToolkit_Author . "\"",
+					\ "__author__ = \"" . g:OxnzToolkitAuthor . "\"",
 					\ "__version__ = 0.1",
 					\ "",
 					\ "",
 					\ ])
 	endif
 endfunction
+
 """""""""""""""""""""""""""""""""""""""""""""""
 " Update time stamp
 """""""""""""""""""""""""""""""""""""""""""""""
@@ -136,6 +140,7 @@ function! <SID>OxnzUpdateTimeStampFunc()
 		call setline(l:lineno, l:line)
 	endif
 endfunction
+
 """""""""""""""""""""""""""""""""""""""""""""""
 " Append Vim Mode Line
 """""""""""""""""""""""""""""""""""""""""""""""
@@ -160,6 +165,7 @@ function! <SID>OxnzInsertLineNumbersFunc()
 		let l:num = l:num+1
 	endwhile
 endfunction
+
 """""""""""""""""""""""""
 " Delete Line Numbers
 """""""""""""""""""""""""
@@ -175,6 +181,7 @@ function <SID>OxnzDeleteLineNumbersFunc()
 		let l:num = l:num + 1
 	endwhile
 endfunction
+
 """"""""""""""""""""""""""""""""""""""""""""""""
 " Delete Leading White Spaces
 """"""""""""""""""""""""""""""""""""""""""""""""
@@ -185,6 +192,7 @@ function! <SID>OxnzDeleteLeadingSpacesFunc()
 		echo "No more leading space exists"
 	endtry
 endfunction
+
 """"""""""""""""""""""""""""""""""""""""""""""""
 " Delete Trailing White Spaces
 """"""""""""""""""""""""""""""""""""""""""""""""
@@ -195,6 +203,7 @@ function! <SID>OxnzDeleteTrailingSpacesFunc()
 		echo "No more trailing space exists"
 	endtry
 endfunction
+
 """"""""""""""""""""""""""""""""""""""""""""
 " Remove Extra Blank Lines, Only Leave One
 """"""""""""""""""""""""""""""""""""""""""""
@@ -208,6 +217,7 @@ endfunction
 function! <SID>OxnzDeleteBlankLinesFunc()
 	:silent! g/^\s*$/d
 endfunction
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Trim Leading, Trailing Spaces and Also Unique Blank Lines
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -215,13 +225,6 @@ function! <SID>OxnzTrimFunc()
 	call <SID>OxnzDeleteLeadingSpacesFunc()
 	call <SID>OxnzDeleteTrailingSpacesFunc()
 	call <SID>OxnzUniqueBlankLinesFunc()
-endfunction
-""""""""""""""""""""""""""""""
-" Test Function
-""""""""""""""""""""""""""""""
-function! <SID>OxnzTestFunc()
-	call <SID>OxnzUniqueBlankLinesFunc()
-	call <SID>OxnzDeleteBlankLinesFunc()
 endfunction
 
 """""""""""""""""
@@ -239,16 +242,15 @@ command! -nargs=0 OxnzDeleteTrailingSpaces
 command! -nargs=0 OxnzUniqueBlankLines	:call <SID>OxnzUniqueBlankLinesFunc()
 command! -nargs=0 OxnzDeleteBlankLines	:call <SID>OxnzDeleteBlankLinesFunc()
 command! -nargs=0 OxnzTrim		:call <SID>OxnzTrimFunc()
-command! -nargs=0 OxnzTest		:call <SID>OxnzTestFunc()
 " }}}
 "按\ml,自动插入modeline
 "nnoremap <silent> <Leader>ml	:call OxnzModeLine() <CR>
 
-"if has("autocmd")
-"	augroup OxnzToolkitEx
-"	au!
-"		autocmd BufNewFile * call <SID>OxnzInsertHeaderFunc()
-"		autocmd BufNewFile *.h call <SID>OxnzInsertGuardFunc()
-"		autocmd BufWrite *.* call <SID>OxnzUpdateTimeStampFunc()
-"	augroup END
-"endif
+if has("autocmd")
+	augroup OxnzToolkitEx
+	au!
+		autocmd BufNewFile * call <SID>OxnzInsertHeaderFunc()
+		autocmd BufNewFile *.h{,pp} call <SID>OxnzInsertGuardFunc()
+		autocmd BufWrite *.* call <SID>OxnzUpdateTimeStampFunc()
+	augroup END
+endif

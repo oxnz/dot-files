@@ -172,5 +172,5 @@ nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
 """"""""""""""""""""""""""
 " plugin - OxnzToolkit
 """"""""""""""""""""""""""
-let g:OxnzToolkit_Author="Oxnz"
-let g:OxnzToolkit_Email = "yunxinyi@gmail.com"
+let g:OxnzToolkitAuthor="Oxnz"
+let g:OxnzToolkitEmail = "yunxinyi@gmail.com"
