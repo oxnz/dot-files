@@ -27,6 +27,7 @@ if [ -x /usr/bin/dircolors ]; then
 	#alias dir='dir --color=auto'
 	#alias vdir='vdir --color=auto'
 elif [ `uname -s` = "Darwin" ]; then
+    :
 fi
 
 # Add an "alert" alias for long running commands.  Use like so:
