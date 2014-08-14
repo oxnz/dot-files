@@ -48,8 +48,9 @@ elif [ -n "$ZSH_VERSOIN" ]; then
 fi
 #}}}
 
+###var(s) for other commands {{{
+export PYTHONSTARTUP=~/.pythonrc
 #}}}
-
 
 # Local variables:
 # mode: shell-script
