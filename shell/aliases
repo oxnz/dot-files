@@ -29,7 +29,7 @@ if [ -x /usr/bin/dircolors ]; then
 	alias ls='ls --color=auto'
 	#alias dir='dir --color=auto'
 	#alias vdir='vdir --color=auto'
-elif [ `uname -s` = "Darwin" ]; then
+elif [ $(uname -s) = "Darwin" ]; then
     :
 fi
 
