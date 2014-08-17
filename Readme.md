@@ -16,6 +16,11 @@ a better emacs config stuff
 
 documents for reference
 
+##Notes
+
+tree alias:
+find . -print | sed -e 's;[^/]*/;|____;g;s;____|;|;g'
+
 ## License
 
 ![The MIT License](./LICENSE)
