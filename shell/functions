@@ -74,7 +74,7 @@ function rename() {
 	local to="$(dirname $1)/$2"
 	[ "$1" != "$to" ] || { printf "Newname is the same as oldname\n"; return 1; }
 	[ -e "$to" ] && { printf "File or directory already exist: $to\n"; return 1; }
-	command mv -i -- $1 $to
+	command mv -i -- "$1" "$to"
 }
 
 # extract files from compressed status
@@ -103,7 +103,7 @@ extract () {
 			  *.gz) gunzip $1 ;;
 			  *.zip|*.war|*.jar) unzip $1 ;;
               *.Z) uncompress $1 ;;
-              *.txz) mv $1 ${1:0:-4}.tar.xz; set -- $@ ${1:0:-4}.tar.xz ;;
+              *.txz) mv "$1" "${1:0:-4}.tar.xz"; set -- $@ "${1:0:-4}.tar.xz" ;;
 			  *.xz) xz --decompress $1 ;;
               *.7z) 7za x $1 ;;
               *.pax) pax -r -f $1 ;;
@@ -213,17 +213,17 @@ function trash() {
 			;;
 		*)
 			for item in "$@"; do
-				if [[ ! -e $item ]]; then
+				if [[ ! -e "$item" ]]; then
 					echo "$item :No such file or directory, skipped" 1>&2
 					# uncomment the following line to abort if non-exists
 					#return 1
 					continue
 				fi
-				local dst=${TRASH}/$(basename $item)
-				while [[ -e $dst ]]; do
+				local dst=${TRASH}/$(basename "$item")
+				while [[ -e "$dst" ]]; do
 					dst="${dst}+"
 				done
-				command mv -- $item $dst
+				command mv -- "$item" "$dst"
 			done
 			;;
 	esac
