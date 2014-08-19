@@ -1,0 +1,19 @@
+#!/bin/sh
+
+#编辑器
+export EDITOR=vim
+
+# python
+export PYTHONSTARTUP=~/.pythonrc.py
+
+#输入法
+#export XMODIFIER$="@im=ibus"
+#export QT_MODULE=ibus
+#export GTK_MODULE=ibus
+
+for file in ~/.shell/*
+do
+	if [[ -r $file ]]; then
+		source $file
+	fi
+done
