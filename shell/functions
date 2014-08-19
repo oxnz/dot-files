@@ -155,11 +155,10 @@ function histop() {
 		shift
 	fi
 
-	printf -l ${(o)history%% *} | uniq -c | sort -nr | awk -v nh=$HISTSIZE \
-        -v nl=$n '{ BEGIN { printf("Number\tTimes\tFrequency\tCommand\n"); }
-            if (FNR <= nl) { printf("%-8d%-8d%8.2f\t%-16s\n", \
-            FNR, $1, $1*100/nh, $2); }
-        }'
+	sort $HISTFILE | uniq -c | sort -nr | awk -v nh=$HISTSIZE \
+        -v nl=$n 'BEGIN { printf("Number\tTimes\tFrequency\tCommand\n"); }
+    { if (FNR <= nl) { printf("%-8d%-8d%8.2f\t%-16s\n", \
+            FNR, $1, $1*100/nh, $2); } }'
 }
 
 # iTunes control function
