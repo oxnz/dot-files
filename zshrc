@@ -2,7 +2,7 @@
 # File	: .zshrc
 #
 # Created: 2013-06-25 12:20:00
-# Last-update: 2013-10-14 15:12:49
+# Last-update: 2014-08-19 15:59:14
 # Version: 0.1
 # Author: Oxnz
 # License: Copyright (C) 2013 Oxnz
@@ -12,26 +12,11 @@
 
 export LC_ALL=en_US.UTF-8
 
-# color{{{
+#命令提示符
 autoload colors
 colors
-
-for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE
-do
-	eval _$color='%{$terminfo[bold]$fg[${(L)color}]%}'
-	eval $color='%{$fg[${(L)color}]%}'
-	(( count = $count + 1))
-done
-FINISH="%{$terminfo[sgr0]%}"
-
-#}}}
-
-#命令提示符
-#prompt
-#autoload -Uz promptinit
-#promptinit
-#prompt redhat
-PROMPT=$(echo "[$CYAN%n@$YELLOW%m:$GREEN%.$_YELLOW$FINISH]%# ")
+PROMPT="%{$fg[cyan]%}[%{$reset_color%}%{$fg[red]%}%n%{$reset_color%}%{$fg[green]%}@%{$reset_color%}%{$fg[blue]%}%m %{$fg_no_bold[magenta]%}%1~%{$reset_color%} %{$fg[red]%}%?%{$reset_color%}%{$fg[cyan]%}]%#%{$reset_color%} "
+#RPROMPT="%{$fg[cyan]%}[%{$reset_color%}%{$fg[blue]%}h:\!%{$reset_color%} %{$fg[green]%}j:\j%{$reset_color%} %{$fg[yellow]%}e:%?%{$reset_color%}%{$fg[cyan]%}]%{$reset_color%}"
 
 #zstyle ':vcs_info:*' enable git
 #zstyle ':vcs_info:git*:*' git-revision true
@@ -47,30 +32,7 @@ case $TERM in (*xterm|*rxvt*|(dt|k|E)term)
 esac
 #}}}
 
-#编辑器
-export EDITOR=vim
-
-# python
-export PYTHONSTARTUP=~/.pythonrc.py
-
-#输入法
-#export XMODIFIER$="@im=ibus"
-#export QT_MODULE=ibus
-#export GTK_MODULE=ibus
-
 # Utils settings {{{
-#允许在交互模式中使用注释  例如：
-setopt INTERACTIVE_COMMENTS
-#启用自动 cd，输入目录名回车进入目录,稍微有点混乱，不如 cd 补全实用
-setopt AUTO_CD
-#扩展路径
-#/v/c/p/p => /var/cache/pacman/pkg
-setopt complete_in_word
-
-# disable core dumps
-limit coredumpsize 0
-
-###################################################
 # Key bindings
 # Use emacs keybindings even if our EDITOR is set to vi
 bindkey -e
@@ -175,14 +137,6 @@ zstyle ':completion:*:corrections' format $'\e[01;32m -- %d (errors: %e) --\e[0m
 zstyle ':completion:*:-tilde-:*' group-order 'named-directories' 'path-directories' 'users' 'expand'
 #}}}
 
-# spelling correction options
-#setopt CORRECT
-
-# prompt for confirmation after 'rm *', etc.
-#setopt RM_STAR_WAIT
-
-# don't write over existing files with >, use >! instead
-setopt NOCLOBBER
 
 ##行编辑高亮模式 {{{
 # Ctrl+@ 设置标记，标记和光标点之间为 region
@@ -265,15 +219,6 @@ zmodload zsh/mathfunc
 autoload -U zsh-mime-setup
 zsh-mime-setup
 
-# If the EXTENDED_GLOB option is set, the ^, ~, and # characters also denote
-# a pattern, some command depends on this special characters need to escape
-# slash, like `git reset HEAD\^`, U can also `alias git="noglob git"`, a 3rd
-# option: % noglob git show HEAD^
-setopt EXTENDED_GLOB
-
-#setopt correctall
-autoload compinstall
-     
 #漂亮又实用的命令高亮界面
 TOKENS_FOLLOWED_BY_COMMANDS=('|' '||' ';' '&' '&&' 'sudo' 'do' 'time' 'strace')
 
@@ -308,15 +253,6 @@ check-cmd-backward-delete-char() { zle .backward-delete-char && recolor-cmd }
 zle -N self-insert check-cmd-self-insert
 zle -N backward-delete-char check-cmd-backward-delete-char
 
-
 if [ -f ~/.shrc ]; then
 	. ~/.shrc
 fi
-
-
-for file in ~/.shell/*
-do
-	if [ -r $file ]; then
-		. $file
-	fi
-done

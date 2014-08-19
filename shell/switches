@@ -7,13 +7,13 @@ HISTIGNORE="&:ls:[bf]g:exit:reset:clear:cd:cd..:cd.."
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
-HISTFILE="$HOME/.zsh_history"
+HISTFILE="$HOME/.sh_history"
 HISTSIZE=1000
 SAVEHIST=$HISTSIZE
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTFILESIZE=2000
 
-#{{{ History Settings
+#{{{ Utils Settings
 # bash shell settings
 if [ -n "$BASH_VERSION" ]; then
     # If set, the pattern "**" used in a pathname expansion context will
@@ -26,6 +26,33 @@ if [ -n "$BASH_VERSION" ]; then
 	shopt -s cmdhist		# Multiline cmd records as one cmd in history
 	shopt -s extglob		# Allow basic regexps in bash
 elif [ -n "$ZSH_VERSOIN" ]; then
+    # disable core dumps
+    limit coredumpsize 0
+    #扩展路径
+    #/v/c/p/p => /var/cache/pacman/pkg
+    setopt complete_in_word
+
+    # spelling correction options
+    #setopt CORRECT
+
+    # prompt for confirmation after 'rm *', etc.
+    #setopt RM_STAR_WAIT
+    # don't write over existing files with >, use >! instead
+    setopt NOCLOBBER
+    #允许在交互模式中使用注释  例如：
+    setopt INTERACTIVE_COMMENTS
+    #启用自动 cd，输入目录名回车进入目录,稍微有点混乱，不如 cd 补全实用
+    setopt AUTO_CD
+
+    # If the EXTENDED_GLOB option is set, the ^, ~, and # characters also denote
+    # a pattern, some command depends on this special characters need to escape
+    # slash, like `git reset HEAD\^`, U can also `alias git="noglob git"`, a 3rd
+    # option: % noglob git show HEAD^
+    setopt EXTENDED_GLOB
+
+    #setopt correctall
+    autoload compinstall
+
 	setopt HIST_IGNORE_DUPS
 	setopt APPEND_HISTORY
 	# When using a hist thing, make a newline show the change before exec it.
