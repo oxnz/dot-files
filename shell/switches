@@ -8,10 +8,11 @@ HISTIGNORE="&:ls:[bf]g:exit:reset:clear:cd:cd..:cd.."
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
 HISTFILE="$HOME/.sh_history"
-HISTSIZE=1000
+HISTSIZE=10000
+# for tcsh
 SAVEHIST=$HISTSIZE
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTFILESIZE=2000
+HISTFILESIZE=$HISTSIZE
 
 #{{{ Utils Settings
 # bash shell settings
