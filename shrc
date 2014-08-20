@@ -11,6 +11,9 @@ export PYTHONSTARTUP=~/.pythonrc.py
 #export QT_MODULE=ibus
 #export GTK_MODULE=ibus
 
+# command not found support
+[[ -r /etc/zsh_command_not_found ]] && source /etc/zsh_command_not_found
+
 for file in ~/.shell/*
 do
 	if [[ -r $file ]]; then
