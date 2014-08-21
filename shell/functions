@@ -202,24 +202,23 @@ function itunes() {
 
 # apt-history
 function apt-hist() {
-	local logs=$(ls -rt /var/log/dpkg*)
 	case "$1" in
-		install)
-			zgrep --no-filename 'install' $logs
-			;;
-		upgrade|remove)
-			zgrep --no-filename $1 $logs
-			;;
-		rollback)
-			zgrep --no-filename upgrade $logs | grep "$2" -A10000000 | \
-				grep "$3" -B10000000 | awk '{print $4"="$5}'
+		install|upgrade|remove)
+            apt-hist list | grep --no-filename " $1 "
 			;;
 		list)
-			zcat $logs
+            for log in $(ls -t /var/log/dpkg.log*); do
+                if [ ${log##*.} == gz ]; then
+                    gunzip -c $log | tac
+                else
+                    tac $log
+                fi
+            done
 			;;
 		*)
 			echo "Usage: apt-hist <install|upgrade|remove|rollback|list>"
 			return 1
+            ;;
 	esac
 }
 
