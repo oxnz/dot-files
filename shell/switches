@@ -27,6 +27,9 @@ if [ -n "$BASH_VERSION" ]; then
 	shopt -s cmdhist		# Multiline cmd records as one cmd in history
 	shopt -s extglob		# Allow basic regexps in bash
 elif [ -n "$ZSH_VERSOIN" ]; then
+    # command not found support
+    [[ -r /etc/zsh_command_not_found ]] && source /etc/zsh_command_not_found
+
     # disable core dumps
     limit coredumpsize 0
     #扩展路径
@@ -77,7 +80,14 @@ fi
 #}}}
 
 ###var(s) for other commands {{{
+export EDITOR=vim
 export PYTHONSTARTUP=~/.pythonrc
+#}}}
+
+# input method {{{
+#export XMODIFIER$="@im=ibus"
+#export QT_MODULE=ibus
+#export GTK_MODULE=ibus
 #}}}
 
 # Local variables:

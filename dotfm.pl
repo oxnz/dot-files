@@ -11,7 +11,6 @@ use File::Basename;
 use File::Path;
 use Getopt::Long;
 use Pod::Usage;
-use Archive::Tar;
 
 sub update() {
 	my $sf = shift;
@@ -39,6 +38,7 @@ sub update() {
 # 	tarfile: archive file name
 # 	flistref: ref to file list
 sub pack() {
+	require Archive::Tar;
 	my $tarfile = shift;
 	my $h = shift;
 	print "start packing\n";
@@ -48,7 +48,7 @@ sub pack() {
 	}
 	$tar->add_files(@{$h});
 	print "write to file => [$tarfile]\n";
-	$tar->write($tarfile, COMPRESS_GZIP);
+	$tar->write($tarfile, Archive::Tar->COMPRESS_GZIP);
 }
 
 sub deploy() {
@@ -74,24 +74,24 @@ BEGIN {
 		print "SIGNAL: $sig\n";
 	};
 	my @flist = (
-		"zshrc",
-		"vimrc",
+		"bash_profile",
+		"bashrc",
 		"emacs",
+		"emacs.d/init.el",
 		"gitconfig",
 		"gitignore",
-		"bashrc",
-		"shrc",
 		"pythonrc",
-		"profile",
-		"bash_profile",
+		"shell/aliases",
+		"shell/completions",
+		"shell/functions",
+		"shell/paths",
+		"shell/switches",
+		"shrc",
+		"vimrc",
 		"vim/plugin/OxnzToolkit.vim",
 		"vim/plugin/DoxygenToolkit.vim",
 		"vim/doc/OxnzToolkit.txt",
-		"emacs.d/init.el",
-		"shell/aliases",
-		"shell/functions",
-		"shell/switches",
-		"shell/completions",
+		"zshrc",
 	);
 	my $help;
 	my $pfile;

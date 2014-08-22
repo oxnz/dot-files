@@ -1,28 +1,6 @@
 # Functions:
 # [pathmunge man dict ips rename extract histop itunes]
 
-pathmunge() {
-	case ":${PATH}:" in
-		*:"$1":* | "$1:${PATH}:")
-			# $1 is already contained or $1 is NIL
-			;;
-		*)
-			if [ "$2" = "after" ]
-			then
-				PATH=$PATH:$1
-			else
-				PATH=$1:$PATH
-			fi
-	esac
-}
-#[ -d "/usr/local/jdk/bin" ] && pathmunge "/usr/local/jdk/bin" "after"
-[ -d "/opt/jdk/bin" ] && pathmunge "/opt/jdk/bin" "after"
-[ -d "/usr/local/confluence/bin" ] && pathmunge "/usr/local/confluence/bin" "after"
-#[ -d "/Users/xinyi/Workspace/android-sdks/platform-tools" ] && pathmunge "/Users/xinyi/Workspace/android-sdks/platform-tools" "after"
-#[ -d "/Applications/Qt/Qt5.1.1/5.1.1/clang_64/bin" ] && pathmunge "/Applications/Qt/Qt5.1.1/5.1.1/clang_64/bin" "after"
-#[[ -d "/Applications/TeX/texlive/2013basic/bin/x86_64-darwin" ]] && pathmunge "/Applications/TeX/texlive/2013basic/bin/x86_64-darwin" "after"
-unset pathmunge
-
 man () {
 	env \
 	LESS_TERMCAP_mb=$(printf "\e[1;31m") \
@@ -34,23 +12,6 @@ man () {
 	LESS_TERMCAP_us=$(printf "\e[1;32m") \
 	man "$@"
 }
-
-if [ -d "/etc/profile.d" ]
-then
-	for i in /etc/profile.d/*.sh
-	do
-		if [ -r "$i" ]
-		then
-			if [ "$PS1" ]
-			then
-				. "$i"
-			else
-				. "$i" > /dev/null 2>&1
-			fi
-		fi
-	done
-	unset i
-fi
 
 # look words in mac's dict
 dict() {
