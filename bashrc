@@ -1,6 +1,9 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
+# see http://tiswww.case.edu/php/chet/bash/{CHANGES,COMPAT,NEWS}
+# see http://mywiki.wooledge.org/BashGuide
+# see http://wiki.bash-hackers.org/doku.php
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
