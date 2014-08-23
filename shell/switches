@@ -8,11 +8,11 @@ HISTIGNORE="&:ls:[bf]g:exit:reset:clear:cd:cd..:cd.."
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
 HISTFILE="$HOME/.sh_history"
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTFILESIZE=100000
 HISTSIZE=10000
 # for tcsh
 SAVEHIST=$HISTSIZE
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTFILESIZE=$HISTSIZE
 
 #{{{ Utils Settings
 # bash shell settings
@@ -26,6 +26,8 @@ if [ -n "$BASH_VERSION" ]; then
 	shopt -s checkwinsize	# Redraw contents if win size changes
 	shopt -s cmdhist		# Multiline cmd records as one cmd in history
 	shopt -s extglob		# Allow basic regexps in bash
+    #shopt -s histverify     # Allow further modification other than exec immediately
+    #shopt -s lithist        # Preserve the multiline history
 elif [ -n "$ZSH_VERSOIN" ]; then
     # command not found support
     [[ -r /etc/zsh_command_not_found ]] && source /etc/zsh_command_not_found
