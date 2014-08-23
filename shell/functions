@@ -1,5 +1,22 @@
-# Functions:
-# [pathmunge man dict ips rename extract histop itunes]
+# functions
+
+# put a red `!' in front of the PS1 if last command exit with an error code
+PROMPT_COMMAND='{
+    if [ $? -ne 0 ]; then
+        printf "\e[01;31m!\e[m"
+    fi
+}'
+
+# test if function to declare already exists
+for func in EC man dict ips rename extract histop itunes; do
+    if [[ $(typeset -f $func) ]]; then
+        echo "WARNING: $func is aleary exists"
+    fi
+done
+
+# set trap to intercept the non-zero return code of last program
+function EC() { echo -e '\e[1;31m'non-zero return code: $?'\e[m'; }
+#trap EC ERR
 
 function man () {
 	env \
