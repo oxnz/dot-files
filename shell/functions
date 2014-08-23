@@ -1,7 +1,7 @@
 # Functions:
 # [pathmunge man dict ips rename extract histop itunes]
 
-man () {
+function man () {
 	env \
 	LESS_TERMCAP_mb=$(printf "\e[1;31m") \
 	LESS_TERMCAP_md=$(printf "\e[1;31m") \
@@ -13,13 +13,13 @@ man () {
 	man "$@"
 }
 
-# look words in mac's dict
-dict() {
+# look words in nix's dict
+function dict() {
 	/usr/bin/grep "$@" /usr/share/dict/words
 }
 
 # show ip
-ips() {
+function ips() {
     ip -family inet -oneline address show | perl -ne'BEGIN {
         my $fmt = "%-8s%-8s%-20s%-16s%-s\n";
         printf($fmt, "Index", "Device", "IPv4 Address", "Broadcast", "Scope");
@@ -52,7 +52,8 @@ function rename() {
 #	else
 #		echo "extract needs $prog, but not exist"
 #	fi
-extract () {
+function extract() {
+    [ $# -eq 0 ] && echo "Usage: extract <archives>" && return 1
     while (( $# > 0 )); do
 	    if [[ -f $1 ]]
 	    then
