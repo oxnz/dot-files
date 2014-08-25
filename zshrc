@@ -1,8 +1,7 @@
-#!/bin/zsh
-# File	: .zshrc
+# ~/.zshrc
 #
 # Created: 2013-06-25 12:20:00
-# Last-update: 2014-08-19 15:59:14
+# Last-update: 2014-08-25 22:36:45
 # Version: 0.1
 # Author: Oxnz
 # License: Copyright (C) 2013 Oxnz
