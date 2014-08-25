@@ -9,8 +9,9 @@ done
 unset i
 
 # show banner
-# sed -e "s/.\{20\}/&\n/g"
 cat <<End-Of-Info | sed -e 's/.\{80\}/&\n/g'
+Kernel: $(uname -r)
+Uptime: $(uptime)
 Mail: $(/usr/sbin/sendmail -bp)
 Memory:
 $(free -h)
@@ -26,4 +27,3 @@ cat <<"End-Of-Cow"
                 ||----w |
                 ||     ||
 End-Of-Cow
-:
