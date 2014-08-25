@@ -40,22 +40,3 @@ popd () {
     dirs
 }
 dirs () { echo "`pwd` $DSTACK"; return 0; }
-
-#
-# Set some generic aliase functions
-#
-alias o='less'
-alias ..='cd ../'
-alias ...='cd ../../'
-alias +='pushd'
-alias -='popd'
-alias rd='rmdir'
-alias md='mkdir -p'
-alias you='su - -c "yast2 online_update"'
-alias rehash='hash -r'
-alias beep='printf "\007"'
-alias unmount='echo "Error: Try the command: umount" 1>&2 && false'
-
-#
-# End of /etc/profile.d/alias.ash
-#

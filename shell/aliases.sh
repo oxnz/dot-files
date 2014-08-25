@@ -53,12 +53,19 @@ alias cd..='cd ..'
 #alias sl='ls'
 
 #short cuts {{{
+alias o='less'
 alias h='history'
 alias j='jobs -l'
+alias +='pushd'
+#alias -='popd'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias x='extract'
 alias g='google'
+alias rd='rmdir'
+alias md='mkdir -p'
+alias beep='printf "\007"'
+alias unmount='echo "Error: Try the command: umount" 1>&2 && false'
 #}}}
 
 # command wrapper {{{
