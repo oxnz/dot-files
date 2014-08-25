@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 package main;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use strict;
 use warnings;
@@ -25,7 +25,10 @@ sub update() {
 		}
 	}
 	if ( (-e $sf) && (-r $sf) ) {
-		if (compare($sf, $df)) {
+		if (-d $sf && ! -e $df) {
+			print "updating directory: $df\n";
+			mkdir($df) or die $!;
+		} elsif (compare($sf, $df)) {
 			print "updating file: $df\n";
 			copy($sf, $df) or die $!;
 		}
@@ -81,11 +84,8 @@ BEGIN {
 		"gitconfig",
 		"gitignore",
 		"pythonrc",
-		"shell/aliases.sh",
-		"shell/completions.sh",
-		"shell/functions.sh",
-		"shell/paths.sh",
-		"shell/switches.sh",
+		"shell/*",
+		"shell/profile.d/*",
 		"shrc",
 		"vimrc",
 		"vim/plugin/OxnzToolkit.vim",
@@ -109,8 +109,12 @@ BEGIN {
 	} elsif (defined($pfile)) {
 		&pack($pfile, \@flist);
 	} elsif (defined($update)) {
-		for my $f (@flist) {
-			&update(glob("~/.$f"), $f);
+		# prefix len
+		my $len = length(glob("~/") . ".");
+		for my $p (@flist) {
+			for my $f (glob("~/.$p")) {
+				&update($f, substr($f, $len));
+			}
 		}
 	} elsif (defined($deploy)) {
 		for my $f (@flist) {
