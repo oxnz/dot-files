@@ -9,8 +9,14 @@ for func in EC man dict ips rename extract histop itunes; do
 done
 
 # set trap to intercept the non-zero return code of last program
-function EC() { echo -e '\e[1;31m'non-zero return code: $?'\e[m'; }
-#trap EC ERR
+#function _err() { echo -e '\e[1;31m'non-zero return code: $?'\e[m'; }
+#trap _err ERR
+
+# do stuff before exit
+function _exit() {
+    echo "bye"
+}
+#trap _exit EXIT
 
 # put a red `!' in front of the PS1 if last command exit with an error code
 function prompt_command() {
@@ -109,6 +115,42 @@ if [ -n "$BASH_VERSION" ]; then
 elif [ -n "$ZSH_VERSOIN" ]; then
     compdef '_files -g "*.gz *.tgz *.txz *.xz *.7z *.Z *.bz2 *.tbz *.zip *.rar *.tar *.lha"' extract
 fi
+
+# Find a file with a pattern in name
+function ff() {
+    find . -type -iname '*'"$*"'*' -ls;
+}
+
+# Find a file with pattern $1 in the name and Execute $2 on it
+function fe() {
+    find . -type f -iname '*'"${1:-}"'*' \
+        -exec ${2:-file} {} \; ;
+}
+
+# Find a pattern in a set of files and highlight them
+# see http://tldp.org/LDP/abs/html/sample-bashrc.html
+function fstr() {
+    OPTIND=1
+    local case=""
+    while getopts :it opt; do
+        case "$opt" in
+            i) case="-i "
+                ;;
+            *) cat <<End-Of-Usage
+fstr: find string in files.
+Usage: fstr [-i] <pattern> <filename pattern>
+End-Of-Usage
+                ;;
+        esac
+    done
+    shift $(($OPTIND - 1))
+    if [ "$#" -lt 1 ]; then
+        echo $usage
+        return 1
+    fi
+    find . -type f -name "${2:-*}" -print0 | \
+        xargs -0 egrep --color=auto -sn ${case} "$1"
+}
 
 # History accepts a range in zsh entries as [first] [last] arguments, so to
 # get them all run history 1.
