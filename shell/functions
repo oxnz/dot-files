@@ -9,7 +9,7 @@ PROMPT_COMMAND='{
 
 # test if function to declare already exists
 for func in EC man dict ips rename extract histop itunes; do
-    if [[ $(typeset -f $func) ]]; then
+    if typeset -f $func > /dev/null; then
         echo "WARNING: $func is aleary exists"
     fi
 done
