@@ -1,31 +1,29 @@
-#!/bin/sh
+# ~/.shrc
 
-for i in ~/.shell/*
-do
-	if [ -r $i ]; then
+for i in ~/.shell/*.{ba,}sh; do
+	if [ -f $i -a -r $i ]; then
 		. $i
 	fi
 done
 
 unset i
 
-# echo welcome msg here
+# show banner
 # sed -e "s/.\{20\}/&\n/g"
-cat <<"EOCOW"
- _______
-< Welcome >
- -------
+cat <<End-Of-Info | sed -e 's/.\{80\}/&\n/g'
+Mail: $(/usr/sbin/sendmail -bp)
+Memory:
+$(free -h)
+Crontab:
+M H D m W command
+$(crontab -l 2>&1)
+End-Of-Info
+
+cat <<"End-Of-Cow"
         \   ^__^
          \  (oo)\_______
             (__)\       )\/\
                 ||----w |
                 ||     ||
-EOCOW
-
-echo "Mail"
-/usr/sbin/sendmail -bp
-echo "Memory"
-free -h
-echo "crontab"
-echo "M H D m W command"
-crontab -l
+End-Of-Cow
+:

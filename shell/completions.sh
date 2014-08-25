@@ -13,6 +13,15 @@ if [ -n "$BASH_VERSION" ] && ! shopt -oq posix ; then
 	fi
 fi
 
+for i in ~/.shell/profile.d/*.{ba,}sh; do
+	if [ -r $i ]; then
+		:
+		#. $i
+	fi
+done
+
+unset i
+
 #!/usr/bin/sh
 #shopt -s extglob        # 必须的
 #set +o nounset          # 否则某些自动补全将会失败

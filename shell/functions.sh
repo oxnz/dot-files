@@ -1,11 +1,5 @@
-# functions
+# ~/.shell/functions.sh
 
-# put a red `!' in front of the PS1 if last command exit with an error code
-PROMPT_COMMAND='{
-    if [ $? -ne 0 ]; then
-        printf "\e[01;31m!\e[m"
-    fi
-}'
 
 # test if function to declare already exists
 for func in EC man dict ips rename extract histop itunes; do
@@ -18,15 +12,24 @@ done
 function EC() { echo -e '\e[1;31m'non-zero return code: $?'\e[m'; }
 #trap EC ERR
 
+# put a red `!' in front of the PS1 if last command exit with an error code
+function prompt_command() {
+    if [ $? -ne 0 ]; then
+        printf "\e[01;31m!\e[m"
+    fi
+}
+
+#PROMPT_COMMAND=prompt_command
+
 function man () {
 	env \
 	LESS_TERMCAP_mb=$'\E[01;31m' \
 	LESS_TERMCAP_md=$'\E[01;38;5;74m' \
 	LESS_TERMCAP_me=$'\E[00m' \
 	LESS_TERMCAP_se=$'\E[00m' \
-	LESS_TERMCAP_so=$'\E[38;5;246m' \
+	LESS_TERMCAP_so=$'\E[32;5;246m' \
 	LESS_TERMCAP_ue=$'\E[00m' \
-	LESS_TERMCAP_us=$'\E[04;38;5;146m' \
+	LESS_TERMCAP_us=$'\E[04;36;5;146m' \
 	man "$@"
 }
 
@@ -90,6 +93,7 @@ function extract() {
 			  *.xz) xz --decompress $1 ;;
               *.7z) 7za x $1 ;;
               *.pax) pax -r -f $1 ;;
+              *.rpm) rpm2cpio $1 | cpio -idmv ;;
               *.pkg) pkgutil --expand $1 ${1:0:-4} ;;
 			  *) echo "'$1' cannot be extracted via extract" 1>&2 ;;
 		    esac
@@ -268,14 +272,16 @@ function google() {
 }
 
 function todo() {
-echo "see https://docs.python.org/3.2/library/dbm.html"
-    echo "TODO: dbm"
+    echo "see https://docs.python.org/3.2/library/dbm.html"
+    cat <<End-Of-Usage
+    "TODO: dbm"
     echo "Usage: todo <-l|-d|-c|-t|-n>"
-    "-l list"
-    "-d delete"
-    "-n create"
-    "-c content"
-    "-t title"
+    -l list
+    -d delete
+    -n create
+    -c content
+    -t title
+End-Of-Usage
 }
 
 # Local variables:

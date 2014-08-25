@@ -7,7 +7,7 @@ HISTIGNORE="&:ls:[bf]g:exit:reset:clear:cd:cd..:cd.."
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
-HISTFILE="$HOME/.sh_history"
+#HISTFILE="$HOME/.sh_history"
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTFILESIZE=100000
 HISTSIZE=10000
