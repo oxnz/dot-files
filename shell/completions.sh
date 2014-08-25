@@ -15,8 +15,7 @@ fi
 
 for i in ~/.shell/profile.d/*.{ba,}sh; do
 	if [ -r $i ]; then
-		:
-		#. $i
+		. $i
 	fi
 done
 
