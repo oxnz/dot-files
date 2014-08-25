@@ -267,6 +267,17 @@ function google() {
 	esac
 }
 
+function todo() {
+echo "see https://docs.python.org/3.2/library/dbm.html"
+    echo "TODO: dbm"
+    echo "Usage: todo <-l|-d|-c|-t|-n>"
+    "-l list"
+    "-d delete"
+    "-n create"
+    "-c content"
+    "-t title"
+}
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4

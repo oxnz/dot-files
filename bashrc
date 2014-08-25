@@ -4,6 +4,7 @@
 # see http://tiswww.case.edu/php/chet/bash/{CHANGES,COMPAT,NEWS}
 # see http://mywiki.wooledge.org/BashGuide
 # see http://wiki.bash-hackers.org/doku.php
+# see http://mywiki.wooledge.org/BashPitfalls
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then

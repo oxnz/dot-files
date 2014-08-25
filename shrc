@@ -8,3 +8,24 @@ do
 done
 
 unset i
+
+# echo welcome msg here
+# sed -e "s/.\{20\}/&\n/g"
+cat <<"EOCOW"
+ _______
+< Welcome >
+ -------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+EOCOW
+
+echo "Mail"
+/usr/sbin/sendmail -bp
+echo "Memory"
+free -h
+echo "crontab"
+echo "M H D m W command"
+crontab -l
