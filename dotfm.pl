@@ -15,25 +15,30 @@ use Pod::Usage;
 sub update() {
 	my $sf = shift;
 	my $df = shift;
-	for my $f ($sf, $df) {
-		if (! -e $sf) {
-			print "File: $sf does not exist\n";
-			return 1;
-		} elsif (! -r $sf) {
-			print "File: $sf can not be read\n";
-			return 1;
-		}
+	my $tdir = dirname($df);
+	if (! -e $sf) {
+		print "File: $sf does not exist\n";
+		return 1;
+	} elsif (! -r $sf) {
+		print "File: $sf can not be read\n";
+		return 1;
 	}
-	if ( (-e $sf) && (-r $sf) ) {
-		if (-d $sf && ! -e $df) {
+
+	if (! -e $tdir) {
+		print "Making directory: $tdir\n";
+		mkdir($tdir);
+	}
+
+	if ( -d $sf) {
+		if (! -e $df) {
 			print "updating directory: $df\n";
 			mkdir($df) or die $!;
-		} elsif (compare($sf, $df)) {
-			print "updating file: $df\n";
-			copy($sf, $df) or die $!;
 		}
-		return 0;
+	} elsif (compare($sf, $df)) {
+		print "updating file: $df\n";
+		copy($sf, $df) or die $!;
 	}
+	return 0;
 }
 
 # packup dotfiles to a tar.gz file
@@ -63,7 +68,12 @@ sub deploy() {
 		mkpath($dname);
 	}
 	if ( (-e $sf) && (-r $sf) ) {
-		if (compare($sf, $df)) {
+		if (-d $sf) {
+			if (! -e $df) {
+				print "deploy directory: $df\n";
+				mkdir($df) or die $!;
+			}
+		} elsif (compare($sf, $df)) {
 			print "deploy file: $df\n";
 			copy($sf, $df) or die $!;
 		}
@@ -117,8 +127,11 @@ BEGIN {
 			}
 		}
 	} elsif (defined($deploy)) {
-		for my $f (@flist) {
-			&deploy($f, glob("~/.$f"));
+		my $len = length(glob("~/") . ".");
+		for my $p (@flist) {
+			for my $f (glob($p)) {
+				&deploy($f, glob("~/.$f"));
+			}
 		}
 	} else {
 		pod2usage(0);
