@@ -20,12 +20,10 @@ function _exit() {
 
 # put a red `!' in front of the PS1 if last command exit with an error code
 function prompt_command() {
-    if [ $? -ne 0 ]; then
-        printf "\e[01;31m!\e[m"
-    fi
+:
 }
 
-#PROMPT_COMMAND=prompt_command
+PROMPT_COMMAND=prompt_command
 
 function man () {
 	env \
