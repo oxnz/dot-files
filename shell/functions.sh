@@ -1,5 +1,10 @@
 # ~/.shell/functions.sh
 
+if ! typeset -f command_not_found_handle > /dev/null; then
+    function command_not_found_handle() {
+        echo "bash: $1: command not found"
+    }
+fi
 
 # test if function to declare already exists
 for func in EC man dict ips rename extract histop itunes; do
@@ -16,7 +21,7 @@ done
 function _exit() {
     echo "bye"
 }
-#trap _exit EXIT
+trap _exit EXIT
 
 # put a red `!' in front of the PS1 if last command exit with an error code
 function prompt_command() {
@@ -128,26 +133,24 @@ function fe() {
 # Find a pattern in a set of files and highlight them
 # see http://tldp.org/LDP/abs/html/sample-bashrc.html
 function fstr() {
-    OPTIND=1
-    local case=""
-    while getopts :it opt; do
+    local case="-I"
+    local usage="fstr: find string in files.
+Usage: fstr [-i] <pattern> <filename pattern>"
+
+    if [ "$#" -lt 1 ]; then
+        set -- $@ "-h"
+    fi
+    local OPTIND=1
+    local opt
+    while getopts ":i" opt; do
         case "$opt" in
-            i) case="-i "
-                ;;
-            *) cat <<End-Of-Usage
-fstr: find string in files.
-Usage: fstr [-i] <pattern> <filename pattern>
-End-Of-Usage
-                ;;
+            i) case="-i" ;;
+            *) echo "$usage" && return 1 ;;
         esac
     done
     shift $(($OPTIND - 1))
-    if [ "$#" -lt 1 ]; then
-        echo $usage
-        return 1
-    fi
     find . -type f -name "${2:-*}" -print0 | \
-        xargs -0 egrep --color=auto -sn ${case} "$1"
+        xargs -0 egrep --color=auto -n ${case} "$1"
 }
 
 # History accepts a range in zsh entries as [first] [last] arguments, so to
@@ -155,31 +158,36 @@ End-Of-Usage
 # Note that the history list starts at 1 and not 0
 # print top command in history
 function histop() {
-	local FNAME='histop'
-	if [[ $# -ne 0 ]]; then
-		case "$1" in
-			-h|--help)
-				echo "Usage: $FNAME -n <num>"
-				echo "num: print num lines of most used command"
-				return 0
-				;;
-			-n)
-				if [ $# -eq 2 -a $2 -ge 1 -a $2 -le $HISTSIZE ]; then
-					local n=$2
-					shift
-				else
-					echo "option -n needs an number"
-					return 1
-				fi
-				;;
-			*)
-				echo "$FNAME: Unknown option: $1"
-				$FNAME --help
-				return 1
-				;;
-		esac
-		shift
-	fi
+    local opt
+    local OPTIND=1
+    while getopts ":hn:" opt; do
+        case "$opt" in
+            h)
+				cat >&2 <<-End-Of-Help
+Usage: histop -n <num>
+    num: print num lines of most used command
+End-Of-Help
+                return 0
+                ;;
+            n)
+                if [[ $OPTARG =~ ^[1-9][0-9]*$ ]]; then
+                    local n=$OPTARG
+                    echo "n=$n"
+                else
+                    echo "Warning: option n needs an number" >&2
+                    return 1
+                fi
+                ;;
+            \?)
+                echo "Invalid option: -$OPTARG" >&2
+                return 1
+                ;;
+            :)
+                echo "Option -$OPTARG requires an arguent." >&2
+                return 1
+                ;;
+        esac
+    done
 
 	fc -l -n 1 | perl -ane 'BEGIN {my %cmdlist}{$cmdlist{@F[0]}++}
 	END {printf("Number\tTimes\tFrequency\tCommand\n");
@@ -257,7 +265,7 @@ function trash() {
 			TRASH=~/.Trash
 			;;
 		Linux)
-			TRASH=~/.trash
+			TRASH=~/.local/share/Trash/files
 			;;
 		*)
 			echo "Unsupported system" 1>&2 && return 0
