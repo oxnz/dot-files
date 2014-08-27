@@ -6,16 +6,8 @@
 # see http://wiki.bash-hackers.org/doku.php
 # see http://mywiki.wooledge.org/BashPitfalls
 
-# Source global definitions
-if [ -f /etc/bashrc ]; then
-	. /etc/bashrc
-elif [ -f /etc/bash.bashrc ]; then
-	. /etc/bash.bashrc
-fi
-
-if [ -f ~/.shrc ]; then
-	. ~/.shrc
-fi
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
@@ -35,3 +27,33 @@ case "$TERM" in
 	*)
 		;;
 esac
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+	if [ -f /usr/share/bash-completion/bash_completion ]; then
+		. /usr/share/bash-completion/bash_completion
+		echo "YES"
+	elif [ -f /etc/bash_completion ]; then
+		. /etc/bash_completion
+	elif [ -f /usr/local/share/bash-completion/bash-completion ]; then
+		. /usr/local/share/bash-completion/bash-completion
+	elif [ -f /usr/local/etc/bash_completion ]; then
+	    . /usr/local/etc/bash_completion
+	fi
+fi
+
+# source commen settings
+if [ -f ~/.shrc ]; then
+	. ~/.shrc
+fi
+
+if [ -d ~/.shell ]; then
+	for i in ~/.shell/*.{ba,}sh; do
+		if [ -r $i ]; then
+			. $i
+		fi
+	done
+	unset i
+fi

@@ -1,10 +1,11 @@
 # ~/.zshrc
 #
 # Created: 2013-06-25 12:20:00
-# Last-update: 2014-08-25 22:36:45
+# Last-update: 2014-08-27 16:08:39
 # Version: 0.1
 # Author: Oxnz
 # License: Copyright (C) 2013 Oxnz
+# Reference: http://grml.org/zsh/zsh-lovers.html
 
 # Skip all this for non-interactive shells
 [[ -z "$PS1" ]] && return
@@ -22,14 +23,6 @@ PROMPT="%{$fg[cyan]%}[%{$reset_color%}%{$fg[red]%}%n%{$reset_color%}%{$fg[green]
 #zstyle ':vcs_info:git*:*' check-for-changes false
 #zstyle ':vcs_info:git*' formats "(%s) %12.12i %c%u %b%m"
 #zstyle ':vcs_info:git*' actionformats "(%s|%a) %12.12i %c%u %b%m"
-
-#标题栏、任务栏样式{{{
-case $TERM in (*xterm|*rxvt*|(dt|k|E)term)
-	precmd() { print -Pn "\e]0;%n@%M//%/\a" }
-	preexec() { print -Pn "\e]0;%n@%M//%/\ $1\a" }
-	;;
-esac
-#}}}
 
 # Utils settings {{{
 # Key bindings
@@ -252,6 +245,12 @@ check-cmd-backward-delete-char() { zle .backward-delete-char && recolor-cmd }
 zle -N self-insert check-cmd-self-insert
 zle -N backward-delete-char check-cmd-backward-delete-char
 
-if [ -f ~/.shrc ]; then
-	. ~/.shrc
+# source common utilites
+if [ -d ~/.shell ]; then
+	for i in ~/.shell/*.{z,}sh(N); do
+		if [ -r $i ]; then
+			. $i
+		fi
+	done
+	unset i
 fi

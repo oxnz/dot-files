@@ -96,7 +96,6 @@ BEGIN {
 		"pythonrc",
 		"shell/*",
 		"shell/profile.d/*",
-		"shrc",
 		"vimrc",
 		"vim/plugin/OxnzToolkit.vim",
 		"vim/plugin/DoxygenToolkit.vim",
