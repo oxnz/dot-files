@@ -2,7 +2,7 @@
 
 if ! typeset -f command_not_found_handle > /dev/null; then
     function command_not_found_handle() {
-        echo "bash: $1: command not found"
+        echo "${SHELL:-bash}: $1: command not found"
     }
 fi
 
@@ -22,19 +22,6 @@ function _exit() {
     echo "bye"
 }
 trap _exit EXIT
-
-# put a red `!' in front of the PS1 if last command exit with an error code
-function prompt_command() {
-    GIT_PS1_SHOWUPSTREAM='auto' \
-    GIT_PS1_SHOWDIRTYSTATE='Y' \
-    GIT_PS1_SHOWSTASHSTATE='Y' \
-    GIT_PS1_SHOWCOLORHINTS='Y' \
-    GIT_PS1_SHOWCOLORHINTS='Y' \
-    GIT_PS1_SHOWUNTRACKEDFILES='Y' \
-    __git_ps1 "(%s)"
-}
-
-PROMPT_COMMAND=prompt_command
 
 function man () {
 	env \
@@ -64,17 +51,6 @@ function ips() {
     if (my ($index, $dev, $inet, $brd, $scope, $flags) = /^(\d+):\s+(\w+)\s+inet\s+([^\s]+)(?:\s+brd\s+([^\s]+)|)\s+scope\s+([^\\]+)\\\s+(.*)$/) {
         printf($fmt, $index, $dev, $inet, defined($brd) ? $brd : " ", $scope);
     }'
-}
-
-# rename file or directory
-function rename() {
-	[ $#@ -eq 2 ] || { printf "rename <oldname> <newname>\n"; return 1; }
-	[ -e "$1" ] || { printf "No such file or directory: $1\n"; return 1; }
-	[ -n "$2" ] || { printf "Please specify a newname\n"; return 1; }
-	local to="$(dirname $1)/$2"
-	[ "$1" != "$to" ] || { printf "Newname is the same as oldname\n"; return 1; }
-	[ -e "$to" ] && { printf "File or directory already exist: $to\n"; return 1; }
-	command mv -i -- "$1" "$to"
 }
 
 # extract files from compressed status
