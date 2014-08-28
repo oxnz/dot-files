@@ -1,7 +1,7 @@
 # ~/.zshrc
 #
 # Created: 2013-06-25 12:20:00
-# Last-update: 2014-08-27 16:08:39
+# Last-update: 2014-08-28 21:47:29
 # Version: 0.1
 # Author: Oxnz
 # License: Copyright (C) 2013 Oxnz
@@ -11,12 +11,6 @@
 [[ -z "$PS1" ]] && return
 
 export LC_ALL=en_US.UTF-8
-
-#命令提示符
-autoload colors
-colors
-PROMPT="%{$fg[cyan]%}[%{$reset_color%}%{$fg[red]%}%n%{$reset_color%}%{$fg[green]%}@%{$reset_color%}%{$fg[blue]%}%m %{$fg_no_bold[magenta]%}%1~%{$reset_color%} %{$fg[red]%}%?%{$reset_color%}%{$fg[cyan]%}]%#%{$reset_color%} "
-#RPROMPT="%{$fg[cyan]%}[%{$reset_color%}%{$fg[blue]%}h:\!%{$reset_color%} %{$fg[green]%}j:\j%{$reset_color%} %{$fg[yellow]%}e:%?%{$reset_color%}%{$fg[cyan]%}]%{$reset_color%}"
 
 #zstyle ':vcs_info:*' enable git
 #zstyle ':vcs_info:git*:*' git-revision true
