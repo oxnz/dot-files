@@ -34,7 +34,6 @@ esac
 if ! shopt -oq posix; then
 	if [ -f /usr/share/bash-completion/bash_completion ]; then
 		. /usr/share/bash-completion/bash_completion
-		echo "YES"
 	elif [ -f /etc/bash_completion ]; then
 		. /etc/bash_completion
 	elif [ -f /usr/local/share/bash-completion/bash-completion ]; then
@@ -42,11 +41,6 @@ if ! shopt -oq posix; then
 	elif [ -f /usr/local/etc/bash_completion ]; then
 	    . /usr/local/etc/bash_completion
 	fi
-fi
-
-# source commen settings
-if [ -f ~/.shrc ]; then
-	. ~/.shrc
 fi
 
 if [ -d ~/.shell ]; then
