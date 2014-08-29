@@ -20,3 +20,10 @@ cat <<"End-Of-Cow"
                 ||----w |
                 ||     ||
 End-Of-Cow
+cat <<"End-of-peek"
+/*       _\|/_
+         (o o)
+ +----oOO-{_}-OOo-+
+ |hello           |
+ +---------------*/
+End-of-peek
