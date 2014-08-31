@@ -1,13 +1,20 @@
 #!/bin/bash
 # Author: Oxnz
 
+# dispaly a message box with specific content and title
 function msgbox() {
+	if [ -t 0 ]; then
+		echo "Read from stdin is not supported" >&2
+		return 1;
+	fi
 	local OPTIND=1
 	local opt
 	local width=${COLUMNS:-80}
-	while getopts ":c:e:f:hlm:nst:w:" opt; do
-		echo "opt = $opt, val = $OPTARG"
+	while getopts ":a:c:e:f:hlm:nst:w:" opt; do
 		case "$opt" in
+			a)
+				local align=$OPTARG
+				;;
 			c)
 				local color=$OPTARG
 				;;
@@ -52,6 +59,7 @@ function msgbox() {
 				cat >&2 <<\End-Of-Usage
 msgbox <-e|-f|-t>
   Options:
+	-a specify content alignment l(eft)/m(iddle)/r(right), default is left
 	-c spcify ansi color code for eyes
 	-e specify an eyestyle, a random one is used if not specified
 	-f specify footer
@@ -70,11 +78,35 @@ End-Of-Usage
 	unset opt
 	shift $(($OPTIND-1))
 
-perl -ane 'BEGIN {
+perl -ane '
+#bc: border char, default is "|"
+#pc: padding char, default is one space
+sub linedump {
+	my ($line, $align, $bc, $pc) = @_;
+	$align = "l" if not $align;
+	$bc = "|" if not $bc;
+	$pc = " " if not $pc;
+	my $lw = $w - 4;
+	$line =~ s/\n//;
+	$line =~ s/\t/        /g;
+	my $len = length($line);
+	for (my $i = 0; $i < int($len/$lw); ++$i) {
+		printf("${bc} %s ${bc}\n", substr($line, $i*$lw, $lw));
+	}
+	my $tail = substr($line, -($len % $lw));
+	my $tlen = length($tail);
+	my $slen = $lw - $tlen;
+	my $tailfmt = {
+		l => "${bc} %-${lw}s ${bc}\n",
+		m => "${bc} %+" . (($slen - $slen%2)/2 + $tlen) . "s" . "${pc}" x (($slen + $slen%2)/2) . " ${bc}\n",
+		r => "${bc} %+${lw}s ${bc}\n"
+	};
+	printf($tailfmt->{$align}, $tail) if $tail;
+}
+BEGIN {
 	$w = '"$width"';
 	$_ = "_\\|/_";
-	my $lw = $w - length();
-	print " " x (($lw - $lw%2)/2), $_, " " x (($lw + $lw%2)/2), "\n";
+	&linedump($_, "m", " ");
 	$_ = q/'"${eye:-0}"'/;
 	if ($_) {
 		$_ = "($_ $_)" if 1 == length();
@@ -92,38 +124,32 @@ perl -ane 'BEGIN {
 	}
 	$_ = "\e[${color}m$_\e[m" if $color;
 	print " " x (($lw - $lw%2)/2), $_, " " x (($lw + $lw%2)/2), "\n";
-	$_ = "oOO-{_}-OOo";
-	$_ = "oOO-" . q/'"${mouth:-{_}}"'/ . "-OOo";
+	$_ = "oOO-" . q/'"${mouth:-"{_}"}"'/ . "-OOo";
 	$lw = $w - length() - 2;
 	print "+", "-" x (($lw - $lw%2)/2), $_, "-" x (($lw + $lw%2)/2), "+\n";
-	$_ = q/'"${title:-0}"'/;
-	if ($_) {
-		$lw = $w - length() - 2;
-		print "|", " " x (($lw - $lw%2)/2), $_, " " x (($lw + $lw%2)/2), "|\n";
-		printf("|%s|\n", "-" x ($w-2));
+	$_ = q{'"${title:-0}"'};
+	for (split("\n")) {
+		&linedump($_, "m");
 	}
+	printf("|%s|\n", "-" x ($w-2)) if $_;
 }
 {
-	s/\n//;
-	$len = length();
-	$lw = $w - 4;
-	for ($i = 0; $i < $len; $i += $lw) {
-		my $line = substr($_, $i, $lw);
-		printf("| %-${lw}s |\n", $line);
-	}
+	&linedump($_, q/'"${align:-l}"'/);
 }
 END {
-	$_ = q/'"${footer:-0}"'/;
+	$_ = q{'"${footer:-0}"'};
 	if ($_) {
 		printf("|%s|\n", "-" x ($w-2));
-		$lw = $w - length() - 4;
-		printf("| %-${lw}s |\n", $_);
+		for (split("\n")) {
+			&linedump($_, "l");
+		}
 	}
 	printf("+%s+\n", "-" x ($w-2));
 }'
 }
+
 # show banner
-cat <<End-Of-Info | msgbox -a fda -b -c -d "fda eda"
+cat <<End-Of-Info | msgbox -t "Dashboard-$(uname -a)" -f "Uptime:$(uptime)"
 Kernel: $(uname -r)
 Uptime: $(uptime)
 Mail: $(/usr/sbin/sendmail -bp)
