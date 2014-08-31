@@ -130,7 +130,7 @@ Usage: fstr [-i] <pattern> <filename pattern>"
             *) echo "$usage" && return 1 ;;
         esac
     done
-    shift $(($OPTIND - 1))
+    shift $(($OPTIND-1))
     find . -type f -name "${2:-*}" -print0 | \
         xargs -0 egrep --color=auto -n ${case} "$1"
 }
@@ -154,9 +154,8 @@ End-Of-Help
             n)
                 if [[ $OPTARG =~ ^[1-9][0-9]*$ ]]; then
                     local n=$OPTARG
-                    echo "n=$n"
                 else
-                    echo "Warning: option n needs an number" >&2
+                    echo "Option n needs an number" >&2
                     return 1
                 fi
                 ;;
@@ -170,6 +169,7 @@ End-Of-Help
                 ;;
         esac
     done
+    shift $(($OPTIND-1))
 
 	fc -l -n 1 | perl -ane 'BEGIN {my %cmdlist}{$cmdlist{@F[0]}++}
 	END {printf("Number\tTimes\tFrequency\tCommand\n");
