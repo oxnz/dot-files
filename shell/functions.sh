@@ -180,7 +180,7 @@ End-Of-Help
 		printf("%-8d %-8d%6.2f%%\t%-16s\n", $i, $cmdlist{$cmd},
 			$cmdlist{$cmd}*100/$., $cmd);
 	}
-	printf("%-8s%4d/%-4d%8.2f%%\t%-16s\n", "●", $cnt, $., $cnt*100/$., "●");
+	printf("%-8s%4d/%-4d%8.2f%%\t%-16s\n", "-", $cnt, $., $cnt*100/$., "");
 	}'
 }
 
