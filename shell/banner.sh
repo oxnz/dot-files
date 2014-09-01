@@ -31,13 +31,13 @@ function msgbox() {
 				local color='37;40' # white on black
 				;;
 			f)
-				local footer=$OPTARG
+				local footer="'$OPTARG'"
 				;;
 			s)
 				local single='37;40'
 				;;
 			t)
-				local title=$OPTARG
+				local title="'$OPTARG'"
 				;;
 			w)
                 if [[ $OPTARG =~ ^[1-9][0-9]*$ ]]; then
@@ -93,8 +93,9 @@ sub linedump {
 	for (my $i = 0; $i < int($len/$lw); ++$i) {
 		printf("${bc} %s ${bc}\n", substr($line, $i*$lw, $lw));
 	}
-	my $tail = substr($line, -($len % $lw));
-	my $tlen = length($tail);
+	my $tlen = $len % $lw;
+	return if not $tlen;
+	my $tail = substr($line, -$tlen);
 	my $slen = $lw - $tlen;
 	my $tailfmt = {
 		l => "${bc} %-${lw}s ${bc}\n",
@@ -128,6 +129,7 @@ BEGIN {
 	$lw = $w - length() - 2;
 	print "+", "-" x (($lw - $lw%2)/2), $_, "-" x (($lw + $lw%2)/2), "+\n";
 	$_ = q{'"${title:-0}"'};
+	s/^'"'"'(.*)'"'"'$/$1/;
 	for (split("\n")) {
 		&linedump($_, "m");
 	}
@@ -138,6 +140,7 @@ BEGIN {
 }
 END {
 	$_ = q{'"${footer:-0}"'};
+	s/^'"'"'(.*)'"'"'$/$1/;
 	if ($_) {
 		printf("|%s|\n", "-" x ($w-2));
 		for (split("\n")) {
