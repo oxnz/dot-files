@@ -90,28 +90,41 @@ sub colordump {
 	my $lw = $w - 4;
 	$line =~ s/\n//;
 	$line =~ s/\t/        /g;
+	$align = "r";
+	$lw = 7;
 	my $leftw = $lw;
 	my $lastl = "";
+	my $color = "";
 	$line =~ s/(.*?)(?{
-	my $len = length($1);
-	if ($len < $leftw) {
-		$lastl .= $1;
-		$lw -= $len;
-	} else {
-		my $i = 0;
-		print "${bc} " . $lastl, substr($1, $i, $lw), " ${bc}\n";
-		$lastl = "";
-		for ($i = $lw; $i <= $len; $i += $lw) {
-			print "${bc} " . substr($1, $i, $lw) . " ${bc}\n";
+		my $len = length($1);
+		if ($len < $leftw) {
+			$lastl .= $color . $1;
+			$leftw -= $len;
+		} else {
+			$lastl .= $color . substr($1, 0, $leftw) . "\e[m";
+			print "${bc} $lastl ${bc}\n";
+			$len -= $leftw;
+			my $i = $leftw;
+			for (; $i < $len - $len%$lw; $i += $lw) {
+				$lastl = $color . substr($1, $i, $lw) . "\e[m";
+				print "${bc} $lastl ${bc}\n";
+			}
+			$lastl = substr($1, $i);
+			$leftw = $lw - length($lastl);
+			$lastl = $color . $lastl;
 		}
-		$lastl = substr($1, $i, $lw);
-		$leftw = $lw - length($lastl);
-	}
 	})(\e\[(?:\d{1,3};){0,3}\d{0,3}m)(?{
-		#print $2;
+		$color = $2;
 	})//g;
+	$lastl .= $color;
+	my $tailfmt = {
+		l => "${bc} %-s" . ($pc x $leftw) . " ${bc}\n",
+		m => "${bc} " . ($pc x (($leftw - $leftw%2)/2)) . "%s" . ($pc x (($leftw + $leftw%2)/2)) . " ${bc}\n",
+		r => "${bc} " . ($pc x $leftw) . "%+s ${bc}\n"
+	};
+	printf($tailfmt->{$align}, $lastl) if $lastl;
 }
-sub linedump {
+sub plaindump {
 	my ($line, $align, $bc, $pc) = @_;
 	$align = "l" if not $align;
 	$bc = "|" if not $bc;
@@ -137,7 +150,7 @@ sub linedump {
 BEGIN {
 	$w = '"$width"';
 	$_ = "_\\|/_";
-	&linedump($_, "m", " ");
+	&plaindump($_, "m", " ");
 	$_ = q/'"${eye:-0}"'/;
 	if ($_) {
 		$_ = "($_ $_)" if 1 == length();
@@ -161,12 +174,12 @@ BEGIN {
 	$_ = q/'"${${title//\//\\/}:-0}"'/;
 	s/^'"'"'(.*)'"'"'$/$1/;
 	for (split("\n")) {
-		&linedump($_, "m");
+		&plaindump($_, "m");
 	}
 	printf("|%s|\n", "-" x ($w-2)) if $_;
 }
 {
-	&linedump($_, q/'"${align:-l}"'/);
+	&plaindump($_, q/'"${align:-l}"'/);
 	&colordump($_, q/'"${align:-l}"'/) if /color/;
 }
 END {
@@ -175,7 +188,7 @@ END {
 	if ($_) {
 		printf("|%s|\n", "-" x ($w-2));
 		for (split("\n")) {
-			&linedump($_, "l");
+			&plaindump($_, "l");
 		}
 	}
 	printf("+%s+\n", "-" x ($w-2));
@@ -194,5 +207,4 @@ M H D m W command
 $(crontab -l 2>&1)
 End-Of-Info
 
-echo $'color:\e[01;31mhello f dsajfk sfjksaj fjsaf sjfasjfsa\e[00;32mworl fdsajkf sakf sakjf ksajfkjsadkf ksa fsajfsad\e[0m \e[01;33mhi, jfasjdkfjaks fjksajfjasfjksa fkas jfkjsafksa fksa fjsafas\e[00mjfkas fksa fsajfksaj fkdsa jfksa fsakj \e[34mjfdsakjfasf jas jfsajf sak jfsakj fa sjfakjs fksa jfksa jsa jfsa kjfkasdf kdsa fjksad jfkdsa \e[m' | msgbox
-echo $'color:\e[01;31mhello \e[00;32mworld\e[0m \e[01;33mhi\e[00m' | msgbox | hexdump -C
+echo $'color:\e[01;31mhello \e[00;32mworld\e[0m \e[01;33mhi, jack\e[00mgood\e[34mbye\e[m' | msgbox
