@@ -81,6 +81,36 @@ End-Of-Usage
 perl -ane '
 #bc: border char, default is "|"
 #pc: padding char, default is one space
+sub colordump {
+	print "colordump: \n";
+	my ($line, $align, $bc, $pc) = @_;
+	$align = "l" if not $align;
+	$bc = "|" if not $bc;
+	$pc = " " if not $pc;
+	my $lw = $w - 4;
+	$line =~ s/\n//;
+	$line =~ s/\t/        /g;
+	my $leftw = $lw;
+	my $lastl = "";
+	$line =~ s/(.*?)(?{
+	my $len = length($1);
+	if ($len < $leftw) {
+		$lastl .= $1;
+		$lw -= $len;
+	} else {
+		my $i = 0;
+		print "${bc} " . $lastl, substr($1, $i, $lw), " ${bc}\n";
+		$lastl = "";
+		for ($i = $lw; $i <= $len; $i += $lw) {
+			print "${bc} " . substr($1, $i, $lw) . " ${bc}\n";
+		}
+		$lastl = substr($1, $i, $lw);
+		$leftw = $lw - length($lastl);
+	}
+	})(\e\[(?:\d{1,3};){0,3}\d{0,3}m)(?{
+		#print $2;
+	})//g;
+}
 sub linedump {
 	my ($line, $align, $bc, $pc) = @_;
 	$align = "l" if not $align;
@@ -137,6 +167,7 @@ BEGIN {
 }
 {
 	&linedump($_, q/'"${align:-l}"'/);
+	&colordump($_, q/'"${align:-l}"'/) if /color/;
 }
 END {
 	$_ = q/'"${${footer//\//\\/}:-0}"'/;
@@ -162,3 +193,6 @@ Crontab:
 M H D m W command
 $(crontab -l 2>&1)
 End-Of-Info
+
+echo $'color:\e[01;31mhello f dsajfk sfjksaj fjsaf sjfasjfsa\e[00;32mworl fdsajkf sakf sakjf ksajfkjsadkf ksa fsajfsad\e[0m \e[01;33mhi, jfasjdkfjaks fjksajfjasfjksa fkas jfkjsafksa fksa fjsafas\e[00mjfkas fksa fsajfksaj fkdsa jfksa fsakj \e[34mjfdsakjfasf jas jfsajf sak jfsakj fa sjfakjs fksa jfksa jsa jfsa kjfkasdf kdsa fjksad jfkdsa \e[m' | msgbox
+echo $'color:\e[01;31mhello \e[00;32mworld\e[0m \e[01;33mhi\e[00m' | msgbox | hexdump -C
