@@ -82,47 +82,45 @@ perl -ane '
 #bc: border char, default is "|"
 #pc: padding char, default is one space
 sub colordump {
-	print "colordump: \n";
 	my ($line, $align, $bc, $pc) = @_;
 	$align = "l" if not $align;
 	$bc = "|" if not $bc;
 	$pc = " " if not $pc;
 	my $lw = $w - 4;
-	$line =~ s/\n//;
+	$line =~ s/\n$//;
 	$line =~ s/\t/        /g;
-	$align = "r";
-	$lw = 7;
 	my $leftw = $lw;
 	my $lastl = "";
-	my $color = "";
-	$line =~ s/(.*?)(?{
-		my $len = length($1);
-		if ($len < $leftw) {
-			$lastl .= $color . $1;
-			$leftw -= $len;
+	for (split /(\e\[(?:\d{1,3};){0,3}\d{0,3}m)/, $line) {
+		if ("\e" eq substr($_, 0, 1)) {
+			$color = $_;
 		} else {
-			$lastl .= $color . substr($1, 0, $leftw) . "\e[m";
-			print "${bc} $lastl ${bc}\n";
-			$len -= $leftw;
-			my $i = $leftw;
-			for (; $i < $len - $len%$lw; $i += $lw) {
-				$lastl = $color . substr($1, $i, $lw) . "\e[m";
-				print "${bc} $lastl ${bc}\n";
+			my $len = length();
+			if ($len < $leftw) {
+				$lastl .= "$color$_\e[m";
+				$leftw -= $len;
+			} else {
+				$lastl .= $color . substr($_, 0, $leftw) . "\e[m";
+				print "${bc} ${lastl} ${bc}\n";
+				my $i = $leftw;
+				$len -= $leftw;
+				$leftw = $len % $lw;
+				for (; $i < $len - $leftw; $i += $lw) {
+					$lastl = $color . substr($_, $i, $lw) . "\e[m";
+					print "${bc} ${lastl} ${bc}\n";
+				}
+				$lastl = substr($_, $i, $lw);
+				$lastl = $color . $lastl if $leftw;
+				$leftw = $lw - $leftw;
 			}
-			$lastl = substr($1, $i);
-			$leftw = $lw - length($lastl);
-			$lastl = $color . $lastl;
 		}
-	})(\e\[(?:\d{1,3};){0,3}\d{0,3}m)(?{
-		$color = $2;
-	})//g;
-	$lastl .= $color;
+	}
 	my $tailfmt = {
 		l => "${bc} %-s" . ($pc x $leftw) . " ${bc}\n",
 		m => "${bc} " . ($pc x (($leftw - $leftw%2)/2)) . "%s" . ($pc x (($leftw + $leftw%2)/2)) . " ${bc}\n",
 		r => "${bc} " . ($pc x $leftw) . "%+s ${bc}\n"
 	};
-	printf($tailfmt->{$align}, $lastl) if $lastl;
+	printf($tailfmt->{$align}, $lastl . "\e[m") if $lastl;
 }
 sub plaindump {
 	my ($line, $align, $bc, $pc) = @_;
@@ -161,34 +159,33 @@ BEGIN {
 	}
 	$lw = $w - length();
 	my $single = q/'"${single:-0}"'/;
-	my $color = q/'"${color:-0}"'/;
+	$color = q/'"${color:-0}"'/;
 	if ($single) {
 		substr($_, (1+length())/2, 0, "\e[${single}m");
 		substr($_, length()-1, 0, "\e[m") if not $color;
 	}
 	$_ = "\e[${color}m$_\e[m" if $color;
+	$color = "";
 	print " " x (($lw - $lw%2)/2), $_, " " x (($lw + $lw%2)/2), "\n";
 	$_ = "oOO-" . q/'"${mouth:-"{_}"}"'/ . "-OOo";
 	$lw = $w - length() - 2;
 	print "+", "-" x (($lw - $lw%2)/2), $_, "-" x (($lw + $lw%2)/2), "+\n";
 	$_ = q/'"${${title//\//\\/}:-0}"'/;
-	s/^'"'"'(.*)'"'"'$/$1/;
 	for (split("\n")) {
 		&plaindump($_, "m");
 	}
 	printf("|%s|\n", "-" x ($w-2)) if $_;
 }
 {
-	&plaindump($_, q/'"${align:-l}"'/);
-	&colordump($_, q/'"${align:-l}"'/) if /color/;
+	&colordump($_, q/'"${align:-l}"'/);
 }
 END {
 	$_ = q/'"${${footer//\//\\/}:-0}"'/;
-	s/^'"'"'(.*)'"'"'$/$1/;
+	$color = "";
 	if ($_) {
 		printf("|%s|\n", "-" x ($w-2));
 		for (split("\n")) {
-			&plaindump($_, "l");
+			&colordump($_, "l");
 		}
 	}
 	printf("+%s+\n", "-" x ($w-2));
@@ -206,5 +203,3 @@ Crontab:
 M H D m W command
 $(crontab -l 2>&1)
 End-Of-Info
-
-echo $'color:\e[01;31mhello \e[00;32mworld\e[0m \e[01;33mhi, jack\e[00mgood\e[34mbye\e[m' | msgbox
