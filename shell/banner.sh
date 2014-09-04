@@ -19,25 +19,25 @@ function msgbox() {
 				local color=$OPTARG
 				;;
 			e)
-				local eye=$OPTARG
+				local eye=${OPTARG//\//\\\/}
 				;;
 			l)
 				local list=true
 				;;
 			m)
-				local mouth=$OPTARG
+				local mouth=${OPTARG//\//\\\/}
 				;;
 			n)
 				local color='37;40' # white on black
 				;;
 			f)
-				local footer=$OPTARG
+				local footer=${OPTARG//\//\\\/}
 				;;
 			s)
 				local single='37;40'
 				;;
 			t)
-				local title=$OPTARG
+				local title=${OPTARG//\//\\\/}
 				;;
 			w)
                 if [[ $OPTARG =~ ^[1-9][0-9]*$ ]]; then
@@ -170,7 +170,7 @@ BEGIN {
 	$_ = "oOO-" . q/'"${mouth:-"{_}"}"'/ . "-OOo";
 	$lw = $w - length() - 2;
 	print "+", "-" x (($lw - $lw%2)/2), $_, "-" x (($lw + $lw%2)/2), "+\n";
-	$_ = q/'"${${title//\//\\/}:-0}"'/;
+	$_ = q/'"${title:-0}"'/;
 	for (split("\n")) {
 		&plaindump($_, "m");
 	}
@@ -180,7 +180,7 @@ BEGIN {
 	&colordump($_, q/'"${align:-l}"'/);
 }
 END {
-	$_ = q/'"${${footer//\//\\/}:-0}"'/;
+	$_ = q/'"${footer:-0}"'/;
 	$color = "";
 	if ($_) {
 		printf("|%s|\n", "-" x ($w-2));
