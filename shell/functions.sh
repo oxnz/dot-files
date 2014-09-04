@@ -26,12 +26,12 @@ trap _exit EXIT
 function man () {
 	env \
 	LESS_TERMCAP_mb=$'\E[01;31m' \
-	LESS_TERMCAP_md=$'\E[01;38;5;74m' \
+	LESS_TERMCAP_md=$'\E[01;34m' \
 	LESS_TERMCAP_me=$'\E[00m' \
 	LESS_TERMCAP_se=$'\E[00m' \
-	LESS_TERMCAP_so=$'\E[32;5;246m' \
+	LESS_TERMCAP_so=$'\E[31m' \
 	LESS_TERMCAP_ue=$'\E[00m' \
-	LESS_TERMCAP_us=$'\E[04;36;5;146m' \
+	LESS_TERMCAP_us=$'\E[04;32m' \
 	man "$@"
 }
 
