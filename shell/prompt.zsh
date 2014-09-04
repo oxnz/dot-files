@@ -2,6 +2,7 @@
 # see zshmisc(1)
 
 PROMPT="%F{cyan}[%F{red}%n%F{green}@%F{blue}%m:%F{magenta}%1~:%F{red}%?%F{cyan}]%#%f "
+RPROMPT="%F{cyan}%*%f"
 
 # set terminal title
 case $TERM in

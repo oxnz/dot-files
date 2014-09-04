@@ -197,13 +197,17 @@ END {
 }
 
 # show banner
-cat <<End-Of-Info | msgbox -t "Dashboard-$(uname -a)" -f "Uptime:$(uptime)"
-Kernel: $(uname -r)
-Uptime: $(uptime)
-Mail: $(/usr/sbin/sendmail -bp)
-Memory:
+function banner() {
+	printf "\
+\e[32mKernel:\e[m $(uname -r)
+\e[33mUptime:\e[m $(uptime)
+\e[34mMail:\e[m $(/usr/sbin/sendmail -bp 2>&1)
+\e[35mMemory:\e[m
 $(free -h)
-Crontab:
-M H D m W command
+\e[31mCrontab:\e[m
+\e[36mM H D m W command\e[m
 $(crontab -l 2>&1)
-End-Of-Info
+"
+}
+
+banner | msgbox -t "Dashboard-$(uname -a)" -f "Uptime:$(uptime)"
