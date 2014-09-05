@@ -198,16 +198,14 @@ END {
 
 # show banner
 function banner() {
-	printf "\
-\e[32mKernel:\e[m $(uname -r)
-\e[33mUptime:\e[m $(uptime)
-\e[34mMail:\e[m $(/usr/sbin/sendmail -bp 2>&1)
-\e[35mMemory:\e[m
-$(free -h)
-\e[31mCrontab:\e[m
-\e[36mM H D m W command\e[m
-$(crontab -l 2>&1)
-"
+	echo "\e[32mKernel:\e[m $(uname -r)"
+	echo "\e[33mUptime:\e[m $(uptime)"
+	echo "\e[34mMail:\e[m $(/usr/sbin/sendmail -bp 2>&1)"
+	echo "\e[35mMemory:\e[m"
+	echo "$(free -h)"
+	echo "\e[31mCrontab:\e[m"
+	echo "\e[36mM H D m W command\e[m"
+	echo "$(crontab -l 2>&1)"
 }
 
-banner | msgbox -t "Dashboard-$(uname -a)" -f "Uptime:$(uptime)"
+banner | msgbox -t "$(uname -a)" -f "Uptime:$(uptime)"
