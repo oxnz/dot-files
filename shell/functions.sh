@@ -170,6 +170,10 @@ End-Of-Help
         esac
     done
     shift $(($OPTIND-1))
+	if [ $# -ne 0 ]; then
+		echo "Unexpected parameter(s): '$@'"
+		return 1
+	fi
 
 	fc -l -n 1 | perl -ane 'BEGIN {my %cmdlist}{$cmdlist{@F[0]}++}
 	END {printf("Number\tTimes\tFrequency\tCommand\n");
