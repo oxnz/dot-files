@@ -135,10 +135,19 @@ Usage: fstr [-i] <pattern> <filename pattern>"
         xargs -0 egrep --color=auto -n ${case} "$1"
 }
 
-# History accepts a range in zsh entries as [first] [last] arguments, so to
-# get them all run history 1.
-# Note that the history list starts at 1 and not 0
-# print top command in history
+################################################################################
+# Description:
+#	History accepts a range in zsh entries as [first] [last] arguments, so to
+#	get them all run history 1.
+#	Note that the history list starts at 1 and not 0
+#	print top command in history
+# Globals:
+#	None
+# Arguments:
+#	-h|-n <num>
+# Returns:
+#	None
+################################################################################
 function histop() {
     local opt
     local OPTIND=1
@@ -318,7 +327,15 @@ function todo() {
 End-Of-Usage
 }
 
+###########################################################
 # dump var after tidle expand, command substitute, etc.
+# Globals:
+#	None
+# Arguments:
+#	anything
+# Returns:
+#	None
+###########################################################
 function vardump() {
 	local -i i=0
 	for arg
