@@ -318,6 +318,17 @@ function todo() {
 End-Of-Usage
 }
 
+# dump var after tidle expand, command substitute, etc.
+function vardump() {
+	local -i i=0
+	for arg
+	do
+		i+=1
+		echo "\$${i} => $arg"
+		shift;
+	done
+}
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
