@@ -1,7 +1,7 @@
 # ~/.zshrc
 #
 # Created: 2013-06-25 12:20:00
-# Last-update: 2014-08-28 21:47:29
+# Last-update: 2014-09-24 09:55:39
 # Version: 0.1
 # Author: Oxnz
 # License: Copyright (C) 2013 Oxnz
@@ -29,6 +29,8 @@ bindkey -e
 bindkey "\e[3~"	delete-char	# Del
 # completion in the middle of a line
 bindkey '^i' expand-or-complete-prefix
+# Ctrl+U to be bound to backward-kill-line rather than kill-whole-line
+bindkey \^U backward-kill-line
 
 #following chars are regareds as part of the word
 WORDCHARS='*?_-[]~=&;!#$%^(){}<>'
