@@ -254,34 +254,27 @@ function apt-hist() {
 
 # use alias rm='trash' to play safer
 function trash() {
-	local TRASH
-	case "$(uname -s)" in
-		Darwin)
-			TRASH=~/.Trash
-			;;
-		Linux)
-			TRASH=~/.local/share/Trash/files
-			;;
-		*)
-			echo "Unsupported system" 1>&2 && return 0
-			;;
-	esac
 	case "$1" in
 		""|-h|--help)
 			echo "Usage: trash [files or directories]"
+            return 1
 			;;
 		*)
-			for item in "$@"; do
-				if [[ ! -e "$item" ]]; then
-					echo "$item :No such file or directory, skipped" 1>&2
-					# uncomment the following line to abort if non-exists
-					#return 1
-					continue
-				fi
-				local dst=${TRASH}/$(basename "$item")
-				while [[ -e "$dst" ]]; do
-					dst="${dst}+"
-				done
+			for item in $@; do
+                local tdir="${HOME}/.local/share/Trash"
+                local dst="${tdir}/files/${item}"
+                if [ -e "${dst}" ]; then
+                    local -i i=2
+                    while [ -e "${dst}.$i" ]; do
+                        let i=i+1
+                    done
+                    dst="${dst}.$i"
+                fi
+                cat <<EOT > "${tdir}/info/$(basename $dst).trashinfo"
+[Trash Info]
+Path=$(readlink -e $item)
+DeletionDate=$(date "+%FT%T")
+EOT
 				command mv -- "$item" "$dst"
 			done
 			;;
@@ -307,7 +300,7 @@ function google() {
 			;;
 		*)
 			while [ $# -ge 1 ]; do
-				/usr/bin/open "$url"$(echo ${1// /+} | xxd -plain | sed 's/\(..\)/%\1/g')
+				xdg-open "$url"$(echo ${1// /+} | xxd -plain | sed 's/\(..\)/%\1/g')
 				shift
 			done
 			;;
