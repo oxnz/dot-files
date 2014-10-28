@@ -6,7 +6,7 @@
 " Created	: 2010-03-20 18:00:12
 " Copying	: Copyright (C) 2013 0xnz, All rights reserved.
 "
-" Last-update: 2014-08-28 21:22:51
+" Last-update: 2014-10-22 17:34:04
 "
 " Description: vimrc compatible for Linux/Windows/OSX, GUI/Console
 "-------------------------------------------------------------------------------
@@ -141,7 +141,7 @@ endif
 " expandtab = et smarttab=sta sw=shiftwidth sts=softtabstop
 set sw=4
 set ts=4
-autocmd FileType python setlocal et sta sw=4 sts=4
+autocmd FileType python setlocal ts=4 et sta sw=4 sts=4
 
 set foldmethod=syntax
 set foldlevel=99
