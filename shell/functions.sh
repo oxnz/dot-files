@@ -1,7 +1,91 @@
 # ~/.shell/functions.sh
 
+############################################################
+# used to get user answer interactivly
+# Options:
+############################################################
+function confirm() {
+    local -a args="${@}"
+    local opt
+    local OPTIND=1
+    while getopts "d:hp:t:T:" opt; do
+        case "$opt" in
+            d)
+                if [ "$OPTARG" -eq "$OPTARG" 2> /dev/null ]; then
+                    local -r -i default="$OPTARG"
+                else
+                    echo "Invalid number '${OPTARG}' for option 'd'" >&2
+                    return 1
+                fi
+                ;;
+            h)
+                cat <<End-Of-Help
+Usage: confirm [option]
+    options:
+        -d valued returned when Enter pressed, default 0
+        -h print help message and exit
+        -p prompt
+        -t timeout, default is 3
+        -T value returned when timeout, defalut is read errcode
+End-Of-Help
+                return
+                ;;
+            p)
+                if [ -n "$OPTARG" ]; then
+                    prompt="${OPTARG}, are you sure ?"
+                else
+                    echo "Invalid prompt '${OPTARG}' for option 'p'" >&2
+                    return 1
+                fi
+                ;;
+            t)
+                if [ "$OPTARG" -eq "$OPTARG" 2> /dev/null ]; then
+                    local -r -i timeout="$OPTARG"
+                else
+                    echo "Invalid number '${OPTARG}' for option 't'" >&2
+                    return 1
+                fi
+                ;;
+            T)
+                if [ "$OPTARG" -eq "$OPTARG" 2> /dev/null ]; then
+                    local -r -i tmodef="$OPTARG"
+                else
+                    echo "Invalid number '${OPTARG}' for option 'T'" >&2
+                    return 1
+                fi
+                ;;
+            ?)
+                confirm -h >&2
+                return 1
+                ;;
+        esac
+    done
+    shift $((OPTIND-1))
+
+    local reply
+    read -p "${prompt:-Are you sure ?} [y/n]: " -n 1 -t "${timeout:-3}" -r reply
+    local -i retval=$?
+    # timeout or Ctrl-C
+    if [ $retval -ne 0 ]; then
+        echo "timeout"
+        return ${tmodef:-$retval}
+    fi
+    case "${reply:-enter}" in
+        enter) return "${default:-0}" ;;
+        y|Y) retval=0 ;;
+        n|N) retval=1 ;;
+        *)
+            echo "Invalid input: '${reply}'" >&2
+            confirm "$args"
+            return
+            ;;
+    esac
+    echo
+    return $retval
+}
+
 # echo error message if exists and return error code
-function errpro() {
+function errlog() {
     local mesg="${1-success}"
     local code="${2-0}"
 
@@ -195,7 +279,7 @@ function histop() {
 Usage: histop -n <num>
     num: print num lines of most used command
 End-Of-Help
-                return 0
+                return
                 ;;
             n)
                 if [[ $OPTARG =~ ^[1-9][0-9]*$ ]]; then
@@ -262,7 +346,7 @@ Usage: itunes <option>
         next|previous   play next or previous track
         help            show this message and exit
 End-Of-Help
-			return 0
+			return
 			;;
 		*)
 			print "Unkonwn option: $opt"
@@ -296,7 +380,7 @@ function apt-hist() {
 			;;
 		""|-h|--help)
 			echo "Usage: apt-hist <help|install|upgrade|remove|rollback|list>"
-			return 0
+			return
             ;;
         *)
 			print "Unkonwn option: $opt"
@@ -310,7 +394,7 @@ function apt-hist() {
 # perform uri_encode | uri_decode
 # perl -MURI::Escape -e 'print uri_unescape();'
 # Options:
-#   afFhpu
+#   ahp
 ########################################################################
 function quote() {
     # candidate implementation
@@ -320,8 +404,7 @@ function quote() {
     while getopts "afFhpu" opt; do
         case "$opt" in
             a)
-				echo "${1// /+}" | xxd -plain | sed 's/../%&/g'
-                return $PIPESTATUS
+                local -r a=1
                 ;;
             h)
                 cat <<End-Of-Help
@@ -330,19 +413,11 @@ Usage: quote [option] [string]
         -a quote all characters
         -h show this help message and exit
         -p path quote
-        -u quoted hex in uppercase
 End-Of-Help
                 return
                 ;;
             p)
-                shift
-                quote "$@" | sed -e 's/%2[fF]/\//g'
-                return $PIPESTATUS
-                ;;
-            u)
-                shift
-                quote "$@" | sed -e 's/%../\U&\E/g'
-                return $PIPESTATUS
+                local -r p=\/
                 ;;
             ?)
                 quote -h >&2
@@ -353,23 +428,23 @@ End-Of-Help
     shift $((OPTIND-1))
 
     local -r s="$1"
-    local -r -i l="${#s}"
+    local -r -i l=${#s}
     local t=''
     local c
     local o
     local -i i
 
     for ((i=0; i < l; ++i)); do
-        c=${s:$i:1}
+        c="${s:$i:1}"
         case "$c" in
-            [-_.~a-zA-Z0-9])
+            "$p"|"$a"[-_.~a-zA-Z0-9])
                 o="$c"
                 ;;
             *)
-                o=$(echo -n "$c" | od -An -t x1 | tr ' ' %)
+                o=$(echo -n "$c" | od -An -t x1 | tr '[ a-z]' '[%A-Z]')
                 ;;
         esac
-        t+=$o
+        t+="$o"
     done
     echo $t
 }
@@ -398,7 +473,13 @@ function trash() {
     while getopts "cd:hlr:" opt; do
         case "$opt" in
             c)
-                echo "clear not supported yet"
+                local prompt='[trash] the clear operation cannot be undone'
+                if confirm -p "${prompt}" -t 2 -d 1; then
+                    rm -rf "${FILEDIR}/*"
+                    rm -rf "${INFODIR}/*"
+                else
+                    echo "cancelled"
+                fi
                 return
                 ;;
             d)
