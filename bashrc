@@ -43,6 +43,7 @@ if ! shopt -oq posix; then
 	fi
 fi
 
+# source the custom utilities
 if [ -d ~/.shell ]; then
 	for i in ~/.shell/*.{ba,}sh; do
 		if [ -r $i ]; then
