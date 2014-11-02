@@ -31,4 +31,4 @@ export PYTHONSTARTUP=~/.pythonrc
 # sh-indent-comment: t
 # indent-tabs-mode: nil
 # End:
-# ex: ts=4 sw=4 et filetype=sh
+# vim: ts=4 sw=4 et filetype=sh
