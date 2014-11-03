@@ -1,5 +1,14 @@
 # ~/.shell/functions.sh
 
+################################################################################
+# a simple logger
+# Constants: LOGFILE
+################################################################################
+function log() {
+    local -r LOGFILE="${HOME}/.shell/shell.log"
+    echo "[$(date '+%F %T %Z') ${FUNCNAME[1]}] $@" >> "$LOGFILE"
+}
+
 ############################################################
 # used to get user answer interactivly
 # Options:
@@ -63,39 +72,34 @@ End-Of-Help
     shift $((OPTIND-1))
 
     local reply
-    read -p "${prompt:-Are you sure ?} [y/n]: " -n 1 -t "${timeout:-3}" -r reply
+    read -n 1 -p "${prompt:-Are you sure ?} [y/n]: " -t "${timeout:-3}" -r reply
     local -i retval=$?
     # timeout or Ctrl-C
     if [ $retval -ne 0 ]; then
-        echo "timeout"
-        return ${tmodef:-$retval}
+        if [ $retval -gt 128 ]; then
+            echo "timeout"
+            return ${tmodef:-$retval}
+        else
+            echo "failed"
+            return $retval
+        fi
     fi
+    local emsg=''
     case "${reply:-enter}" in
-        enter) return "${default:-0}" ;;
+        enter)
+            emsg='default'
+            retval=${default:-0}
+            ;;
         y|Y) retval=0 ;;
-        n|N) retval=1 ;;
+        $'\x04'|n|N) retval=1 ;;
         *)
             echo "Invalid input: '${reply}'" >&2
             confirm "$args"
             return
             ;;
     esac
-    echo
+    echo "$emsg"
     return $retval
-}
-
-# echo error message if exists and return error code
-function errlog() {
-    local mesg="${1-success}"
-    local code="${2-0}"
-
-    if [[ ! $code = *([0-9]) ]]; then
-        mesg="${mesg}\nnumber needed for error code, but '${code}' given"
-        code=$((code == 0 ? 1 : code))
-    fi
-
-    echo -e "$mesg" >&$((code %= 255, code == 0 ? 1 : 2))
-    return $code
 }
 
 ################################################################################
@@ -114,17 +118,22 @@ function __initialize__() {
     local func
     for func in EC man dict ips rename extract histop itunes; do
         if typeset -f $func > /dev/null; then
-            echo "WARNING: $func is aleary exists"
+            echo "WARNING: ${func} is aleary exists"
         fi
     done
 
     # set trap to intercept the non-zero return code of last program
-    #function _err() { echo -e '\e[1;31m'non-zero return code: $?'\e[m'; }
-    #trap _err ERR
+    function _err() {
+        local status=$?
+        local cmd
+        cmd="$(history | tail -1 | sed -e 's/^ *[0-9]* *//')"
+        log "command [${cmd}] execute failed with status [${status}]"
+    }
+    trap _err ERR
 
     # do some stuff before exit
     function _exit() {
-        echo "bye"
+        log "${USER} leaves $(tty)"
     }
     trap _exit EXIT
 }
@@ -356,17 +365,20 @@ End-Of-Help
 	osascript -e "tell application \"iTunes\" to $opt"
 }
 
-###########################################################
+################################################################################
 # display apt-history
 # Options:
 #   help|install|upgrade|remove|list
 # Returns:
 #	None
-###########################################################
+# Note:
+#   \<,\>: word boundary in regular expression
+#   ref: http://www.linuxtopia.org/online_books/advanced_bash_scripting_guide/special-chars.html
+################################################################################
 function apt-hist() {
 	case "$1" in
 		install|upgrade|remove)
-            apt-hist list | grep --no-filename " $1 "
+            apt-hist list | grep --no-filename "\<$1\>"
 			;;
 		list)
             for log in $(ls -t /var/log/dpkg.log*); do
@@ -380,7 +392,6 @@ function apt-hist() {
 			;;
 		""|-h|--help)
 			echo "Usage: apt-hist <help|install|upgrade|remove|rollback|list>"
-			return
             ;;
         *)
 			print "Unkonwn option: $opt"
@@ -523,10 +534,13 @@ function trash() {
         fi
         cat <<EOT > "${INFODIR}/$(basename "${dst}").trashinfo"
 [Trash Info]
-Path=$(quote "$(readlink -e "${item}")" | sed -e 's/%2[fF]/\//g')
+Path=$(quote -p "$(readlink -e "${item}")"
 DeletionDate=$(date "+%FT%T")
 EOT
-        command mv -- "$item" "$dst"
+        if ! command mv -- "$item" "$dst"; then
+            echo "failed to move file '${item}' to trash" >&2
+            return 1
+        fi
     done
 }
 
@@ -540,6 +554,35 @@ function dos2unix() {
     command perl -i -p -e 's/\r\n/\n/' "$1"
 }
 
+if which tree >/dev/null 2>&1; then
+function tree() {
+    local opt
+    local OPTIND=1
+    while getopts "h" opt; do
+        case "$opt" in
+            h)
+                cat <<End-Of-Help
+Usage: tree [option] [directory]
+End-Of-Help
+                return
+                ;;
+            ?)
+                tree -h >&2
+                return 1
+                ;;
+        esac
+    done
+    shift $((OPTIND-1))
+    if [ $# -gt 1 ]; then
+        echo "too many parameters" >&2
+        return 1
+    fi
+    local dir="${1:-.}"
+    echo "$dir"
+    find "$dir" -print | sed -e 's#[^/]*/#|____#g
+    s#____|#  |#g'
+}
+fi
 ###########################################################
 # search google via command line
 # Constans:
@@ -594,6 +637,32 @@ function vardump() {
 	done
 }
 
+# TODO: add apply, map, filter, reduce function
+function apply() {
+    if [ $# -ne 2 ]; then
+        echo "Usage: apply input-cmd process-cmd" >&2
+        return 1
+    fi
+
+    local item
+    for item in $($1); do
+        $2 "$item"
+    done
+}
+
+function filter() {
+    if [ $# -ne 2 ]; then
+        echo "Usage: filter input-cmd filter-cmd" >&2
+        return 1
+    fi
+
+    local item
+    for item in $($1); do
+        if $2 "$item"; then
+            echo "$item"
+        fi
+    done
+}
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
