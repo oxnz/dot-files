@@ -124,10 +124,10 @@ function __initialize__() {
 
     # set trap to intercept the non-zero return code of last program
     function _err() {
-        local status=$?
+        local ecode=$?
         local cmd
         cmd="$(history | tail -1 | sed -e 's/^ *[0-9]* *//')"
-        log "command [${cmd}] execute failed with status [${status}]"
+        log "command [${cmd}] execute failed with exit code [${ecode}]"
     }
     trap _err ERR
 
@@ -260,7 +260,7 @@ Usage: fstr [-i] <pattern> <filename pattern>"
             *) echo "$usage" && return 1 ;;
         esac
     done
-    shift $(($OPTIND-1))
+    shift $((OPTIND-1))
     find . -type f -name "${2:-*}" -print0 | \
         xargs -0 egrep --color=auto -n ${case} "$1"
 }
@@ -304,7 +304,7 @@ End-Of-Help
                 ;;
         esac
     done
-    shift $(($OPTIND-1))
+    shift $((OPTIND-1))
 	if [ $# -ne 0 ]; then
 		echo "Unexpected parameter(s): '$@'"
 		return 1
@@ -410,7 +410,7 @@ function apt-hist() {
 function quote() {
     # candidate implementation
     #perl -MURI::Escape -e 'print uri_escape($ARGV[0]), "\n"' "$1"
-    local opt="$1"
+    local opt
     local OPTIND=1
     while getopts "afFhpu" opt; do
         case "$opt" in
@@ -479,15 +479,14 @@ function trash() {
     local -r TRASHDIR="${HOME}/.local/share/Trash"
     local -r FILEDIR="${TRASHDIR}/files"
     local -r INFODIR="${TRASHDIR}/info"
-    local opt="$1"
+    local opt
     local OPTIND=1
     while getopts "cd:hlr:" opt; do
         case "$opt" in
             c)
                 local prompt='[trash] the clear operation cannot be undone'
                 if confirm -p "${prompt}" -t 2 -d 1; then
-                    rm -rf "${FILEDIR}/*"
-                    rm -rf "${INFODIR}/*"
+                    rm -rf {"${FILEDIR}","${INFODIR}"}/*
                 else
                     echo "cancelled"
                 fi
@@ -502,7 +501,9 @@ function trash() {
                 return
                 ;;
             l)
-                echo -e "DeletionDate\tDeletionTime\tPath"
+                echo $'DeletionDate\tDeletionTime\tPath'
+                local f
+                local item
                 for f in "${INFODIR}"/*.trashinfo; do
                     [ -f "$f" ] || continue
                     item="$(sed -ne '2h
@@ -521,20 +522,21 @@ function trash() {
                 ;;
         esac
     done
-    shift $(($OPTIND-1))
+    shift $((OPTIND-1))
 
+    local item
     for item in "$@"; do
         local dst="${FILEDIR}/${item}"
         if [ -e "${dst}" ]; then
             local -i i=2
             while [ -e "${dst}.$i" ]; do
-                let i=i+1
+                i+=1
             done
             dst="${dst}.$i"
         fi
         cat <<EOT > "${INFODIR}/$(basename "${dst}").trashinfo"
 [Trash Info]
-Path=$(quote -p "$(readlink -e "${item}")"
+Path=$(quote -p "$(readlink -e "${item}")")
 DeletionDate=$(date "+%FT%T")
 EOT
         if ! command mv -- "$item" "$dst"; then
@@ -554,8 +556,24 @@ function dos2unix() {
     command perl -i -p -e 's/\r\n/\n/' "$1"
 }
 
-if which tree >/dev/null 2>&1; then
-function tree() {
+which perror > /dev/null || function perror() {
+    if [ $# -eq 0 ]; then
+        echo "Usage: perror errno"
+        return
+    fi
+
+    perl -MPOSIX -e 'my ($errno, $errmsg) = ($ARGV[0], "");
+    if ($errno ne $errno + 0) {
+        die "Invalid errno: [$errno]\n";
+    } elsif ($errno == 0) {
+        $errmsg = "Success";
+    } else {
+        $errmsg = strerror($errno);
+    }
+    printf "error code %3d:\t$errmsg\n", $errno;' "$@"
+}
+
+which tree > /dev/null || function tree() {
     local opt
     local OPTIND=1
     while getopts "h" opt; do
@@ -582,7 +600,6 @@ End-Of-Help
     find "$dir" -print | sed -e 's#[^/]*/#|____#g
     s#____|#  |#g'
 }
-fi
 ###########################################################
 # search google via command line
 # Constans:
