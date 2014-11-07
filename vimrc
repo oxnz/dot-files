@@ -6,7 +6,7 @@
 " Created	: 2010-03-20 18:00:12
 " Copying	: Copyright (C) 2013 0xnz, All rights reserved.
 "
-" Last-update: 2014-10-22 17:34:04
+" Last-update: 2014-11-07 14:58:18
 "
 " Description: vimrc compatible for Linux/Windows/OSX, GUI/Console
 "-------------------------------------------------------------------------------
@@ -17,6 +17,12 @@ if v:progname =~? "evim"
   finish
 endif
 
+" prevent vi read .vimrc
+" ref:
+" http://stackoverflow.com/questions/636721/how-to-detect-vi-not-vim-in-vimrc
+:if ! version >= 500
+:	finish
+:endif
 " Use Vim settings, rather than Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
 set nocompatible
@@ -175,3 +181,9 @@ nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
 """"""""""""""""""""""""""
 let g:OxnzToolkitAuthor="Oxnz"
 let g:OxnzToolkitEmail = "yunxinyi@gmail.com"
+
+"""""""""""""""""""""""""""""""""""""""""""
+" plugin - OxnzTemplate
+"""""""""""""""""""""""""""""""""""""""""""
+let g:OxnzTemplateAuthor = "Oxnz"
+let g:OxnzTemplateEmail = "yunxinyi@gmail.com"

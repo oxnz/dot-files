@@ -1,0 +1,23 @@
+#!/bin/sh
+cat << EOF
+/*
+ * Filename:	[&expand('%:t')]
+ *
+ * Author:		[\$author]
+ * Email:		[\$email]
+ * Created:		[!date '+\[%F %T %Z]']
+ * Last-update:	[=time.strftime('%F %T %Z')]
+ * Description: [\$anchor]
+ *
+ * Version:		[\$version]
+ * Revision:	[None]
+ * Revision history:	[None]
+ * Date Author Remarks:	[None]
+ *
+ * License: 
+ * Copyright (c) 2013 Oxnz
+ *
+ * [license]
+ *
+ */
+EOF
