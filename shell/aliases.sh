@@ -16,7 +16,11 @@ alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 #}}}
 
-# play safe {{{
+# platform compatible {{{
+which xdg-open > /dev/null && alias open='xdg-open'
+#}}}
+
+# play safer {{{
 alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
@@ -35,7 +39,7 @@ fi
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+which notify-send > /dev/null && alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # some more ls aliases
 # specify format {{{
@@ -48,11 +52,14 @@ alias gdb='gdb --quiet'
 alias bc='bc --quiet'
 #}}}
 
-# typo...
+# typo {{{
 alias cd..='cd ..'
+alias unmount='echo "Error: Try the command: umount" >&2 && false'
 #alias sl='ls'
+#}}}
 
 #short cuts {{{
+alias e="${EDITOR:-vim}"
 alias o='less'
 alias h='history'
 alias j='jobs -l'
@@ -65,7 +72,6 @@ alias g='google'
 alias rd='rmdir'
 alias md='mkdir -p'
 alias beep='printf "\007"'
-alias unmount='echo "Error: Try the command: umount" 1>&2 && false'
 #}}}
 
 # command wrapper {{{
@@ -77,32 +83,14 @@ alias svn='svn-color'
 #alias emacs-nox='emacs-24.3 -nw'
 #alias emacsclient='/usr/local/bin/emacsclient'
 #alias bash='/usr/local/bin/bash'
-#alias vi='/usr/local/bin/vim'
-#alias vim='/usr/local/bin/vim'
-#alias ex='/usr/local/bin/ex'
-#alias view='/usr/local/bin/view'
-#alias rview='/usr/local/bin/rview'
-#alias rvim='/usr/local/bin/rvim'
-#alias vimdiff='/usr/local/bin/vimdiff'
 #alias edit='emacs-24.3 -nw'
 #alias make='/usr/local/bin/gnu-make'
 #}}}
 #new command
-#alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
 alias now='/bin/date +"%F %T"'
 
-# path aliases {{{
-# use `cd ~xxx' to access
-if [ -n $ZSH_VERSION ]; then
-	hash -d DOCS="${HOME}/Documents"
-	hash -d WORK="${HOME}/Developer"
-	hash -d DOWN="${HOME}/Downloads"
-fi
-[ -d "${HOME}/Workspace" ] && hash -d WORK="${HOME}/Workspace"
-#}}}
-
 #command not in PATH var {{{
-alias py2applet='/System/Library/Frameworks/Python.framework/Versions/Current/Extras/bin/py2applet'
+#alias py2applet='/System/Library/Frameworks/Python.framework/Versions/Current/Extras/bin/py2applet'
 # learn you a good emacs
 #alias vi='echo "command not found"'
 #alias vi='emacs-24.3 -nw'
