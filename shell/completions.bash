@@ -1,8 +1,24 @@
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+	if [ -f /usr/share/bash-completion/bash_completion ]; then
+		. /usr/share/bash-completion/bash_completion
+	elif [ -f /etc/bash_completion ]; then
+		. /etc/bash_completion
+	elif [ -f /usr/local/share/bash-completion/bash-completion ]; then
+		. /usr/local/share/bash-completion/bash-completion
+	elif [ -f /usr/local/etc/bash_completion ]; then
+	    . /usr/local/etc/bash_completion
+	fi
+fi
+
 # source other completions
 if [ -d ~/.shell/profile.d ]; then
 	for i in ~/.shell/profile.d/*.{ba,}sh; do
 		if [ -r $i ]; then
-			. $i
+			:
+			#. $i
 		fi
 	done
 	unset i
