@@ -1,4 +1,5 @@
 # ~/.shell/functions.sh
+# utility functions
 
 ################################################################################
 # a simple logger
@@ -7,6 +8,175 @@
 function log() {
     local -r LOGFILE="${HOME}/.shell/shell.log"
     echo "[$(date '+%F %T %Z') ${FUNCNAME[1]}] $@" >> "$LOGFILE"
+}
+
+################################################################################
+# query weather info
+# ref: http://openweathermap.org/current
+# TODO: use ip2loc get location, then get weather by coord
+################################################################################
+function weather() {
+    if [ $# -ne 1 ]; then
+        echo "Usage: ${FUNCNAME[0]} [option] <city>" >&2
+        return 1
+    fi
+    local -r city="$1"
+    local -r baseurl='http://api.openweathermap.org/data/2.5/weather'
+    local -r url="${baseurl}?q=${city:-Wuhan},${country:-cn}&units=${units:-metric}"
+    ruby -e '
+require "net/http"
+require "json"
+
+fmtime = lambda { |ts| Time.at(ts).strftime("%F %T %Z") }
+res = Net::HTTP.get_response(URI('"'${url}'"'))
+if res.is_a?(Net::HTTPSuccess)
+    res = JSON.parse(res.body)
+    printf <<EOF
+Name: #{res["name"]}(#{res["sys"]["country"]}) coord(lon: #{res["coord"]["lon"]}, lat: #{res["coord"]["lat"]})
+Sunrise: #{fmtime.call(res["sys"]["sunrise"])}, Sunset: #{fmtime.call(res["sys"]["sunset"])}
+Weather:
+EOF
+res["weather"].each {|w|
+    printf %Q/\tmain: #{w["main"]}, description: #{w["description"]}\n/
+}
+printf <<EOF
+Temp: #{res["main"]["temp"]}(min: #{res["main"]["temp_min"]}, max: #{res["main"]["temp_max"]}), pressure: #{res["main"]["pressure"]}, humidity: #{res["main"]["humidity"]}
+Wind: #{res["wind"]["speed"]} m/s, deg: #{res["wind"]["deg"]}
+Clouds: #{res["clouds"]["all"]}
+EOF
+end
+'
+}
+
+################################################################################
+# convert ip address to location info
+################################################################################
+function ip2loc() {
+    local opt
+    local OPTIND=1
+    while getopts "hv" opt; do
+        case "$opt" in
+            h)
+                echo "Usage: ${FUNCNAME[0]} [option] [ip]"
+                return
+                ;;
+            v)
+                local -r verbose='true'
+                ;;
+            ?)
+                ip2loc >&2
+                return 1
+                ;;
+        esac
+    done
+    shift $((OPTIND-1))
+
+    local ip="$1"
+    local scpt='/^.$/d;s/^\s*"\([^"]*\)":\s*"\([^"]*\)",\?$/\1: \2/'
+    if [ -n "$verbose" ]; then
+        curl ipinfo.io/"${ip}" > >(sed -e "$scpt")
+    else
+        curl ipinfo.io/"${ip}" > >(sed -e "$scpt") 2>/dev/null
+    fi
+}
+
+################################################################################
+# test if variable is specified type
+################################################################################
+function isnum() {
+    local opt
+    local OPTIND=1
+    while getopts ":hf:q" opt; do
+        case "$opt" in
+            h)
+                cat <<End-Of-Usage
+Usage: ${FUNCNAME[0]} [option] [variable]
+    Options:
+        -f  format:
+            -d  decimal number
+            -o  octal number
+            -x  hex number
+            if not specified, any matched format will return true
+        -h  show this message and exit
+        -q  quiet
+End-Of-Usage
+                return
+                ;;
+            f)
+                case "$OPTARG" in
+                    d)
+                        local -r fmt=d
+                        local -r pattern='^[0-9]$|^[1-9][0-9]*$'
+                        ;;
+                    o)
+                        local -r fmt=o
+                        local -r pattern='^[0-7]$|^0[0-7]*$'
+                        ;;
+                    x)
+                        local -r fmt=x
+                        local -r pattern='^0$|^0[xX][0-9a-fA-F]*$'
+                        ;;
+                    *)
+                        echo "Unrecognized format '$OPTARG' for option 'f'" >&2
+                        return 1
+                        ;;
+                esac
+                ;;
+            q) local -r quiet='true' ;;
+            :)
+                echo "${FUNCNAME[0]}: option requires an argument -- $OPTARG" >&2
+                return 1
+                ;;
+            ?)
+                [[ "$OPTARG" =~ [0-9] ]] && break
+                echo "${FUNCNAME[0]}: illegal option -- $OPTARG" >&2
+                return 1
+                ;;
+        esac
+    done
+    shift $((OPTIND-1))
+
+    local s="$1"
+    if [ $# -ne 1 -o -z "$s" ]; then
+        [ "$quiet" == 'true' ] || isnum -h >&2
+        return 1
+    fi
+    case "${fmt:-any}" in
+        o|d|x)
+            case "${s:0:1}" in -|+) s="${s:1}" ;; esac
+            [[ "$s" =~ $pattern ]] && return 0
+            ;;
+        'any')
+            printf '%d' "$s" >& /dev/null && return 0
+            ;;
+        *)
+            echo "Unsupported format '${fmt}'" >&2
+            ;;
+    esac
+    return 1
+}
+
+################################################################################
+# generate random stuff
+################################################################################
+function random() {
+    local opt
+    local OPTIND=1
+    while getopts 'h' opt; do
+        case "$opt" in
+            h)
+                echo "Usage: ${FUNCNAME[0]} [option] [string]"
+                return
+                ;;
+        esac
+    done
+    shift $((OPTIND-1))
+
+    [ $# -gt 0 ] || set -- "$RANDOM"
+    local item
+    for item; do
+        md5sum <<< "$item"
+    done
 }
 
 ############################################################
@@ -29,7 +199,7 @@ function confirm() {
                 ;;
             h)
                 cat <<End-Of-Help
-Usage: confirm [option]
+Usage: ${FUNCNAME[0]} [option]
     options:
         -d valued returned when Enter pressed, default 0
         -h print help message and exit
@@ -116,7 +286,7 @@ function __initialize__() {
 
     # test if function to declare already exists
     local func
-    for func in EC man dict ips rename extract histop itunes; do
+    for func in EC man words ips rename extract histop itunes; do
         if typeset -f $func > /dev/null; then
             echo "WARNING: ${func} is aleary exists"
         fi
@@ -155,9 +325,9 @@ function man () {
 #########################################
 # look up similar word(s) in *nix's dict
 #########################################
-function dict() {
+function words() {
     local word
-    for word in "$@"; do
+    for word; do
         grep "$word" /usr/share/dict/words
     done
 }
@@ -195,7 +365,7 @@ function ips() {
 ################################################################################
 function extract() {
     [ $# -eq 0 ] && echo "Usage: extract <archives>" && return 1
-    while [ $# -gt 0 ]; do
+    while [ $# -ge 0 ]; do
 	    if [ -f "$1" ]
 	    then
 		    case "$1" in
@@ -231,38 +401,63 @@ elif [ -n "$ZSH_VERSOIN" ]; then
     compdef '_files -g "*.gz *.tgz *.txz *.xz *.7z *.Z *.bz2 *.tbz *.zip *.rar *.tar *.lha"' extract
 fi
 
-# find a file with a pattern in name
-function ff() {
-    find . -type f -name '*'"$*"'*' -ls;
-}
-
-# find a file with pattern $1 in the name and Execute $2 on it
-function fe() {
-    find . -type f -name '*'"${1:-}"'*' \
-        -exec ${2:-file} {} \; ;
-}
-
+################################################################################
 # find a pattern in a set of files and highlight them
 # see http://tldp.org/LDP/abs/html/sample-bashrc.html
+################################################################################
 function fstr() {
-    local case="-I"
-    local usage="fstr: find string in files.
-Usage: fstr [-i] <pattern> <filename pattern>"
-
-    if [ "$#" -lt 1 ]; then
-        set -- "$@" "-h"
-    fi
     local opt
     local OPTIND=1
-    while getopts ":i" opt; do
+    while getopts "d:Ef:hI" opt; do
         case "$opt" in
-            i) case="-i" ;;
-            *) echo "$usage" && return 1 ;;
+            d)
+                if [ -d "$OPTARG" ]; then
+                    local -r dir="$OPTARG"
+                else
+                    echo "${FUNCNAME[0]}: Invalid direcotry -- $OPTARG" >&2
+                    return 1
+                fi
+                ;;
+            E)
+                which egrep > /dev/null && local -r grep="egrep" ||
+                    echo "${FUNCNAME[0]}: egrep not found, fallback to grep" >&2
+                ;;
+            f)
+                local -r fpat="$OPTARG"
+                ;;
+            h)
+                cat <<End-Of-Usage
+Usage: ${FUNCNAME[0]} [option] <pattern(s)>
+    options:
+        -d  <search directory>
+        -E  use egrep
+        -f  <filename pattern>
+        -h  show this message and exit
+        -I  case-insensitive
+End-Of-Usage
+                return
+                ;;
+            I)
+                local -r case="-i"
+                ;;
+            ?)
+                fstr -h >&2
+                return 1
         esac
     done
     shift $((OPTIND-1))
-    find . -type f -name "${2:-*}" -print0 | \
-        xargs -0 egrep --color=auto -n ${case} "$1"
+
+    if [ "$#" -eq 0 ]; then
+        echo "${FUNCNAME[0]}: pattern string misssing" >&2
+        return 1
+    fi
+
+    local pat
+    for pat; do
+        shift
+        set -- "$@" "-e" "$pat"
+    done
+    find "${dir:-.}" -type f -name "${fpat:-*}" -exec "${grep:-grep}" --color=auto -H -n ${case} "$@" {} \;
 }
 
 ################################################################################
@@ -445,8 +640,8 @@ End-Of-Help
     local o
     local -i i
 
-    for ((i=0; i < l; ++i)); do
-        c="${s:$i:1}"
+    for ((i = 0; i < l; ++i)); do
+        c="${s:i:1}"
         case "$c" in
             "$p"|"$a"[-_.~a-zA-Z0-9])
                 o="$c"
@@ -524,11 +719,13 @@ function trash() {
     done
     shift $((OPTIND-1))
 
-    local item
-    for item in "$@"; do
-        local dst="${FILEDIR}/${item}"
+    local src
+    local dst
+    local -i i
+    for src; do
+        dst="${FILEDIR}/${src}"
         if [ -e "${dst}" ]; then
-            local -i i=2
+            i=2
             while [ -e "${dst}.$i" ]; do
                 i+=1
             done
@@ -536,22 +733,22 @@ function trash() {
         fi
         cat <<EOT > "${INFODIR}/$(basename "${dst}").trashinfo"
 [Trash Info]
-Path=$(quote -p "$(readlink -e "${item}")")
+Path=$(quote -p "$(readlink -e "${src}")")
 DeletionDate=$(date "+%FT%T")
 EOT
-        if ! command mv -- "$item" "$dst"; then
-            echo "failed to move file '${item}' to trash" >&2
+        if ! command mv -- "$src" "$dst"; then
+            echo "failed to move file '${src}' to trash" >&2
             return 1
         fi
     done
 }
 
-function unix2dos() {
+which unix2dos > /dev/null || function unix2dos() {
     [[ "$#" -eq 0 ]] && echo "Usage: unix2dos <file>" ||
     command perl -i -p -e 's/\n/\r\n/' "$1"
 }
 
-function dos2unix() {
+which dos2unix > /dev/null || function dos2unix() {
     [[ "$#" -eq 0 ]] && echo "Usage: dos2unix <file>" ||
     command perl -i -p -e 's/\r\n/\n/' "$1"
 }
@@ -613,13 +810,12 @@ function google() {
     local -r url="https://www.google.com.hk/search?hl=en#newwindow=1&q="
 	case "$1" in
 		"" | -h | --help)
-			printf "google:\n\tgoogle <keyword>\n"
-			exit 0
+			echo "Usage: google <keyword>"
 			;;
 		*)
-			while [ $# -ge 1 ]; do
-				xdg-open "$url"$(echo ${1// /+} | xxd -plain | sed 's/\(..\)/%\1/g')
-				shift
+            local keyword
+            for keyword; do
+                open "${url}$(quote "$keyword")"
 			done
 			;;
 	esac
@@ -647,6 +843,7 @@ End-Of-Usage
 ###########################################################
 function vardump() {
 	local -i i=0
+    local arg
 	for arg; do
         i+=1
 		echo "\$${i} => $arg"
