@@ -6,8 +6,8 @@ try:
     import rlcompleter
     import os
     import atexit
-except ImportError, e:
-    print e
+except ImportError as e:
+    print(e)
 else:
     class TabCompleter(rlcompleter.Completer):
         """Completer that support tab indenting"""
