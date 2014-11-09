@@ -1,0 +1,26 @@
+#!/bin/sh
+# template file for generate template files for OxnzTemplateKit
+# author: Oxnz
+# copyright: Copyright (C) 2014, Oxnz All Rights Reserved.
+
+if [ $# -ne 2 ]; then
+	echo "Usage: $0 filetype filepath" >&2
+	return 1
+fi
+
+#filetype="$1"
+filepath="$2"
+filedir="$(dirname "${filepath}")"
+filename="$(basename "${filepath}")"
+fileroot="${filename%.*}"
+filetype="${fileroot%%.*}"
+suffix="${fileroot##*.}"
+extension="${filename##*.}"
+
+cat << EOF
+#!/bin/sh
+# File: ${filename}
+# Author: [\$AUTHOR]
+# Created
+# Description: template file for filetype: [${filetype}] with suffix: [${suffix}]
+EOF

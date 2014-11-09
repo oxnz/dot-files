@@ -1,0 +1,90 @@
+#!/usr/bin/env python
+# 
+import os
+import sys
+import time
+
+def pmcommon():
+    return '''
+use strict;
+use warnings;
+
+our @ISA = qw(Exporter);
+our %EXPORT_TAGS = ( 'all' => [ qw() ] );
+our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
+our @EXPORT = qw();
+our $VERSION = '1.00';
+require Exporter;
+use AutoLoader qw(AUTOLOAD);
+
+
+sub new
+{
+    my $class = shift;
+    my $arg = shift;
+    my $self = {};
+
+    %HERE%
+
+    bless($self, $class);
+    return $self;
+}
+
+
+1;
+# __END__
+#
+# Below is stub documentation for your module. You'd better edit it!
+'''
+
+def common(shebang, encoding = None, codelines = None):
+    print '''{}
+# {}
+# Filename:	[&expand('%:t')]
+#
+# Author:		[$author]
+# Email:		[$email]
+# Created:		[!date '+\[%F %T %Z\]']
+# Last-update:	[=time.strftime('%F %T %Z')]
+# Description: [$anchor]
+#
+# Version:		[$version]
+# Revision:	[None]
+# Revision history:	[None]
+# Date Author Remarks:	[None]
+#
+# License: 
+# Copyright (c) 2013 Oxnz
+#
+# Distributed under terms of the [LICENSE] license.
+# [license]
+#
+#
+{}'''.format(shebang or '#!/bin/sh', encoding or '', codelines or '')
+
+class OxnzTemplate(object):
+    def __init__(self, filetype, filepath):
+        dirname = os.path.dirname(filepath)
+        basename = os.path.basename(filepath)
+        filename, suffix = os.path.splitext(basename)
+        shebang = lambda progname=filetype, args=None: '#!/usr/bin/env {} {}'.format(progname, args or '')
+        self.optdict = {
+                'python.py': lambda: common(shebang(), encoding='-*- coding: utf-8 -*-'),
+                'ruby.rb': lambda: common(shebang(), encoding='coding: utf-8'),
+                'lua.lua': lambda: common(shebang()),
+                'perl.pl': lambda: common(shebang(args='-w'), codelines='\nuse strict;\nuse warnings;'),
+                'perl.pm': lambda: common(shebang(), codelines=pmcommon()),
+        }
+        self.func = self.optdict[filetype + suffix]
+
+    def __call__(self):
+        self.func()
+
+
+if __name__ == '__main__':
+    if len(sys.argv) == 3:
+        OxnzTemplate(*sys.argv[1:])()
+    else:
+        progname = os.path.basename(__file__)
+        print >>sys.stderr, 'Usage: {} filetype filepath'.format(sys.argv[0])
+        sys.exit(1)

@@ -1,0 +1,86 @@
+#!/usr/bin/env python
+# 
+import os
+import sys
+import time
+
+def cheader(header):
+    ccommon()
+    print '''
+#ifndef {}
+#define {}
+
+#endif//{}
+'''.format(header, header, header)
+
+def csource(header):
+    ccommon()
+    print '''
+#include <stdio.h>
+#include <stdlib.h>
+#include "{}"
+'''.format(header)
+
+def ccommon():
+    common()
+
+def javasource(filename):
+    classname = filename
+    common()
+    print '''
+public class {} {{
+    public {} {{
+    }}
+
+    public static void main(String[] args) {{
+        System.out.println("Hello world!");
+    }}
+}}'''.format(classname, classname)
+
+def common():
+    print '''/*
+ * Filename:	[&expand('%:t')]
+ *
+ * Author:		[$author]
+ * Email:		[$email]
+ * Created:		[!date '+\[%F %T %Z\]']
+ * Last-update:	[=time.strftime('%F %T %Z')]
+ * Description: [$anchor]
+ *
+ * Version:		[$version]
+ * Revision:	[None]
+ * Revision history:	[None]
+ * Date Author Remarks:	[None]
+ *
+ * License: 
+ * Copyright (c) 2013 Oxnz
+ *
+ * Distributed under terms of the [LICENSE] license.
+ * [license]
+ *
+ */'''
+
+class OxnzTemplate(object):
+    def __init__(self, filetype, filepath):
+        dirname = os.path.dirname(filepath)
+        basename = os.path.basename(filepath)
+        filename, suffix = os.path.splitext(basename)
+        self.optdict = {
+                'c.h': lambda: cheader('_{}_H_'.format(filename.upper())),
+                'c.c': lambda: csource(filename + '.h'),
+                'cpp.h': lambda: cheader('_{}_H_'.format(filename.upper())),
+                'java.java': lambda: javasource(filename),
+        }
+        self.func = self.optdict[filetype + suffix]
+
+    def __call__(self):
+        self.func()
+
+
+if __name__ == '__main__':
+    if len(sys.argv) == 3:
+        OxnzTemplate(*sys.argv[1:])()
+    else:
+        progname = os.path.basename(__file__)
+        print >>sys.stderr, 'Usage: {} filetype filepath'.format(sys.argv[0])
+        sys.exit(1)

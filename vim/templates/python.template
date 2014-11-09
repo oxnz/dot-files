@@ -1,0 +1,14 @@
+#!/bin/sh
+cat << 'EOF'
+[$FBASE]
+[$FEXT]
+[$FPATH]
+[$FDIR]
+[$FNAME]
+[$AUTHOR]
+[$USER]
+[$HOSTNAME]
+[$EMAIL]
+[$SITE]
+[$COPYRIGHT]
+EOF
