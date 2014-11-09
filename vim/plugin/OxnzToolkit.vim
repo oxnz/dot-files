@@ -43,28 +43,70 @@
 " - Type OxnzModeLine to generate vim mode line
 
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Exit if already loaded
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if exists("g:OxnzToolkitVersion")
+	echohl ErrorMsg
+	echo 'Error: OxnzToolkit Already Loaded'
+	echohl None
+	finish
+endif
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Display Error Message
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function <SID>OxnzTemplateKitErrMsgFunc(msg)
+    echohl ErrorMsg
+    echo 'Warning: ' . a:msg
+    echohl None
+endfunction
+
+function <SID>OxnzTemplateKitWarnFunc(msg)
+    echohl WarningMsg
+    echo 'Error: ' . a:msg
+    echohl None
+endfunction
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" test if "compatible" mode set
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if &compatible
+	" To use this plugin, :set nocompatible
+	" or just create an empty .vimrc file
+	call <SID>OxnzTemplateKitErrMsgFunc('OxnzToolkit requires no compatible')
+	finish
+endif
 
 if v:version < 700
+	call <SID>OxnzTemplateKitErrMsgFunc('OxnzToolkit requires vim >= 7.0')
 	finish
 endif
 
-" test if "compatible" mode set
-if &cp
-	finish
+" check for Ruby functionality
+if !has('ruby')
+	call <SID>OxnzTemplateKitWarnFunc('OxnzToolkit requires vim compiled with +ruby for some functionality')
+	" finish
 endif
 
-" Verify if already loaded
-if exists("g:OxnzToolkitVersion")
-	echo 'OxnzToolkit Already Loaded.'
-	finish
-endif
-
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin global var
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:OxnzToolkitVersion = '0.1.1'
 
-""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Script local vars
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let s:OxnzToolkitVimScript = resolve(expand('<sfile>:p'))
+let s:OxnzToolkitPluginPath =
+			\ fnamemodify(s:OxnzToolkitVimScript, ':h')
+let s:OxnzToolkitRubyScript =
+			\ fnamemodify(s:OxnzToolkitVimScript, ':r') . '.rb'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Insert C\CPP Include Guards
-""""""""""""""""""""""""""""""""""""""""""""
-function! <SID>OxnzInsertGuardFunc()
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function <SID>OxnzInsertGuardFunc()
 	exec "normal G"
 	let l:fname = expand("%:t")
 	let l:fname = toupper(l:fname)
@@ -77,58 +119,10 @@ function! <SID>OxnzInsertGuardFunc()
 				\ ])
 endfunction
 
-""""""""""""""""""""""""""""""""""""""""""""
-" Insert Header by Filetype
-""""""""""""""""""""""""""""""""""""""""""""
-function! <SID>OxnzInsertHeaderFunc()
-	if &filetype == 'sh'
-		call setline(1, "\#!/bin/bash")
-		call append(line("."), "\# Author: Oxnz")
-		call append(line(".")+1, "")
-	endif
-	if &filetype == 'zsh'
-		echo "unimplished yet"
-	endif
-	if (&filetype == 'c' || &filetype == 'cpp' || &filetype == 'java' ||
-				\ &filetype == 'php')
-		call setline(1, [
-					\ "/*",
-					\ "     Filename: " . expand("%:t"),
-					\ "  Description: ",
-					\ "",
-					\ "      Version: 0.1",
-					\ "      Created: " . strftime("%F %T"),
-					\ "  Last-update: " . strftime("%F %T"),
-					\ "     Revision: None",
-					\ "",
-					\ "       Author: " . g:OxnzToolkitAuthor,
-					\ "        Email: " . g:OxnzToolkitEmail,
-					\ "",
-					\ "Revision history:",
-					\ "\tDate Author Remarks",
-					\ "*/",
-					\ ])
-	endif
-	if &filetype == 'python'
-		call setline(1, ["\#!/usr/bin/env python",
-					\ "\#coding: utf-8",
-					\ "",
-					\ "\"\"\"one line abstract",
-					\ "",
-					\ "detail:\"\"\"",
-					\ "",
-					\ "__author__ = \"" . g:OxnzToolkitAuthor . "\"",
-					\ "__version__ = 0.1",
-					\ "",
-					\ "",
-					\ ])
-	endif
-endfunction
-
 """""""""""""""""""""""""""""""""""""""""""""""
 " Update time stamp
 """""""""""""""""""""""""""""""""""""""""""""""
-function! <SID>OxnzUpdateTimeStampFunc()
+function <SID>OxnzUpdateTimeStampFunc()
 	let l:lineno = search("Last-update:", "n")
 	if l:lineno
 		let l:line = getline(l:lineno)
@@ -144,7 +138,7 @@ endfunction
 """""""""""""""""""""""""""""""""""""""""""""""
 " Append Vim Mode Line
 """""""""""""""""""""""""""""""""""""""""""""""
-function! <SID>OxnzAppendModeLineFunc()
+function <SID>OxnzAppendModeLineFunc()
 	let l:modeline = printf(" vim: set ts=%d sw=%d tw=%d %set :",
 				\ &tabstop, &shiftwidth, &textwidth, &expandtab ? '' : 'no')
 	let l:modeline = substitute(&commentstring, "%s", l:modeline, "")
@@ -154,7 +148,7 @@ endfunction
 """""""""""""""""""""""""
 " Insert Line Numbers
 """""""""""""""""""""""""
-function! <SID>OxnzInsertLineNumbersFunc()
+function <SID>OxnzInsertLineNumbersFunc()
 	let l:num=1
 	let l:end = line("$")
 	:1
@@ -185,7 +179,7 @@ endfunction
 """"""""""""""""""""""""""""""""""""""""""""""""
 " Delete Leading White Spaces
 """"""""""""""""""""""""""""""""""""""""""""""""
-function! <SID>OxnzDeleteLeadingSpacesFunc()
+function <SID>OxnzDeleteLeadingSpacesFunc()
 	try
 		:%s/^\s\+//
 	catch /^Vim\%((\a\+)\)\=:E486/
@@ -196,7 +190,7 @@ endfunction
 """"""""""""""""""""""""""""""""""""""""""""""""
 " Delete Trailing White Spaces
 """"""""""""""""""""""""""""""""""""""""""""""""
-function! <SID>OxnzDeleteTrailingSpacesFunc()
+function <SID>OxnzDeleteTrailingSpacesFunc()
 	try
 		:%s/\s\+$//
 	catch /^Vim\%((\a\+)\)\=:E486/
@@ -207,50 +201,72 @@ endfunction
 """"""""""""""""""""""""""""""""""""""""""""
 " Remove Extra Blank Lines, Only Leave One
 """"""""""""""""""""""""""""""""""""""""""""
-function! <SID>OxnzUniqueBlankLinesFunc()
+function <SID>OxnzUniqueBlankLinesFunc()
 	:silent! g/^\n\{2,}/d
 endfunction
 
 """"""""""""""""""""""""""""""""""""""""""""""
 " Delete Blank Lines
 """"""""""""""""""""""""""""""""""""""""""""""
-function! <SID>OxnzDeleteBlankLinesFunc()
+function <SID>OxnzDeleteBlankLinesFunc()
 	:silent! g/^\s*$/d
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Trim Leading, Trailing Spaces and Also Unique Blank Lines
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! <SID>OxnzTrimFunc()
+function <SID>OxnzTrimFunc()
 	call <SID>OxnzDeleteLeadingSpacesFunc()
 	call <SID>OxnzDeleteTrailingSpacesFunc()
 	call <SID>OxnzUniqueBlankLinesFunc()
 endfunction
 
-"""""""""""""""""
-" Shortcuts...
-"""""""""""""""""
-""" commands {{{
-command! -nargs=0 OxnzModeLine	:call <SID>OxnzAppendModeLineFunc()
-command! -nargs=0 OxnzHeader	:call <SID>OxnzInsertHeaderFunc()
-command! -nargs=0 OxnzInsertLineNumbers	:call <SID>OxnzInsertLineNumbersFunc()
-command! -nargs=0 OxnzDeleteLineNumbers :call <SID>OxnzDeleteLineNumbersFunc()
-command! -nargs=0 OxnzDeleteLeadingSpaces
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Comment or Uncomment selected area or current line
+" ref: http://vim.wikia.com/wiki/Comment_%26_Uncomment_multiple_lines_in_Vim
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function <SID>OxnzToggleCommentFunc()
+	echo "hello"
+endfunction
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Ruby entry
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function <SID>OxnzToolkitRubyFunc(cmd, ...)
+	try
+		execute 'rubyfile' s:OxnzToolkitRubyScript
+	catch
+		echohl WarningMsg | echo v:exception | echohl None
+	endtry
+endfunction
+
+function <SID>OxnzRubyInfoFunc()
+	call <SID>OxnzToolkitRubyFunc('rubyinfo')
+endfunction
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Commands definitions
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+command -nargs=0 OxnzModeLine			:call <SID>OxnzAppendModeLineFunc()
+command -nargs=0 OxnzInsertLineNumbers	:call <SID>OxnzInsertLineNumbersFunc()
+command -nargs=0 OxnzDeleteLineNumbers	:call <SID>OxnzDeleteLineNumbersFunc()
+command -nargs=0 OxnzDeleteLeadingSpaces
 			\ :call <SID>OxnzDeleteLeadingSpacesFunc()
-command! -nargs=0 OxnzDeleteTrailingSpaces
+command -nargs=0 OxnzDeleteTrailingSpaces
 			\ :call <SID>OxnzDeleteTrailingSpacesFunc()
-command! -nargs=0 OxnzUniqueBlankLines	:call <SID>OxnzUniqueBlankLinesFunc()
-command! -nargs=0 OxnzDeleteBlankLines	:call <SID>OxnzDeleteBlankLinesFunc()
-command! -nargs=0 OxnzTrim		:call <SID>OxnzTrimFunc()
-" }}}
+command -nargs=0 OxnzUniqueBlankLines	:call <SID>OxnzUniqueBlankLinesFunc()
+command -nargs=0 OxnzDeleteBlankLines	:call <SID>OxnzDeleteBlankLinesFunc()
+command -nargs=0 OxnzTrim				:call <SID>OxnzTrimFunc()
+command -nargs=0 OxnzToggleComment		:call <SID>OxnzToggleCommentFunc()
+command -nargs=0 OxnzRubyInfo			:call <SID>OxnzRubyInfoFunc()
+
 "按\ml,自动插入modeline
 "nnoremap <silent> <Leader>ml	:call OxnzModeLine() <CR>
 
-if has("autocmd")
+if has('autocmd') && !exists('g:OxnzToolkitAutocmdLoaded')
+	let g:OxnzToolkitAutocmdLoaded = 1
 	augroup OxnzToolkitEx
-	au!
-		autocmd BufNewFile * call <SID>OxnzInsertHeaderFunc()
-		autocmd BufNewFile *.h{,pp} call <SID>OxnzInsertGuardFunc()
+		" autocmd BufNewFile *.h{,pp} call <SID>OxnzInsertGuardFunc()
 		autocmd BufWrite *.* call <SID>OxnzUpdateTimeStampFunc()
 	augroup END
 endif
