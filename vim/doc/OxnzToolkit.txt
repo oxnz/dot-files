@@ -1,60 +1,157 @@
-*OxnzToolkit.txt*
+*OxnzToolkit.txt* utils command for vim
 
 File: OxnzToolkit.txt
 Version: 0.1.1
 Author: Oxnz
 Maintainer: Oxnz
 Created: 2013-10-10 13:00:27
-Last-update: 2013-10-10 13:38:20
+Last-update: 2014-11-08 19:22:24
 Homepage: https://github.com/oxnz
 
-License:
-	Copyright (C) 2013 Oxnz
-
-	This file is part of OxnzToolkit.
-
-CONTENTS~
-*OxnzToolkit*
 ==============================================================================
-1. Overview					|OxnzToolkit-overview|
-2. Installation				|OxnzToolkit-installation|
-3. Commands					|OxnzToolkit-commands|
-4. Settings					|OxnzToolkit-settings|
-5. Key-mappings				|OxnzToolkit-key-mapping|
-6. Supporting plugins		|OxnzToolkit-supporting-plugins|
-7. Advanced					|OxnzToolkit-advanced|
-8. Credits					|OxnzToolkit-credits|
-9. Todo						|OxnzToolkit-todo|
+CONTENTS                                                         *OxnzToolkit*
 
+    1. Overview                    |OxnzToolkit-overview|
+    2. Installation                |OxnzToolkit-installation|
+    3. Commands                    |OxnzToolkit-commands|
+        3.1 OxnzHeader             |OxnzHeader|
+        3.2 OxnzModeLine           |OxnzModeLine|
+    4. Settings                    |OxnzToolkit-settings|
+    5. Key-mappings                |OxnzToolkit-key-mapping|
+    6. Advanced                    |OxnzToolkit-advanced|
+    7. License                     |OxnzToolkit-license|
+    8. Bugs                        |OxnzToolkit-bugs|
+    9. Contributing                |OxnzToolkit-contributing|
+    10. Changelog                  |OxnzToolkit-changelog|
 
-OVERVIEW~
-*OxnzToolkit-overview*
 ==============================================================================
+1. Overview                                             *OxnzToolkit-overview*
+
 This plugin is aimed at making it more convient to do daily stuff.
 
-INSTALLATION~
-*OxnzToolkit-installation*
 ==============================================================================
-copy OxnzToolkit.vim to ~/.vim/plugin
-copy OxnzToolkit.txt to ~/.vim/doc
-helptags ~/.vim/doc
+2. Installation                                     *OxnzToolkit-installation*
 
-COMMANDS~
-										*OxnzToolkit-commands*
+Copy this file into $HOME/.vim/plugin directory so that it will be sourced on
+startup automatically.
+
+Note! This plugin requires Vim be compiled with Ruby interpretation.  If you
+don't know if your build of Vim has this functionality, you can check by
+running "vim --version" from the command line and looking for "+ruby".
+Alternatively, just try sourcing this script.
+
+>
+    copy OxnzToolkit.vim to ~/.vim/plugin
+    copy OxnzToolkit.txt to ~/.vim/doc
+    helptags ~/.vim/doc
+<
+
+The last command will generate helptags
+
+If there's trouble such as 'Sorry, the command is not available in this
+version', then you may using a basic version of vim, which doesn't support
+some script language extensions. try to install the full version vim to solve
+the problem.
+
+Debian derived versions of Linux:
+>
+    sudo apt-get install vim-nox
+<
+Redhat derived:
+>
+    yum install vim-enhanced
+<
+FreeBSD:
+>
+    pkg_add -r vim+ruby
+<
+Manually install:
+>
+    ./configure --enable-rubyinterp
+<
+
 ==============================================================================
+3. Commands                                             *OxnzToolkit-commands*
 
-										*:OxnzHeader*
-Command:
-	:OxnzHeader
+This section will describe the commands supplied by OxnzToolkit separately
+
+------------------------------------------------------------------------------
+3.1 OxnzHeader                                                    *OxnzHeader*
+
 If you are editing a source file, this command will generate a formated header
 contains such as author, created time, last modified date and so on.
 
 Also, even you just edit an plain text, you could also call this command:
 >
-	:OxnzHeader
+    :OxnzHeader
 <
 to generate some personal info.
 
-										*:OxnzModeLine*
-Command:
+------------------------------------------------------------------------------
+3.1 OxnzHeader                                                  *OxnzModeLine*
+
 Insert a vim conf line as a comment line in your source file.
+
+==============================================================================
+4. Settings                                             *OxnzToolkit-settings*
+
+Put your personal info in your vimrc file is done.
+>
+	""""""""""""""""""""""""""""""""""""""""""""""
+	" plugin - OxnzToolkit
+	""""""""""""""""""""""""""""""""""""""""""""""
+	let g:OxnzToolkitAuthor="Oxnz"
+	let g:OxnzToolkitEmail = "yunxinyi@gmail.com"
+<
+
+==============================================================================
+5. Key-mappings                                      *OxnzToolkit-key-mapping*
+
+==============================================================================
+6. Advanced                                             *OxnzToolkit-advanced*
+
+This section is leave blank intentionly.
+
+==============================================================================
+7. License                                               *OxnzToolkit-license*
+
+Copyright (c) 2013 Oxnz
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+==============================================================================
+8. Bugs                                                     *OxnzToolkit-bugs*
+
+If you find a bug please post it on the issue tracker:
+http://github.com/oxnz/OxnzToolkit.vim/issues/
+
+==============================================================================
+9. Contributing                                     *OxnzToolkit-contributing*
+
+Think you can make this plugin better?  Awesome!  Fork it on BitBucket or
+GitHub and send a pull request.
+
+BitBucket: http://bitbucket.org/oxnz/OxnzToolkit.vim/
+GitHub: http://github.com/oxnz/OxnzToolkit.vim/
+
+==============================================================================
+10. Changelog                                          *OxnzToolkit-changelog*
+
+v0.1.1
+    * Alpha stage
