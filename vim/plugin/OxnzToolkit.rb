@@ -6,6 +6,12 @@
 # ref: http://items.sjbach.com/97/writing-a-vim-plugin
 #
 
+def VIM::has ident
+	# All return values from `evaluate` are strings, and
+	#   # "0" evaluates to true in ruby.
+	return VIM::evaluate("has('#{ident}')") != '0'
+end
+
 class OxnzToolkit
 	def initialize
 	end
@@ -24,11 +30,12 @@ class OxnzToolkit
 		end
 	end
 
+	def :
 	def rubyinfo
 		msg %{Ruby Info:
 Version: #{RUBY_VERSION}
-Platform: #{RUBY_PLATFORM}"
-Release Date: #{RUBY_RELEASE_DATE}"}
+Platform: #{RUBY_PLATFORM}
+Release Date: #{RUBY_RELEASE_DATE}}
 	end
 
 	def errcnf command
@@ -63,10 +70,8 @@ if __FILE__ == $0 or 'vim-ruby' == $0
 		OxnzToolkit.new.do
 	rescue Interrupt => e
 		$stderr.puts "Interrupted"
-		exit 1
 	rescue => e
 		$stderr.puts "#{$0}: #{e}"
-		exit 1
 	rescue
 		raise
 	end

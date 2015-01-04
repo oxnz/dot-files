@@ -4,9 +4,9 @@
 " author: Oxnz
 " mail: yunxinyi@gmail.com
 
-"""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Verify if already loaded
-"""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if exists('g:OxnzTemplateKitLoaded')
 	echohl ErrorMsg
 	echo 'Error: OxnzTemplateKit Already Loaded'
@@ -71,18 +71,39 @@ function <SID>OxnzTemplateInsertFunc()
 	call <SID>OxnzTemplateKitFunc('insert', &filetype)
 endfunction
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Confirm function
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" TODO: add confirm while some templates need extra parameter,
+" like makefile against C is different from other Object-C projects
+
 """""""""""""""""""""""""""""""""""""""
 " Test Func
 """""""""""""""""""""""""""""""""""""""
-function <SID>OxnzTestFunc()
-	echoerr "fa"
+function <SID>OxnzTemplateKitTestFunc()
+	"use py return var to send back the var value
+	py << EOF
+try:
+	import vim
+	print vim.eval("%:t")
+except Exception as e:
+	print "excepted: ", e
+	return 1
+except:
+	print "2 excepted: ", e
+	print 'hello not exists {}'.format(e)
+else:
+	print 'ok'
+finally:
+	print 'done'
+EOF
 endfunction
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Command definitions
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 command -nargs=0 OxnzTemplateInsert :call <SID>OxnzTemplateInsertFunc()
-command -nargs=0 OxnzTest		:call <SID>OxnzTestFunc()
+command -nargs=0 OxnzTemplateKitTest		:call <SID>OxnzTemplateKitTestFunc()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Autocmd group for OxnzTemplate

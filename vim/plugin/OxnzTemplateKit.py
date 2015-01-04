@@ -17,6 +17,20 @@ def dbgout(obj):
     with open(os.path.join(vim.eval('fnamemodify(resolve(expand("<sfile>:p")), ":h")'), 'debug.out'), 'a') as f:
         print >>f, obj
 
+
+class OxnzVimUtils(object):
+    def __init__(self):
+        pass
+
+    def input(self, prompt):
+        vimvar = 'answer'
+        vim.command('call inputsave()')
+        vim.command('let {} = input("{}: ")'.format(vimvar, prompt.replace('"', "'")))
+        vim.command('call inputrestore()')
+        answer = vim.eval(vimvar)
+        vim.command('unlet {}'.format(vimvar))
+        return answer
+
 class OxnzTemplateKitError(RuntimeError):
     '''general error class'''
     def __init__(self, message):
@@ -257,14 +271,18 @@ class OxnzTemplate(object):
 
 class OxnzTemplateRenderer(object):
     '''template renderer'''
-    def __init__(self, content):
+    def __init__(self, content, strict=True):
         '''
+        content: need to be rendered
+        strict: in mode when error, throw immediatly
+
         esch: escape char
         optc: option code
         expr: any expression or variable name
         optchars = '|'.join([re.escape(c) for c in '~!@#$%^&*-+=\\<>.?/'])
         '''
         self._content = content
+        self._strict = True
         self._regex = ''.join([
             r'(?P<esch>(^|\n|.))',  # start|newlilne|anychar
             r'(?P<pats>(',          # all the pattern, wrapper brackets `[]' included
@@ -292,8 +310,9 @@ class OxnzTemplateRenderer(object):
             'FBASE':    vim.eval('expand("%:r")'),
             'FEXT':     vim.eval('expand("%:e")'),
             'FDIR':     vim.eval('expand("%:p:h")'),
-            'AUTHOR':   vim.eval('g:OxnzTemplateKitAuthor'),
-            'EMAIL':    vim.eval('g:OxnzTemplateKitEmail'),
+            'AUTHOR':   self.__load_vim_var('g:OxnzTemplateAuthor', 'AUTHOR'),
+            'EMAIL':    self.__load_vim_var('g:OxnzTemplateEmail', 'EMAIL'),
+            'VERSION':  '0.0.1',
             'USER':     os.getlogin(),
             'HOSTNAME': self.__exec_shell_stmt('hostname'),
             'COPYRIGHT':'Copyright {} {}, ALl Rights Reserved'.format(os.getlogin(), time.strftime('%Y')),
@@ -322,17 +341,31 @@ class OxnzTemplateRenderer(object):
         return out
 
     def __load_cfg_var(self, name):
-        return self._vardict.get(name, 'cfg:'+name.lower())
+        '''return variables predefined in self._vardict'''
+        return self._vardict.get(name, self.__errvnf(name, lambda: name))
 
-    def __load_vim_var(self, name):
-        '''expand:
+    def __load_vim_var(self, name, *default):
+        '''return value for name if exists, otherwise throw NameError if default is not given
+        expand:
 			:p		expand to full path
 			:h		head (last path component removed)
 			:t		tail (last path component only)
 			:r		root (one extension removed)
 			:e		extension only
         '''
-        return vim.eval(name)
+        defcnt = len(default)
+        try:
+            if vim.eval('exists({})'.format(name.replace("'", '"'))):
+                return vim.eval(name)
+        except vim.error as e:
+            #print "Warning: {}: '{}'".format(e, name)
+            pass
+        if defcnt > 1:
+            #raise TypeError("'__load_vim_var' takes 2 or 3 arguments ({} given)".format(defcnt))
+            return self.__errvnf(name, lambda: name)
+        elif defcnt == 0:
+            raise NameError("name '{}' is not defined".format(name))
+        return default[0]
 
     def __eval_python_exp(self, expr):
         '''python eval'''
@@ -359,7 +392,10 @@ class OxnzTemplateRenderer(object):
             raise OxnzTemplateKitError("shell command execute failed: '{}'".format(e))
 
     def __eval_vim_exp(self, expr):
-        return 'vxm done'
+        try:
+            return vim.eval(expr)
+        except vim.error as e:
+            return expr
 
     def __load_file_content(self, expr):
         return 'file:' + expr
@@ -367,6 +403,10 @@ class OxnzTemplateRenderer(object):
     def __erronf(self, pats, optc, expr):
         '''error on option not found, i.e. not in self._optdct'''
         raise OxnzTemplateKitError("handler for option code '{}' not exists, full pattern is '{}'".format(optc, pats))
+
+    def __errvnf(self, name, func):
+        '''error on variable not found'''
+        return func()
 
     def __sub(self, match):
         '''do substitute'''
@@ -387,11 +427,11 @@ class OxnzTemplateEngine(object):
         self._plugdir = os.path.dirname(vim.eval('s:OxnzTemplateKitPluginPath'))
         self._tempdir = os.path.join(self._plugdir, 'templates')
 
-    def render(self, content):
+    def __render(self, content):
         '''content is string'''
         return OxnzTemplateRenderer(content)()
 
-    def compile(self, template):
+    def __compile(self, template):
         '''compile template
         pass fullname as first argument
         '''
@@ -403,22 +443,35 @@ class OxnzTemplateEngine(object):
             raise OxnzTemplateCompileError(template, returncode, stderrdata)
         return stdoutdata
 
-    def insert(self, filetype):
+    def __insert(self, filetype):
+        '''insert template by filetype and suffix'''
         if len(filetype) != 1:
             raise OxnzTemplateKitError("invalid filetype '{}'".format(filetype))
         filetype = filetype[0]
         template = OxnzTemplate(self._tempdir, filetype)
         if template.compilable:
-            content = self.compile(template)
+            content = self.__compile(template)
         else:
             content = template.content
         if template.renderable:
-            content = self.render(content)
+            content = self.__render(content)
         vim.current.buffer[:] = content.split('\n')
 
-    def execmd(self, name, args):
+    def __commentprefix(self):
+        '''return comment prefix(es) based on filetype'''
+        if self._filetype in ('sh', 'zsh', 'python', 'perl', 'ruby'):
+            return ('#')
+        elif self._filetype in ('c', 'cpp', 'php', 'css'):
+            return ('//', '#')
+        elif self._filetype in ('vim'):
+            return '"'
+        else:
+            raise OxnzTemplateKitError("unknown comment prefix for filetype: {}".format(self._filetype))
+
+    def do(self, name, args):
+        '''do command by name'''
         commands = {
-            'insert': self.insert
+            'insert': self.__insert,
         }
         cmd = commands.get(name, self.__errcnf(name))
         cmd(args)
@@ -427,6 +480,11 @@ class OxnzTemplateEngine(object):
         def errfunc(args):
             raise OxnzTemplateKitError("command '{}' not found".format(command))
         return errfunc
+
+class OxnzTemplateKitErrpro(object):
+    def __init__(self, ex):
+        pass
+    pass
 
 class erreport(object):
     '''report error'''
@@ -450,16 +508,20 @@ if __name__ == '__main__':
         cmdname = vim.eval('a:cmd')
         cmdargs = vim.eval('a:000')
         engine = OxnzTemplateEngine()
-        engine.execmd(cmdname, cmdargs)
+        engine.do(cmdname, cmdargs)
     except OxnzTemplateError as e:
         #erreport()(e)
         print >>sys.stderr, e
+        pass
     except OxnzTemplateCompileError as e:
+        pass
         print >>sys.stderr, e
     except OxnzTemplateKitError as e:
+        pass
         print >>sys.stderr, e
     except vim.error as e:
-        print >>stderr, e
+        pass
+        print >>sys.stderr, e
     except:
         #raise vim.error('Unexpected error:', sys.exc_info()[0])
         raise

@@ -41,6 +41,10 @@
 " Use:
 " - Type OxnzHeader to generate header by filetype
 " - Type OxnzModeLine to generate vim mode line
+"
+" Dependencies:
+" - OSX version: https://gist.github.com/nelstrom/7435463
+" - Ubuntu: apt-get install vim-nox
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -56,13 +60,13 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Display Error Message
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function <SID>OxnzTemplateKitErrMsgFunc(msg)
+function <SID>OxnzToolkitErrMsgFunc(msg)
     echohl ErrorMsg
     echo 'Warning: ' . a:msg
     echohl None
 endfunction
 
-function <SID>OxnzTemplateKitWarnFunc(msg)
+function <SID>OxnzToolkitWarnFunc(msg)
     echohl WarningMsg
     echo 'Error: ' . a:msg
     echohl None
@@ -74,18 +78,18 @@ endfunction
 if &compatible
 	" To use this plugin, :set nocompatible
 	" or just create an empty .vimrc file
-	call <SID>OxnzTemplateKitErrMsgFunc('OxnzToolkit requires no compatible')
+	call <SID>OxnzToolkitErrMsgFunc('OxnzToolkit requires no compatible')
 	finish
 endif
 
 if v:version < 700
-	call <SID>OxnzTemplateKitErrMsgFunc('OxnzToolkit requires vim >= 7.0')
+	call <SID>OxnzToolkitErrMsgFunc('OxnzToolkit requires vim >= 7.0')
 	finish
 endif
 
 " check for Ruby functionality
 if !has('ruby')
-	call <SID>OxnzTemplateKitWarnFunc('OxnzToolkit requires vim compiled with +ruby for some functionality')
+	call <SID>OxnzToolkitWarnFunc('OxnzToolkit requires vim compiled with +ruby for some functionality')
 	" finish
 endif
 
@@ -126,11 +130,9 @@ function <SID>OxnzUpdateTimeStampFunc()
 	let l:lineno = search("Last-update:", "n")
 	if l:lineno
 		let l:line = getline(l:lineno)
-		echom l:lineno
 		let l:line = substitute(l:line,
 					\ "\\d\\{4\\}-\\d\\{2\\}-\\d\\d \\d\\d:\\d\\d:\\d\\d$",
 					\ strftime("%F %T"), "")
-					\ "  Last-update: " . strftime("%F %T"),
 		call setline(l:lineno, l:line)
 	endif
 endfunction
@@ -229,6 +231,33 @@ function <SID>OxnzToggleCommentFunc()
 	echo "hello"
 endfunction
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Random number generator
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function <SID>OxnzRandomNumberFunc(n)
+	let l:rn = localtime() % 0x10000
+	let l:rn = (l:rn * 31421 + 6927) % 0x10000
+	return l:rn * a:n / 0x10000
+endfunction
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use random colorscheme
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function <SID>OxnzRandomColorsFunc(...)
+	let l:schemes = a:000
+	let l:random = <SID>OxnzRandomNumberFunc(len(l:schemes))
+	let l:scheme = l:schemes[l:random]
+	execute 'colorscheme' l:scheme
+endfunction
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Test Func
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function <SID>OxnzTestFunc()
+	let l:t = <SID>OxnzRandomNumberFunc(20)
+	echo l:t
+endfunction
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Ruby entry
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -246,6 +275,8 @@ endfunction
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Commands definitions
+" TODO: add key maps for these commands, cause they're too long to type
+" ref: http://vim.wikia.com/wiki/Mapping_keys_in_Vim_-_Tutorial_(Part_1)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 command -nargs=0 OxnzModeLine			:call <SID>OxnzAppendModeLineFunc()
 command -nargs=0 OxnzInsertLineNumbers	:call <SID>OxnzInsertLineNumbersFunc()
@@ -258,15 +289,28 @@ command -nargs=0 OxnzUniqueBlankLines	:call <SID>OxnzUniqueBlankLinesFunc()
 command -nargs=0 OxnzDeleteBlankLines	:call <SID>OxnzDeleteBlankLinesFunc()
 command -nargs=0 OxnzTrim				:call <SID>OxnzTrimFunc()
 command -nargs=0 OxnzToggleComment		:call <SID>OxnzToggleCommentFunc()
+command -complete=color -nargs=+ OxnzRandomColors		:call <SID>OxnzRandomColorsFunc(<f-args>)
 command -nargs=0 OxnzRubyInfo			:call <SID>OxnzRubyInfoFunc()
+command -nargs=0 OxnzToolkitTest		:call <SID>OxnzTestFunc()
 
 "按\ml,自动插入modeline
 "nnoremap <silent> <Leader>ml	:call OxnzModeLine() <CR>
 
 if has('autocmd') && !exists('g:OxnzToolkitAutocmdLoaded')
 	let g:OxnzToolkitAutocmdLoaded = 1
-	augroup OxnzToolkitEx
+	augroup OxnzToolkit
 		" autocmd BufNewFile *.h{,pp} call <SID>OxnzInsertGuardFunc()
 		autocmd BufWrite *.* call <SID>OxnzUpdateTimeStampFunc()
+
+		""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+		" BIG RED UNWANTED WHITESPACE
+		""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+		highlight ExtraWhitespace ctermbg=red guibg=red
+		match ExtraWhitespace /(\s\+$|\t)/
+		autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+		autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+		autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+		autocmd BufWinLeave * call clearmatches()
+
 	augroup END
 endif
