@@ -6,7 +6,7 @@
 " Created	: 2010-03-20 18:00:12
 " Copying	: Copyright (C) 2013 0xnz, All rights reserved.
 "
-" Last-update: 2014-11-07 14:58:18
+" Last-update: 2014-11-28 19:34:47
 "
 " Description: vimrc compatible for Linux/Windows/OSX, GUI/Console
 "-------------------------------------------------------------------------------
@@ -20,9 +20,9 @@ endif
 " prevent vi read .vimrc
 " ref:
 " http://stackoverflow.com/questions/636721/how-to-detect-vi-not-vim-in-vimrc
-:if ! version >= 500
-:	finish
-:endif
+if ! version >= 500
+	finish
+endif
 " Use Vim settings, rather than Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
 set nocompatible
@@ -57,16 +57,19 @@ set smarttab		" Be smart when using tabs
 "set mouse=a		" Enable mouse usage (all modes)
 
 " Set font according to system
-"if has("unix")
-"	set gfn=Menlo:h15
-"elseif has("win16") || has("win32")
-"	set gfn=Bitstream\ Vera\ Sans\ Mono:h11
-"elseif has("linux")
-"	set gfn=Monospace\ 11
-"endif
-" 状态行颜色 
-highlight StatusLine guifg=SlateBlue guibg=Yellow 
-highlight StatusLineNC guifg=Gray guibg=White 
+if has("gui_running")
+	if has("unix")
+		set gfn=Menlo:h15
+	elseif has("win16") || has("win32")
+		set gfn=Bitstream\ Vera\ Sans\ Mono:h11
+	elseif has("linux")
+		set gfn=Monospace\ 11
+	endif
+	" 状态行颜色 
+	highlight StatusLine guifg=SlateBlue guibg=Yellow 
+	highlight StatusLineNC guifg=Gray guibg=White 
+endif
+
 set wildmenu		" 增强模式中的命令行自动完成操作 
 " Ignore compiled files
 set wildignore=*.o,*.obj,*.class,*.pyc,.DS_Store
@@ -84,18 +87,50 @@ map Q gq
 " so that you can undo CTRL-U after inserting a line break.
 inoremap <C-U> <C-G>u<C-U>
 
+"空格展开折叠  
+nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
+
 " In many terminal emulators the mouse works just fine, thus enable it.
 " But I really don't like this, so please don't (oxnz).
 "if has('mouse')
 "  set mouse=a
 "endif
 
+" If using a dark background within the editing area and syntax highlighting
+" turn on this option as well
+" set 256 color
+if &t_Co == 256 && $COLORTERM == 'gnome-terminal'
+	set t_Co=256
+endif
+
+set background=dark
+"colorscheme default
+"colorscheme evening
+"colorscheme murphy
+"colorscheme molokai
+"colorscheme desert
+"hi Normal guifg=White guibg=Black
+
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if &t_Co > 2 || has("gui_running")
   syntax on
+"  syntax reset
   set hlsearch
 endif
+
+" setlocal使set的效果只对当前buffer有效，不会影响到打开的其它文件。
+" expandtab = et smarttab=sta sw=shiftwidth sts=softtabstop
+set sw=4
+set ts=4
+set foldmethod=syntax
+set foldlevel=99
+set modeline
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" STATUS LINE
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
 
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
@@ -117,6 +152,9 @@ if has("autocmd")
   " Do spell check for LaTeX files
   autocmd FileType tex setlocal spell spelllang=en
   autocmd FileType plaintext setlocal spell spelllang=en
+  " for ruby, autoindent with two spaces, always expand tabs
+  autocmd FileType ruby,haml,eruby,yaml,html,javascript,sass,cucumber set ai sw=2 sts=2 et
+  autocmd FileType python setlocal ts=4 sta sw=4 sts=4 et
   " When editing a file, always jump to the last known cursor position.
   " Don't do it when the position is invalid or when inside an event handler
   " (happens when dropping a file on gvim).
@@ -143,23 +181,6 @@ if !exists(":DiffOrig")
 		  \ | wincmd p | diffthis
 endif
 
-" setlocal使set的效果只对当前buffer有效，不会影响到打开的其它文件。
-" expandtab = et smarttab=sta sw=shiftwidth sts=softtabstop
-set sw=4
-set ts=4
-autocmd FileType python setlocal ts=4 et sta sw=4 sts=4
-
-set foldmethod=syntax
-set foldlevel=99
-
-set modeline
-
-" If using a dark background within the editing area and syntax highlighting
-" turn on this option as well
-set background=dark
-colorscheme default
-"colorscheme molokai
-
 "-----------------------------------------------------------------
 " plugin - DoxygenToolkit.vim 由注释生成文档，并且能够快速生成函数标准注释
 "-----------------------------------------------------------------
@@ -173,12 +194,9 @@ let g:DoxygenToolkit_authorName="0xnz - <yunxinyi AT gmail DOT com>"
 let g:DoxygenToolkit_versionString = "0.1"
 let g:DoxygenToolkit_licenseTag="MIT License"
 
-"空格展开折叠  
-nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
-
-""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""
 " plugin - OxnzToolkit
-""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""
 let g:OxnzToolkitAuthor="Oxnz"
 let g:OxnzToolkitEmail = "yunxinyi@gmail.com"
 
