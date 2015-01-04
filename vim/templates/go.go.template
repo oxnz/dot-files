@@ -1,0 +1,17 @@
+#!/bin/sh
+# File: go.go.template
+# Author: Oxnz
+# Created
+# Description: template file for filetype: [go] with suffix: [go]
+
+cat << EOF
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	fmt.Println("Hello, world!")
+}
+EOF

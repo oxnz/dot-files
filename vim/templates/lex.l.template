@@ -1,0 +1,29 @@
+#!/bin/sh
+# File: lex.lex.template
+# Author: Oxnz
+# Created
+# Description: template file for filetype: [lex] with suffix: [lex]
+
+cat << EOF
+%{
+	// word count program
+	int wordcnt = 0;
+%}
+char [a-zA-Z\_\'\"\.]
+word {char}+
+%%
+{word} { ++wordcnt; }
+.|\n { /* skip non-char */ }
+%%
+
+int main(int argc, char *argv[]) {
+	yylex();
+	printf("words count: %d\n", wordcnt);
+
+	return 0;
+}
+
+int yywrap() {
+	return 1;
+}
+EOF

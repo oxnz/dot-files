@@ -13,13 +13,42 @@ def cheader(header):
 #endif//{}
 '''.format(header, header, header)
 
-def csource(header):
+def cppmain(codelines = 'std::cout << "Hello world!" << std::endl;'):
+    cmain(codelines)
+
+def cmain(codelines = 'printf("Hello World!\\n");'):
+    print '''
+int main(int argc, char *argv[]) {{
+    {}
+
+    return 0;
+}}'''.format(codelines)
+
+def cppcommon():
+    ccommon()
+
+def cppsource(filename):
+    cppcommon()
+    print '''
+#include <iostream>
+#include "{}.h"
+
+using namespace std;
+'''.format(filename)
+    
+    if filename == 'main':
+        cppmain()
+
+def csource(filename):
     ccommon()
     print '''
 #include <stdio.h>
 #include <stdlib.h>
-#include "{}"
-'''.format(header)
+#include "{}.h"
+'''.format(filename)
+
+    if filename == 'main':
+        cmain()
 
 def ccommon():
     common()
@@ -41,16 +70,16 @@ def common():
     print '''/*
  * Filename:	[&expand('%:t')]
  *
- * Author:		[$author]
- * Email:		[$email]
+ * Author:		[$AUTHOR]
+ * Email:		[$EMAIL]
  * Created:		[!date '+\[%F %T %Z\]']
  * Last-update:	[=time.strftime('%F %T %Z')]
  * Description: [$anchor]
  *
- * Version:		[$version]
- * Revision:	[None]
- * Revision history:	[None]
- * Date Author Remarks:	[None]
+ * Version:		[$VERSION]
+ * Revision:	[NONE]
+ * Revision history:	[NONE]
+ * Date Author Remarks:	[NONE]
  *
  * License: 
  * Copyright (c) 2013 Oxnz
@@ -67,7 +96,9 @@ class OxnzTemplate(object):
         filename, suffix = os.path.splitext(basename)
         self.optdict = {
                 'c.h': lambda: cheader('_{}_H_'.format(filename.upper())),
-                'c.c': lambda: csource(filename + '.h'),
+                'c.c': lambda: csource(filename),
+                'cpp.cpp': lambda: cppsource(filename),
+                'cpp.cc': lambda: cppsource(filename),
                 'cpp.h': lambda: cheader('_{}_H_'.format(filename.upper())),
                 'java.java': lambda: javasource(filename),
         }

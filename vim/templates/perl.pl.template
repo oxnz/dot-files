@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# 
+#
 import os
 import sys
 import time
@@ -40,25 +40,28 @@ sub new
 def common(shebang, encoding = None, codelines = None):
     print '''{}
 # {}
+# ===============================================================
+#
 # Filename:	[&expand('%:t')]
 #
-# Author:		[$author]
-# Email:		[$email]
+# Author:		[$AUTHOR]
+# Email:		[$EMAIL]
 # Created:		[!date '+\[%F %T %Z\]']
 # Last-update:	[=time.strftime('%F %T %Z')]
-# Description: [$anchor]
+# Description: [$ANCHOR]
 #
-# Version:		[$version]
+# Version:		[$VERSION]
 # Revision:	[None]
 # Revision history:	[None]
 # Date Author Remarks:	[None]
 #
-# License: 
+# License:
 # Copyright (c) 2013 Oxnz
 #
 # Distributed under terms of the [LICENSE] license.
 # [license]
 #
+# ===============================================================
 #
 {}'''.format(shebang or '#!/bin/sh', encoding or '', codelines or '')
 
@@ -67,13 +70,14 @@ class OxnzTemplate(object):
         dirname = os.path.dirname(filepath)
         basename = os.path.basename(filepath)
         filename, suffix = os.path.splitext(basename)
-        shebang = lambda progname=filetype, args=None: '#!/usr/bin/env {} {}'.format(progname, args or '')
+        shebang = lambda progname=filetype, args=None: '#!/usr/bin/env {}{}'.format(progname, ' '.join([''] + (args or [])))
         self.optdict = {
                 'python.py': lambda: common(shebang(), encoding='-*- coding: utf-8 -*-'),
                 'ruby.rb': lambda: common(shebang(), encoding='coding: utf-8'),
                 'lua.lua': lambda: common(shebang()),
-                'perl.pl': lambda: common(shebang(args='-w'), codelines='\nuse strict;\nuse warnings;'),
+                'perl.pl': lambda: common(shebang(args=['-w']), codelines='\nuse strict;\nuse warnings;'),
                 'perl.pm': lambda: common(shebang(), codelines=pmcommon()),
+                'sh.sh': lambda: common(shebang()),
         }
         self.func = self.optdict[filetype + suffix]
 
