@@ -1,7 +1,7 @@
 # ~/.zshrc
 #
 # Created: 2013-06-25 12:20:00
-# Last-update: 2014-09-24 09:55:39
+# Last-update: 2014-11-03 15:50:55
 # Version: 0.1
 # Author: Oxnz
 # License: Copyright (C) 2013 Oxnz
@@ -211,9 +211,10 @@ zsh-mime-setup
 TOKENS_FOLLOWED_BY_COMMANDS=('|' '||' ';' '&' '&&' 'sudo' 'do' 'time' 'strace')
 
 recolor-cmd() {
-	region_highlight=()
-	colorize=true
-	start_pos=0
+	local region_highlight=()
+	local colorize=true
+	local start_pos=0
+	local arg
 	for arg in ${(z)BUFFER}; do
 		((start_pos+=${#BUFFER[$start_pos+1,-1]}-${#${BUFFER[$start_pos+1,-1]## #}}))
 		((end_pos=$start_pos+${#arg}))
@@ -235,11 +236,11 @@ recolor-cmd() {
 		start_pos=$end_pos
 	done
 }
-check-cmd-self-insert() { zle .self-insert && recolor-cmd }
-check-cmd-backward-delete-char() { zle .backward-delete-char && recolor-cmd }
+#check-cmd-self-insert() { zle .self-insert && recolor-cmd || echo "failed" }
+#check-cmd-backward-delete-char() { zle .backward-delete-char && recolor-cmd || echo "failed" }
 
-zle -N self-insert check-cmd-self-insert
-zle -N backward-delete-char check-cmd-backward-delete-char
+#zle -N self-insert check-cmd-self-insert
+#zle -N backward-delete-char check-cmd-backward-delete-char
 
 # source common utilites
 if [ -d ~/.shell ]; then
