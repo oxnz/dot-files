@@ -17,5 +17,7 @@ pathmunge() {
 # set PATH so it includes user's private bin if it exists
 [ -d "$HOME/bin" ] && pathmunge "$HOME/bin" after
 [ -d "/usr/local/jdk/bin" ] && pathmunge "/usr/local/jdk/bin" "after"
+[ -d "/usr/local/go/bin" ] && pathmunge "/usr/local/go/bin" "after"
 [ -d "/opt/jdk/bin" ] && pathmunge "/opt/jdk/bin" "after"
+[ -d "/usr/local/apache-maven-3.2.3/bin" ] && pathmunge "/usr/local/apache-maven-3.2.3/bin" "after"
 unset pathmunge

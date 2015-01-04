@@ -179,6 +179,37 @@ function random() {
     done
 }
 
+##############################################################################
+# godoc use less
+##############################################################################
+function godoc() {
+    command godoc "$@" | less
+}
+
+##############################################################################
+# fortune
+##############################################################################
+function fortune() {
+    local f="${HOME}/.shell/data/fortune"
+    local nline
+    nline=$(wc -l "$f")
+    nline="${nline// *}"
+    if [ $nline -le 0 ]; then
+        echo "Misfortune: file has line count: ${nline}" >&2
+        return 1
+    fi
+    local index
+    index=$((RANDOM % nline))
+    sed -ne "${index}{p;q}" "$f"
+}
+
+##############################################################################
+# convert human-readable data(and time) to seconds since epoch and vice versa
+##############################################################################
+function epoch() {
+:
+}
+
 ############################################################
 # used to get user answer interactivly
 # Options:
@@ -316,9 +347,9 @@ function man () {
 	LESS_TERMCAP_md=$'\E[01;34m' \
 	LESS_TERMCAP_me=$'\E[00m' \
 	LESS_TERMCAP_se=$'\E[00m' \
-	LESS_TERMCAP_so=$'\E[31m' \
+	LESS_TERMCAP_so=$'\E[1;44;33m' \
 	LESS_TERMCAP_ue=$'\E[00m' \
-	LESS_TERMCAP_us=$'\E[04;32m' \
+	LESS_TERMCAP_us=$'\E[01;32m' \
 	man "$@"
 }
 
@@ -335,6 +366,7 @@ function words() {
 ################################################################################
 # show ip addr and scope, etc about every NIC found
 # depends on binary ip
+# hostname --all-ip-address (man 1 hostname)
 ################################################################################
 function ips() {
     ip -family inet -oneline address show | perl -ne '
@@ -582,6 +614,32 @@ End-Of-Help
 			;;
 	esac
 	osascript -e "tell application \"iTunes\" to $opt"
+}
+
+################################################################################
+# easy use apt-{get,cache}
+################################################################################
+function apt-() {
+    local arg
+    for arg; do
+        case "$arg" in
+            update|upgrade|install|remove|source|build-dep|dist-upgrade|\
+                dselect-upgrade|clean|autoclean|check)
+                command apt-get "$@"
+                return
+                ;;
+            add|gencaches|showpkg|showsrc|stats|dump|dumpavail|unmet|\
+                    search|show|depends|rdepends|pkgnames|dotty|xvcg|policy)
+                command apt-cache "$@"
+                return
+                ;;
+            -*) ;; # args
+            *)
+                echo "unknown command '$@' for apt-{get,cache}" >&2
+                return 1
+                ;;
+        esac
+    done
 }
 
 ################################################################################
@@ -843,6 +901,14 @@ function google() {
 			done
 			;;
 	esac
+}
+
+
+###########################################################
+# all the info that dig can find
+###########################################################
+function digdug() {
+    dig +nocmd "$1" any +multiline +noall +answer
 }
 
 function todo() {

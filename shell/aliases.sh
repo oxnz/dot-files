@@ -76,6 +76,7 @@ alias beep='printf "\007"'
 
 # command wrapper {{{
 alias svn='svn-color'
+alias define='define -d ~/.shell/data/define'
 #}}}
 
 # override default vesion or default path command {{{
@@ -86,8 +87,11 @@ alias svn='svn-color'
 #alias edit='emacs-24.3 -nw'
 #alias make='/usr/local/bin/gnu-make'
 #}}}
-#new command
+
+#new command {{{
 alias now='/bin/date +"%F %T"'
+alias goc='go build'
+#}}}
 
 #command not in PATH var {{{
 #alias py2applet='/System/Library/Frameworks/Python.framework/Versions/Current/Extras/bin/py2applet'
