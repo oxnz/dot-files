@@ -1,18 +1,14 @@
 [user]
 	name = oxnz
 	email = yunxinyi@gmail.com
-[core]
-	excludesfile = /Users/oxnz/.gitignore
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
-[mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
-[push]
-	default = simple
-[color]
-	ui = true
+[filter "media"]
+	required = true
+	clean = git media clean %f
+	smudge = git media smudge %f
+[filter "hawser"]
+	clean = git hawser clean %f
+	smudge = git hawser smudge %f
+	required = true
 [alias]
 	unadd = reset HEAD --
 	unstage = reset HEAD --
@@ -33,6 +29,7 @@
 	lc = log ORIG_HEAD.. --stat --no-merges
 	changes = diff --name-status -r
 	diffstat = diff --stat -r
-[filter "media"]
-	clean = git-media-clean %f
-	smudge = git-media-smudge %f
+[color]
+	ui = true
+[push]
+	default = simple
