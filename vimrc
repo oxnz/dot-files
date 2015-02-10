@@ -101,9 +101,11 @@ nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
 " set 256 color
 if &t_Co == 256 && $COLORTERM == 'gnome-terminal'
 	set t_Co=256
+	set t_AB=<Esc>[48;5;%dm
+	set t_AF=<Esc>[38;5;%dm
 endif
 
-set background=dark
+"set background=dark
 "colorscheme default
 "colorscheme evening
 "colorscheme murphy

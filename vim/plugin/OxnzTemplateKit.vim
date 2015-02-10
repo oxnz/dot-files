@@ -108,9 +108,9 @@ command -nargs=0 OxnzTemplateKitTest		:call <SID>OxnzTemplateKitTestFunc()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Autocmd group for OxnzTemplate
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if has('autocmd') && !exists('g:OxnzTemplateKitAutocmdLoaded')
-	let g:OxnzTemplateKitAutocmdLoaded = 1
+if has('autocmd')
 	augroup OxnzTemplateKit
+		au!
 		autocmd BufNewFile *.template setfiletype template
 		autocmd BufNewFile * call <SID>OxnzTemplateInsertFunc()
 	augroup END

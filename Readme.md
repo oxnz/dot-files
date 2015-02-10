@@ -1,4 +1,4 @@
-#Dot-Files
+#dot-files
 
 ## emacs
 

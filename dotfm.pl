@@ -87,21 +87,13 @@ BEGIN {
 		print "SIGNAL: $sig\n";
 	};
 	my @flist = (
-		"bash_profile",
-		"bashrc",
 		"emacs",
-		"emacs.d/init.el",
+		"emacs.d",
 		"gitconfig",
 		"gitignore",
 		"pythonrc",
-		"shell/*",
-		"shell/profile.d/*",
 		"vimrc",
-		"vim/plugin/*",
-		"vim/templates/*",
-		"vim/plugin/DoxygenToolkit.vim",
-		"vim/doc/OxnzToolkit.txt",
-		"zshrc",
+		"vim",
 	);
 	my $help;
 	my $pfile;

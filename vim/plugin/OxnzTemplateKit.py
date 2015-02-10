@@ -2,7 +2,7 @@
 # Copyright Oxnz 2014, All rights reserved.
 # author: Oxnz
 # coding: utf-8
-# 
+#
 # ref: http://learnvimscriptthehardway.stevelosh.com/chapters/24.html
 # ref: http://www.ibm.com/developerworks/linux/library/l-vim-script-5/index.html
 

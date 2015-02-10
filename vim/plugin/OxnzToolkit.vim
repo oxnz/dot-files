@@ -289,22 +289,19 @@ command -nargs=0 OxnzUniqueBlankLines	:call <SID>OxnzUniqueBlankLinesFunc()
 command -nargs=0 OxnzDeleteBlankLines	:call <SID>OxnzDeleteBlankLinesFunc()
 command -nargs=0 OxnzTrim				:call <SID>OxnzTrimFunc()
 command -nargs=0 OxnzToggleComment		:call <SID>OxnzToggleCommentFunc()
-command -complete=color -nargs=+ OxnzRandomColors		:call <SID>OxnzRandomColorsFunc(<f-args>)
+command -nargs=+ OxnzRandomColors		:call <SID>OxnzRandomColorsFunc(<f-args>)
 command -nargs=0 OxnzRubyInfo			:call <SID>OxnzRubyInfoFunc()
 command -nargs=0 OxnzToolkitTest		:call <SID>OxnzTestFunc()
 
 "按\ml,自动插入modeline
 "nnoremap <silent> <Leader>ml	:call OxnzModeLine() <CR>
 
-if has('autocmd') && !exists('g:OxnzToolkitAutocmdLoaded')
-	let g:OxnzToolkitAutocmdLoaded = 1
+if has('autocmd')
 	augroup OxnzToolkit
+		autocmd!
 		" autocmd BufNewFile *.h{,pp} call <SID>OxnzInsertGuardFunc()
 		autocmd BufWrite *.* call <SID>OxnzUpdateTimeStampFunc()
 
-		""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-		" BIG RED UNWANTED WHITESPACE
-		""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 		highlight ExtraWhitespace ctermbg=red guibg=red
 		match ExtraWhitespace /(\s\+$|\t)/
 		autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
