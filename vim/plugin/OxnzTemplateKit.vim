@@ -1,20 +1,53 @@
-" A tempmlate system for vim in vimL and python
-" ref: http://www.terminally-incoherent.com/blog/2013/05/06/vriting-vim-plugins-in-python/
+" File: OxnzToolkit.vim
+" Description: A tempmlate system for vim in vimL and python
+" Author: Oxnz
+" Maintainer: Oxnz<yunxinyi@gmail.com>
+" Version: 0.1.1
+" Last Change: Wed Oct  9 13:53:09 CST 2013
+" License:
+" Copyright (c) 2013 Oxnz
+"
+" Permission is hereby granted, free of charge, to any person obtaining a copy
+" of this software and associated documentation files (the "Software"), to deal
+" in the Software without restriction, including without limitation the rights
+" to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+" copies of the Software, and to permit persons to whom the Software is
+" furnished to do so, subject to the following conditions:
+"
+" The above copyright notice and this permission notice shall be included in
+" all copies or substantial portions of the Software.
+"
+" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+" IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+" FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+" AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+" LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+" OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+" THE SOFTWARE.
+"
+" Notes:
 " ref: http://brainacle.com/how-to-write-vim-plugins-with-python.html
-" author: Oxnz
-" mail: yunxinyi@gmail.com
+"
+" Feature:
+" - suffix and filetype based template
+"
+" TODO:
+" 1. add control option for autocmds
+"
+" Use:
+" Autoloaded when create new buffer
+"
+" Dependencies:
+" - None
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Verify if already loaded
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if exists('g:OxnzTemplateKitLoaded')
-	echohl ErrorMsg
-	echo 'Error: OxnzTemplateKit Already Loaded'
-	echohl None
+if exists('g:OxnzTemplateKitVersion')
 	finish
 endif
-let g:OxnzTemplateKitLoaded = 1
-let g:OxnzTemplateKitVersion = '0.1.1'
+let g:OxnzTemplateKitVersion = 0.1.1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Display Error Message
@@ -42,6 +75,8 @@ let s:OxnzTemplateKitPluginPath =
 			\ fnamemodify(s:OxnzTemplateKitVimScript, ':h')
 let s:OxnzTemplateKitPythonScript =
 			\ fnamemodify(s:OxnzTemplateKitVimScript, ':r') . '.py'
+let s:OxnzTemplateKitOptions = &cpo
+set cpo&vim
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -99,15 +134,15 @@ finally:
 EOF
 endfunction
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Command definitions
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 command -nargs=0 OxnzTemplateInsert :call <SID>OxnzTemplateInsertFunc()
-command -nargs=0 OxnzTemplateKitTest		:call <SID>OxnzTemplateKitTestFunc()
+command -nargs=0 OxnzTemplateKitTest	:call <SID>OxnzTemplateKitTestFunc()
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Autocmd group for OxnzTemplate
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if has('autocmd')
 	augroup OxnzTemplateKit
 		au!
@@ -115,3 +150,6 @@ if has('autocmd')
 		autocmd BufNewFile * call <SID>OxnzTemplateInsertFunc()
 	augroup END
 endif
+
+let &cpo=s:OxnzTemplateKitOptions
+unlet s:OxnzTemplateKitOptions

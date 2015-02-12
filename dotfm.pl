@@ -94,6 +94,7 @@ BEGIN {
 		"pythonrc",
 		"vimrc",
 		"vim",
+		"vim/plugin/*",
 	);
 	my $help;
 	my $pfile;

@@ -1,10 +1,10 @@
 " File: OxnzToolkit.vim
-" Description: insert header depends on filetype, insert mode line
-"
+" Description: Vim global plugin for utils functions
 " Author: Oxnz
+" Maintainer: Oxnz<yunxinyi@gmail.com>
 " Version: 0.1.1
-" Date: Wed Oct  9 13:53:09 CST 2013
-" License: 
+" Last Change: Wed Oct  9 13:53:09 CST 2013
+" License:
 " Copyright (c) 2013 Oxnz
 "
 " Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -48,14 +48,14 @@
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Exit if already loaded
+" Exit quickly when:
+" - this plugin was already loaded
+" - when 'compatible' is set
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if exists("g:OxnzToolkitVersion")
-	echohl ErrorMsg
-	echo 'Error: OxnzToolkit Already Loaded'
-	echohl None
+if exists("g:OxnzToolkitVersion") || &cp
 	finish
 endif
+let g:OxnzToolkitVersion = '0.1.1'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Display Error Message
@@ -72,16 +72,6 @@ function <SID>OxnzToolkitWarnFunc(msg)
     echohl None
 endfunction
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" test if "compatible" mode set
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if &compatible
-	" To use this plugin, :set nocompatible
-	" or just create an empty .vimrc file
-	call <SID>OxnzToolkitErrMsgFunc('OxnzToolkit requires no compatible')
-	finish
-endif
-
 if v:version < 700
 	call <SID>OxnzToolkitErrMsgFunc('OxnzToolkit requires vim >= 7.0')
 	finish
@@ -90,13 +80,7 @@ endif
 " check for Ruby functionality
 if !has('ruby')
 	call <SID>OxnzToolkitWarnFunc('OxnzToolkit requires vim compiled with +ruby for some functionality')
-	" finish
 endif
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugin global var
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:OxnzToolkitVersion = '0.1.1'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Script local vars
@@ -106,6 +90,8 @@ let s:OxnzToolkitPluginPath =
 			\ fnamemodify(s:OxnzToolkitVimScript, ':h')
 let s:OxnzToolkitRubyScript =
 			\ fnamemodify(s:OxnzToolkitVimScript, ':r') . '.rb'
+let s:OxnzToolkitOptions = &cpo
+set cpo&vim
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Insert C\CPP Include Guards
@@ -256,6 +242,7 @@ endfunction
 function <SID>OxnzTestFunc()
 	let l:t = <SID>OxnzRandomNumberFunc(20)
 	echo l:t
+	echo "test"
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -293,8 +280,16 @@ command -nargs=+ OxnzRandomColors		:call <SID>OxnzRandomColorsFunc(<f-args>)
 command -nargs=0 OxnzRubyInfo			:call <SID>OxnzRubyInfoFunc()
 command -nargs=0 OxnzToolkitTest		:call <SID>OxnzTestFunc()
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Key mappings
 "按\ml,自动插入modeline
 "nnoremap <silent> <Leader>ml	:call OxnzModeLine() <CR>
+if !hasmapto('<Plug>OxnzToolkit')
+	map <unique> <Leader>nz <Plug>OxnzToolkit
+endif
+noremap <unique> <script> <Plug>OxnzToolkit <SID>OxnzTestFunc
+noremap <SID>OxnzTestFunc :call <SID>OxnzTestFunc()<CR>
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 if has('autocmd')
 	augroup OxnzToolkit
@@ -311,3 +306,9 @@ if has('autocmd')
 
 	augroup END
 endif
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" clean up
+let &cpo = s:OxnzToolkitOptions
+unlet s:OxnzToolkitOptions
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
