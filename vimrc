@@ -6,9 +6,15 @@
 " Created	: 2010-03-20 18:00:12
 " Copying	: Copyright (C) 2013 0xnz, All rights reserved.
 "
-" Last-update: 2014-11-28 19:34:47
+" Last-update: 2015-02-12 20:43:49
 "
-" Description: vimrc compatible for Linux/Windows/OSX, GUI/Console
+" Description: compatible vimrc for Linux/Windows/OSX, GUI/Console
+"
+" TODO:
+" 	set laststatus=2
+" 	set statusline=
+" 	set statusline+=%-3.3n\
+" 	set statusline+=%f\
 "-------------------------------------------------------------------------------
 
 
@@ -34,9 +40,9 @@ set backspace=indent,eol,start
 " differently from regular Vi. They are highly recommended though.
 set fenc=utf-8 		" set file encoding
 
-set confirm			" 在处理未保存或只读文件的时候，弹出确认 
+set confirm			" 在处理未保存或只读文件的时候，弹出确认
 
-set iskeyword+=_,$,@,%,#,- " 带有如下符号的单词不要被换行分割 
+set iskeyword+=_,$,@,%,#,- " 带有如下符号的单词不要被换行分割
 set nobackup		" do not keep a backup file, use versions instead
 "set backupdir=~/.vim/backup
 set history=50		" keep 50 lines of command line history
@@ -44,6 +50,7 @@ set ruler		" show the cursor position all the time
 set rulerformat=%20(%2*%<%f%=\ %m%r\ %3l\ %c\ %p%%%) 
 set showcmd		" Show (partial) command in status line.
 set showmatch		" Show matching brackets.
+set showmode		" show editing mode
 set incsearch		" do incremental searching
 "set ignorecase		" Do case insensitive matching
 set smartcase		" Do smart case matching
@@ -65,16 +72,16 @@ if has("gui_running")
 	elseif has("linux")
 		set gfn=Monospace\ 11
 	endif
-	" 状态行颜色 
-	highlight StatusLine guifg=SlateBlue guibg=Yellow 
-	highlight StatusLineNC guifg=Gray guibg=White 
+	" statusline color
+	highlight StatusLine guifg=SlateBlue guibg=Yellow
+	highlight StatusLineNC guifg=Gray guibg=White
 endif
 
-set wildmenu		" 增强模式中的命令行自动完成操作 
+set wildmenu		" show autocomplete menus
 " Ignore compiled files
 set wildignore=*.o,*.obj,*.class,*.pyc,.DS_Store
-" 在被分割的窗口间显示空白，便于阅读 
-set fillchars=vert:\ ,stl:\ ,stlnc:\ 
+" 在被分割的窗口间显示空白，便于阅读
+set fillchars=vert:\ ,stl:\ ,stlnc:\
 "set nowrapscan " 禁止在搜索到文件两端时重新搜索
 
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
@@ -87,7 +94,7 @@ map Q gq
 " so that you can undo CTRL-U after inserting a line break.
 inoremap <C-U> <C-G>u<C-U>
 
-"空格展开折叠  
+"空格展开折叠
 nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
 
 " In many terminal emulators the mouse works just fine, thus enable it.
@@ -121,6 +128,8 @@ if &t_Co > 2 || has("gui_running")
   set hlsearch
 endif
 
+nnoremap <silent> <Leader>/ :nohlsearch<CR>
+
 " setlocal使set的效果只对当前buffer有效，不会影响到打开的其它文件。
 " expandtab = et smarttab=sta sw=shiftwidth sts=softtabstop
 set sw=4
@@ -133,6 +142,19 @@ set modeline
 " STATUS LINE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" completion
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set wildmode=list:full
+set wildmenu
+" stuff to ignore when tab completing
+set wildignore+=*.png,*.jpg,*.gif
+set wildignore+=*~
+
+if has("printer")
+	set printoptions=paper:A4,duplex:off,collate:n,syntax:a
+endif
 
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
@@ -182,19 +204,6 @@ if !exists(":DiffOrig")
   command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
 		  \ | wincmd p | diffthis
 endif
-
-"-----------------------------------------------------------------
-" plugin - DoxygenToolkit.vim 由注释生成文档，并且能够快速生成函数标准注释
-"-----------------------------------------------------------------
-"let g:DoxygenToolkit_briefTag_pre="@Synopsis"
-"let g:DoxygenToolkit_paramTag_pre="@Param"
-"let g:DoxygenToolkit_returnTag_pre="@Returns"
-let g:DoxygenToolkit_briefTag_funcName="yes"
-let g:DoxygenToolkit_blockHeader="---------------------------------------------"
-let g:DoxygenToolkit_blockFooter="---------------------------------------------"
-let g:DoxygenToolkit_authorName="0xnz - <yunxinyi AT gmail DOT com>"
-let g:DoxygenToolkit_versionString = "0.1"
-let g:DoxygenToolkit_licenseTag="MIT License"
 
 """"""""""""""""""""""""""""""""""""""""""""""
 " plugin - OxnzToolkit
