@@ -1,16 +1,17 @@
 ;; -*-mode: Emacs-Lisp-*-
-;;=============================================================================
-;; Filename: init.el
+;;==============================================================================
+;; Filename:	init.el
 ;;
-;; Copying:	Copyright (C) 2012, 2013 Oxnz, All rights reserved.
-;; Version:	0.2
-;; Author:	0xnz <yunxinyi AT gmail DOT com>
-;; Last-updated: 2013-10-27 18:49:47 CST
+;; Copying:		Copyright (C) 2012, 2013 Oxnz, All rights reserved.
+;; Version:		0.2
+;; Author:		0xnz <yunxinyi AT gmail DOT com>
+;; Last-updated:2013-10-27 18:49:47 CST
 ;;
-;; Note:         This file is NOT part of GNU Emacs
-;; Description:  0xnz's dot emacs file, fixing weird quirks and poor defaults
-;; Use:          copy this file to ~/.emacs or ~/.emacs.d/init.el
-;;_____________________________________________________________________________
+;; Note:        This file is NOT part of GNU Emacs
+;; Description: 0xnz's dot emacs file, fixing weird quirks and poor defaults
+;; License:		The MIT License
+;; Install:		copy this file to ~/.emacs or ~/.emacs.d/init.el
+;;______________________________________________________________________________
 ;; ------------Load_path------------
 (add-to-list 'load-path user-emacs-directory)
 

@@ -1,13 +1,14 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Filename: .emacs
-;
-; Copying:	Copyright (C) 2013 0xnz, All rights reserved.
-; Version:	0.1
-; Author:	0xnz <yunxinyi AT gmail DOT com>
-; Last-update:  2013-10-06 23:37
-;
-; Description:  0xnz's dot emacs file
-; Howto:	save this file to ~/.emacs
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Filename:	.emacs
+;; Description: 0xnz's dot emacs file
+;; Author:		0xnz <yunxinyi AT gmail DOT com>
+;; Version:		0.1
+;; Last-update: 2013-10-06 23:37
+;;
+;; Copying:		Copyright (C) 2013 0xnz, All rights reserved.
+;; License:		The MIT License
+;; Install:		save this file to ~/.emacs
+;;------------------------------------------------------------------------------
 
 ;----------------basic config---------------
 ;Load_path
@@ -237,7 +238,7 @@ scroll-conservatively 10000)
                      plain-TeX-mode))
            (let ((mark-even-if-inactive transient-mark-mode))
              (indent-region (region-beginning) (region-end) nil))))))
-                     
+
 ;;semantic
 ;(setq semantic-default-submodes '(global-semantic-idle-scheduler-mode
 ;                                  global-semanticdb-minor-mode
