@@ -72,7 +72,7 @@ def common():
  *
  * Author:		[$AUTHOR]
  * Email:		[$EMAIL]
- * Created:		[!date '+\[%F %T %Z\]']
+ * Created:		[=time.strftime('%F %T %Z')]
  * Last-update:	[=time.strftime('%F %T %Z')]
  * Description: [$anchor]
  *
@@ -82,7 +82,7 @@ def common():
  * Date Author Remarks:	[NONE]
  *
  * License: 
- * Copyright (c) 2013 Oxnz
+ * Copyright (c) [=time.strftime('%Y')] [$AUTHOR]
  *
  * Distributed under terms of the [LICENSE] license.
  * [license]

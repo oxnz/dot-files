@@ -46,7 +46,7 @@ def common(shebang, encoding = None, codelines = None):
 #
 # Author:		[$AUTHOR]
 # Email:		[$EMAIL]
-# Created:		[!date '+\[%F %T %Z\]']
+# Created:		[=time.strftime('%F %T %Z')]
 # Last-update:	[=time.strftime('%F %T %Z')]
 # Description: [$ANCHOR]
 #
@@ -56,7 +56,7 @@ def common(shebang, encoding = None, codelines = None):
 # Date Author Remarks:	[None]
 #
 # License:
-# Copyright (c) 2013 Oxnz
+# Copyright (c) [=time.strftime('%Y')] [$AUTHOR]
 #
 # Distributed under terms of the [LICENSE] license.
 # [license]
