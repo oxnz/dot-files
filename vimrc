@@ -6,7 +6,7 @@
 " Created	: 2010-03-20 18:00:12
 " Copying	: Copyright (C) 2013 0xnz, All rights reserved.
 "
-" Last-update: 2015-02-12 20:43:49
+" Last-update: 2015-04-13 10:39:42
 "
 " Description: compatible vimrc for Linux/Windows/OSX, GUI/Console
 "
@@ -106,12 +106,10 @@ nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
 " If using a dark background within the editing area and syntax highlighting
 " turn on this option as well
 " set 256 color
+
 if &t_Co == 256 && $COLORTERM == 'gnome-terminal'
 	set t_Co=256
-	set t_AB=<Esc>[48;5;%dm
-	set t_AF=<Esc>[38;5;%dm
 endif
-
 "set background=dark
 "colorscheme default
 "colorscheme evening
