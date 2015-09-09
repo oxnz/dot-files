@@ -58,7 +58,7 @@ def javasource(filename):
     common()
     print '''
 public class {} {{
-    public {} {{
+    public {}() {{
     }}
 
     public static void main(String[] args) {{
