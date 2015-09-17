@@ -58,32 +58,29 @@ ifeq (YES, ${PROFILE})
 endif
 
 INCDIR	=
-INCIDR	= $(addprefix -I, $(INCDIR))
+INCFLAGS= $(addprefix -I, $(INCDIR))
 
 # ------------  name of the target  ----------------------------------------
 TARGET	:= [program]
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS = hello_unittest
+TESTS =
 
 # House-keeping build targets.
 
 all: $(TARGET) $(TESTS)
 
-hello:
-	$(CC) $(LDFLAGS) -o $@ $^
-
 %.o: %.c
-	$(CC) -c $(CFLAGS) $(INCDIR) $<
+	$(CC) -c $(CFLAGS) $(INCFLAGS) $<
 
 %.o: %.cc
-	$(CXX) -c $(CXXFLAGS) $(INCDIR) $<
+	$(CXX) -c $(CXXFLAGS) $(INCFLAGS) $<
 
 %.o: %.cpp
-	$(CXX) -c $(CXXFLAGS) $(INCDIR) $<
+	$(CXX) -c $(CXXFLAGS) $(INCFLAGS) $<
 
 %.o: %.C
-	$(CXX) -c $(CXXFLAGS) $(INCDIR) $<
+	$(CXX) -c $(CXXFLAGS) $(INCFLAGS) $<
 
 %.dep: %.c
 	$(CC) -MM -MF $@ $(CFLAGS) $<
