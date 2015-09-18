@@ -116,8 +116,7 @@ BEGIN {
 		"gitignore",
 		"pythonrc",
 		"vimrc",
-		"vim",
-		"vim/plugin/*",
+		"vim/*/*",
 	);
 	my $help;
 	my $pfile;
