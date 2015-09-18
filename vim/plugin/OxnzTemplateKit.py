@@ -165,6 +165,7 @@ class OxnzTemplate(object):
         '''
         self._tempdir = tempdir
         self._filetype = filetype
+        self._content = None
         self._target = vim.eval('expand("%:p")')
         self._prefix = self._filetype + os.path.splitext(self._target)[1]
         self._infix = None
@@ -256,6 +257,11 @@ class OxnzTemplate(object):
             return None, None
             #raise OxnzTemplateKitError("template shebang not found, first line is '{}'".format(line))
 
+
+    @property
+    def tempdir(self):
+        return self._tempdir
+
     @property
     def compcmd(self):
         return self._compcmd
@@ -272,8 +278,14 @@ class OxnzTemplate(object):
     @property
     def content(self):
         '''return file content'''
-        with open(self.filepath) as f:
-            return f.read()
+        if self._content == None:
+            with open(self.filepath) as f:
+                self._content = f.read()
+        return self._content
+
+    @content.setter
+    def content(self, content):
+        self._content = content
 
     @property
     def filepath(self):
@@ -288,7 +300,7 @@ class OxnzTemplate(object):
 
 class OxnzTemplateRenderer(object):
     '''template renderer'''
-    def __init__(self, content, strict=True):
+    def __init__(self, template, strict=True):
         '''
         content: need to be rendered
         strict: in mode when error, throw immediatly
@@ -298,7 +310,7 @@ class OxnzTemplateRenderer(object):
         expr: any expression or variable name
         optchars = '|'.join([re.escape(c) for c in '~!@#$%^&*-+=\\<>.?/'])
         '''
-        self._content = content
+        self._template = template
         self._strict = True
         self._regex = ''.join([
             r'(?P<esch>(^|\n|.))',  # start|newlilne|anychar
@@ -343,7 +355,7 @@ class OxnzTemplateRenderer(object):
 
     def __call__(self):
         '''render content'''
-        return re.sub(self._regex, self.__sub, self._content)
+        self._template.content = re.sub(self._regex, self.__sub, self._template.content)
 
     def __exec_python_stmt(self, stmt):
         '''http://stackoverflow.com/questions/2220699/whats-the-difference-between-eval-exec-and-compile-in-python'''
@@ -415,15 +427,26 @@ class OxnzTemplateRenderer(object):
             return expr
 
     def __load_file_content(self, expr):
-        return 'file:' + expr
+        try:
+            fpath = expr
+            if not expr.startswith('/'):
+                fpath = os.path.join(self._template.tempdir, fpath)
+            with open (fpath) as f:
+                return f.read()
+        except IOError as e:
+            return self.__errfnf(str(e))
 
     def __erronf(self, pats, optc, expr):
-        '''error on option not found, i.e. not in self._optdct'''
+        '''option not found, i.e. not in self._optdct'''
         raise OxnzTemplateKitError("handler for option code '{}' not exists, full pattern is '{}'".format(optc, pats))
 
     def __errvnf(self, name, func):
-        '''error on variable not found'''
+        '''variable not found'''
         return func()
+
+    def __errfnf(self, msg):
+        '''file not found'''
+        return msg
 
     def __sub(self, match):
         '''do substitute'''
@@ -444,9 +467,9 @@ class OxnzTemplateEngine(object):
         self._plugdir = os.path.dirname(vim.eval('s:OxnzTemplateKitPluginPath'))
         self._tempdir = os.path.join(self._plugdir, 'templates')
 
-    def __render(self, content):
+    def __render(self, template):
         '''content is string'''
-        return OxnzTemplateRenderer(content)()
+        OxnzTemplateRenderer(template)()
 
     def __compile(self, template):
         '''compile template
@@ -458,7 +481,7 @@ class OxnzTemplateEngine(object):
         returncode = task.returncode
         if returncode or stderrdata:
             raise OxnzTemplateCompileError(template, returncode, stderrdata)
-        return stdoutdata
+        template.content = stdoutdata
 
     def __insert(self, filetype):
         '''insert template by filetype and suffix'''
@@ -467,12 +490,10 @@ class OxnzTemplateEngine(object):
         filetype = filetype[0]
         template = OxnzTemplate(self._tempdir, filetype)
         if template.compilable:
-            content = self.__compile(template)
-        else:
-            content = template.content
+            self.__compile(template)
         if template.renderable:
-            content = self.__render(content)
-        vim.current.buffer[:] = content.split('\n')
+            self.__render(template)
+        vim.current.buffer[:] = template.content.split('\n')
 
     def __commentprefix(self):
         '''return comment prefix(es) based on filetype'''
