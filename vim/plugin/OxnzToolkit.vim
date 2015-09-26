@@ -294,7 +294,6 @@ noremap <SID>OxnzTestFunc :call <SID>OxnzTestFunc()<CR>
 if has('autocmd')
 	augroup OxnzToolkit
 		autocmd!
-		" autocmd BufNewFile *.h{,pp} call <SID>OxnzInsertGuardFunc()
 		autocmd BufWrite *.* call <SID>OxnzUpdateTimeStampFunc()
 
 		highlight ExtraWhitespace ctermbg=red guibg=red
