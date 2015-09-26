@@ -33,3 +33,14 @@
 	ui = true
 [push]
 	default = simple
+[pack]
+	threads = 1
+	deltaCacheSize = 128m
+	packSizeLimit = 128m
+	windowMemory = 128m
+[core]
+	bigFileThreshold = 1
+	compression = 0
+	packedGitLimit = 128m
+	packedGitWindowSize = 128m
+

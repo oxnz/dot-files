@@ -1,11 +1,5 @@
-" File: OxnzToolkit.vim
-" Description: A tempmlate system for vim in vimL and python
-" Author: Oxnz
-" Maintainer: Oxnz<yunxinyi@gmail.com>
-" Version: 0.1.1
-" Last Change: Wed Oct  9 13:53:09 CST 2013
-" License:
-" Copyright (c) 2013 Oxnz
+" Copyright (c) 2013-2015 Z
+" All rights reserved.
 "
 " Permission is hereby granted, free of charge, to any person obtaining a copy
 " of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +18,13 @@
 " LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 " OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 " THE SOFTWARE.
+"
+" File: OxnzToolkit.vim
+" Description: A tempmlate system for vim in vimL and python
+" Author: Oxnz
+" Maintainer: Oxnz<yunxinyi@gmail.com>
+" Version: 0.1.1
+" Last Change: Wed Oct  9 13:53:09 CST 2013
 "
 " Notes:
 " ref: http://brainacle.com/how-to-write-vim-plugins-with-python.html
