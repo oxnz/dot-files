@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# Copyright (c) 2013-2015 Z
+# Copyright (c) 2013-2016 Will Z
 # All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,10 +24,11 @@
 
 package main;
 
-our $VERSION = '0.03';
-
 use strict;
 use warnings;
+
+our $VERSION = '0.04';
+
 use File::Compare;
 use File::Copy;
 use File::Basename;
