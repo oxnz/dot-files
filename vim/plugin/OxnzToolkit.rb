@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #
-# Copyright (c) 2013-2015 Z
+# Copyright (c) 2013-2016 Will Z
 # All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,7 +22,7 @@
 # THE SOFTWARE.
 #
 # File: ruby.rb.template
-# Author: Oxnz
+# Author: Will Z
 # Description: template file for filetype: [ruby] with suffix: [rb]
 # ref: http://items.sjbach.com/97/writing-a-vim-plugin
 #
@@ -41,11 +41,11 @@ class OxnzToolkit
 		msg = '"' + msg + '"'
 		case lvl
 		when 'normal'
-			VIM::command "echo #{msg}" 
+			VIM::command "echo #{msg}"
 		when 'warning'
-			VIM::command "echohl WarningMsg | echo #{msg} | echohl None" 
+			VIM::command "echohl WarningMsg | echo #{msg} | echohl None"
 		when 'error'
-			VIM::command "echohl ErrorMsg | echo #{msg} | echohl None" 
+			VIM::command "echohl ErrorMsg | echo #{msg} | echohl None"
 		else
 			msg 'error', "invalid message level: #{lvl}, message: #{msg}"
 		end

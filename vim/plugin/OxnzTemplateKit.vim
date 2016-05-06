@@ -1,4 +1,4 @@
-" Copyright (c) 2013-2015 Z
+" Copyright (c) 2013-2016 Will Z
 " All rights reserved.
 "
 " Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,12 +19,12 @@
 " OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 " THE SOFTWARE.
 "
-" File: OxnzToolkit.vim
+" File: OxnzTemplateKit.vim
 " Description: A tempmlate system for vim in vimL and python
-" Author: Oxnz
-" Maintainer: Oxnz<yunxinyi@gmail.com>
-" Version: 0.1.1
-" Last Change: Wed Oct  9 13:53:09 CST 2013
+" Author: Will Z
+" Maintainer: Will Z<yunxinyi@gmail.com>
+" Version: 1.0.0
+" Last Change: Thu May  5 22:28:27 CST 2016
 "
 " Notes:
 " ref: http://brainacle.com/how-to-write-vim-plugins-with-python.html
@@ -39,7 +39,7 @@
 " Autoloaded when create new buffer
 "
 " Dependencies:
-" - None
+" - python/dyn needed for some functionality
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -48,29 +48,29 @@
 if exists('g:OxnzTemplateKitVersion')
 	finish
 endif
-let g:OxnzTemplateKitVersion = 0.1.1
+let g:OxnzTemplateKitVersion = 1.0.0
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Display Error Message
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function <SID>OxnzTemplateKitErrMsgFunc(msg)
     echohl ErrorMsg
     echo 'Error: ' . a:msg
     echohl None
 endfunction
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Display Warning Message
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function <SID>OxnzTemplateKitWarnFunc(msg)
     echohl WarningMsg
     echo 'Warning: ' . a:msg
     echohl None
 endfunction
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Script local var
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let s:OxnzTemplateKitVimScript = resolve(expand('<sfile>:p'))
 let s:OxnzTemplateKitPluginPath =
 			\ fnamemodify(s:OxnzTemplateKitVimScript, ':h')
@@ -88,9 +88,9 @@ if !has('python')
 	finish
 endif
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Entry Function of OxnzTemplate
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function <SID>OxnzTemplateKitFunc(cmd, ...)
 	try
 		execute 'pyfile' s:OxnzTemplateKitPythonScript
@@ -100,9 +100,9 @@ function <SID>OxnzTemplateKitFunc(cmd, ...)
 	endtry
 endfunction
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Insert Template by FileType
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function <SID>OxnzTemplateInsertFunc()
 	call <SID>OxnzTemplateKitFunc('insert', &filetype)
 endfunction
@@ -113,9 +113,9 @@ endfunction
 " TODO: add confirm while some templates need extra parameter,
 " like makefile against C is different from other Object-C projects
 
-"""""""""""""""""""""""""""""""""""""""
-" Test Func
-"""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Test Stub Func
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function <SID>OxnzTemplateKitTestFunc()
 	"use py return var to send back the var value
 	py << EOF
@@ -152,5 +152,8 @@ if has('autocmd')
 	augroup END
 endif
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Clean up
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let &cpo=s:OxnzTemplateKitOptions
 unlet s:OxnzTemplateKitOptions

@@ -1,4 +1,4 @@
-" Copyright (c) 2013-2015 Z
+" Copyright (c) 2013-2016 Will Z
 " All rights reserved.
 "
 " Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,10 +21,10 @@
 "
 " File: OxnzToolkit.vim
 " Description: Vim global plugin for utils functions
-" Author: Oxnz
-" Maintainer: Oxnz<yunxinyi@gmail.com>
-" Version: 0.1.1
-" Last Change: Wed Oct  9 13:53:09 CST 2013
+" Author: Will Z
+" Maintainer: Will Z<yunxinyi@gmail.com>
+" Version: 1.0.0
+" Last Change: Thu May  5 22:45:17 CST 2016
 "
 " Feature:
 " - generate headers
@@ -47,31 +47,37 @@
 " - Ubuntu: apt-get install vim-nox
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Exit quickly when:
 " - this plugin was already loaded
 " - when 'compatible' is set
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if exists("g:OxnzToolkitVersion") || &cp
 	finish
 endif
-let g:OxnzToolkitVersion = '0.1.1'
+let g:OxnzToolkitVersion = '1.0.0'
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Display Error Message
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function <SID>OxnzToolkitErrMsgFunc(msg)
     echohl ErrorMsg
-    echo 'Warning: ' . a:msg
-    echohl None
-endfunction
-
-function <SID>OxnzToolkitWarnFunc(msg)
-    echohl WarningMsg
     echo 'Error: ' . a:msg
     echohl None
 endfunction
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Display Warning Message
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function <SID>OxnzToolkitWarnFunc(msg)
+    echohl WarningMsg
+    echo 'Warning: ' . a:msg
+    echohl None
+endfunction
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Dependencies check
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if v:version < 700
 	call <SID>OxnzToolkitErrMsgFunc('OxnzToolkit requires vim >= 7.0')
 	finish
@@ -79,12 +85,12 @@ endif
 
 " check for Ruby functionality
 if !has('ruby')
-	call <SID>OxnzToolkitWarnFunc('OxnzToolkit requires vim compiled with +ruby for some functionality')
+"	call <SID>OxnzToolkitWarnFunc('OxnzToolkit requires vim compiled with +ruby for some functionality')
 endif
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Script local vars
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let s:OxnzToolkitVimScript = resolve(expand('<sfile>:p'))
 let s:OxnzToolkitPluginPath =
 			\ fnamemodify(s:OxnzToolkitVimScript, ':h')
@@ -93,25 +99,9 @@ let s:OxnzToolkitRubyScript =
 let s:OxnzToolkitOptions = &cpo
 set cpo&vim
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Insert C\CPP Include Guards
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function <SID>OxnzInsertGuardFunc()
-	exec "normal G"
-	let l:fname = expand("%:t")
-	let l:fname = toupper(l:fname)
-	let l:fname = substitute(l:fname, "\\.", "_", "g")
-	let l:fname = "_" . l:fname . "_"
-	call append(line("$"), ["\#ifndef " . l:fname,
-				\ "\#define " . l:fname,
-				\ "",
-				\ "\#endif//" . l:fname
-				\ ])
-endfunction
-
-"""""""""""""""""""""""""""""""""""""""""""""""
-" Update time stamp
-"""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Update timestamp
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function <SID>OxnzUpdateTimeStampFunc()
 	let l:lineno = search("Last-update:", "n")
 	if l:lineno
@@ -123,9 +113,9 @@ function <SID>OxnzUpdateTimeStampFunc()
 	endif
 endfunction
 
-"""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Append Vim Mode Line
-"""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function <SID>OxnzAppendModeLineFunc()
 	let l:modeline = printf(" vim: set ts=%d sw=%d tw=%d %set :",
 				\ &tabstop, &shiftwidth, &textwidth, &expandtab ? '' : 'no')
@@ -133,9 +123,9 @@ function <SID>OxnzAppendModeLineFunc()
 	call append(line("$"), l:modeline)
 endfunction
 
-"""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Insert Line Numbers
-"""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function <SID>OxnzInsertLineNumbersFunc()
 	let l:num=1
 	let l:end = line("$")
@@ -148,9 +138,9 @@ function <SID>OxnzInsertLineNumbersFunc()
 	endwhile
 endfunction
 
-"""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Delete Line Numbers
-"""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function <SID>OxnzDeleteLineNumbersFunc()
 	let l:num=1
 	let l:end = line("$")
@@ -164,9 +154,9 @@ function <SID>OxnzDeleteLineNumbersFunc()
 	endwhile
 endfunction
 
-""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Delete Leading White Spaces
-""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function <SID>OxnzDeleteLeadingSpacesFunc()
 	try
 		:%s/^\s\+//
@@ -175,9 +165,9 @@ function <SID>OxnzDeleteLeadingSpacesFunc()
 	endtry
 endfunction
 
-""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Delete Trailing White Spaces
-""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function <SID>OxnzDeleteTrailingSpacesFunc()
 	try
 		:%s/\s\+$//
@@ -186,23 +176,23 @@ function <SID>OxnzDeleteTrailingSpacesFunc()
 	endtry
 endfunction
 
-""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Remove Extra Blank Lines, Only Leave One
-""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function <SID>OxnzUniqueBlankLinesFunc()
 	:silent! g/^\n\{2,}/d
 endfunction
 
-""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Delete Blank Lines
-""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function <SID>OxnzDeleteBlankLinesFunc()
 	:silent! g/^\s*$/d
 endfunction
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Trim Leading, Trailing Spaces and Also Unique Blank Lines
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function <SID>OxnzTrimFunc()
 	call <SID>OxnzDeleteLeadingSpacesFunc()
 	call <SID>OxnzDeleteTrailingSpacesFunc()
@@ -217,18 +207,18 @@ function <SID>OxnzToggleCommentFunc()
 	echo "hello"
 endfunction
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Random number generator
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function <SID>OxnzRandomNumberFunc(n)
 	let l:rn = localtime() % 0x10000
 	let l:rn = (l:rn * 31421 + 6927) % 0x10000
 	return l:rn * a:n / 0x10000
 endfunction
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Use random colorscheme
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function <SID>OxnzRandomColorsFunc(...)
 	let l:schemes = a:000
 	let l:random = <SID>OxnzRandomNumberFunc(len(l:schemes))
@@ -236,18 +226,18 @@ function <SID>OxnzRandomColorsFunc(...)
 	execute 'colorscheme' l:scheme
 endfunction
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Test Func
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Test Stub Func
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function <SID>OxnzTestFunc()
 	let l:t = <SID>OxnzRandomNumberFunc(20)
 	echo l:t
 	echo "test"
 endfunction
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Ruby entry
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function <SID>OxnzToolkitRubyFunc(cmd, ...)
 	try
 		execute 'rubyfile' s:OxnzToolkitRubyScript
@@ -282,7 +272,7 @@ command -nargs=0 OxnzToolkitTest		:call <SID>OxnzTestFunc()
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Key mappings
-"按\ml,自动插入modeline
+" press \ml, insert modeline
 "nnoremap <silent> <Leader>ml	:call OxnzModeLine() <CR>
 if !hasmapto('<Plug>OxnzToolkit')
 	map <unique> <Leader>nz <Plug>OxnzToolkit
@@ -307,7 +297,7 @@ if has('autocmd')
 endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" clean up
+" Clean up
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let &cpo = s:OxnzToolkitOptions
 unlet s:OxnzToolkitOptions
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
