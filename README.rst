@@ -48,9 +48,12 @@ tree alias
 License
 =======
 
-[The MIT License](./LICENSE)
+The MIT License
 
-##References
+See LICENSE for details.
+
+References
+==========
 
 * [Shell Special Variables](./sh-spec-var.md)
 * [Test if is interactive shell](./test-sh-interact.md)
