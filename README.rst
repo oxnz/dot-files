@@ -1,59 +1,53 @@
-#dot-files
+#########
+dot-files
+#########
 
-## emacs
+Description
+===========
 
-deprecated
+This repo is part of the productivity project by Max.Z
 
-## vimrc
+Contents
+--------
 
-perlsonal vim config file
+* dotfm.pl
 
-## emacs.d
+    * used to manage the dot files under user's home directory, ie(~).
 
-a better emacs config stuff
+* bashrc
 
-## doc
+    * aliases
+    * profile (``PATH``)
 
-documents for reference
+* zshrc
+* git
 
-##Notes
+    * gitignore
 
-tree alias:
-find . -print | sed -e 's;[^/]*/;|____;g;s;____|;|;g'
+* emacs (a better emacs config stuff: deprecated)
 
-## License
+    * emacs.d
+
+* vim (perlsonal vim config file)
+
+    * vimrc
+    * vim
+
+Notes
+=====
+
+tree alias
+
+.. code-block:: shell
+
+    find . -print | sed -e 's;[^/]*/;|____;g;s;____|;|;g'
+
+License
+=======
 
 [The MIT License](./LICENSE)
-
-dot files for linux, unix & os x.
-
-##Contents
-* `bash_aliases`
-* `bash_profile-{mac, linux}`
-* `bashrc`
-* `gitignore_global`
-* `vimrc`
-* `zshrc`
-* `android`
-* `CFUserTextEncoding`
-* `profile`
-* `vim`
-
-
-##Tools
-
-dotfm.pl used to manage the dot files under user's home directory, ie(~).
 
 ##References
 
 * [Shell Special Variables](./sh-spec-var.md)
 * [Test if is interactive shell](./test-sh-interact.md)
-
-##Contact
-
-0xnz(@oxzn) <yunxinyi AT gmail DOT com>
-
-##License
-Copyright &copy; 2013 0xnz <yunxinyi@gmail.com>, All rights reserved.
-
-[Click here for details](./LICENSE)
