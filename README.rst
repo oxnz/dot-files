@@ -1,5 +1,4 @@
-#########
-dot-files
+Dot-files
 #########
 
 Description
@@ -7,7 +6,19 @@ Description
 
 This repo is part of the productivity project by Max.Z
 
-Contents
+Editors
+-------
+
+* emacs (a better emacs config stuff: deprecated)
+
+    * emacs.d
+
+* vim (perlsonal vim config file)
+
+    * vimrc
+    * vim (plugins)
+
+Shells
 --------
 
 * dotfm.pl
@@ -24,14 +35,6 @@ Contents
 
     * gitignore
 
-* emacs (a better emacs config stuff: deprecated)
-
-    * emacs.d
-
-* vim (perlsonal vim config file)
-
-    * vimrc
-    * vim
 
 Notes
 =====
@@ -51,3 +54,4 @@ License
 
 * [Shell Special Variables](./sh-spec-var.md)
 * [Test if is interactive shell](./test-sh-interact.md)
+
