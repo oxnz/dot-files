@@ -1,4 +1,4 @@
-" Copyright (c) 2013-2015 Z
+" Copyright (c) 2013-2021 Z
 " All rights reserved.
 "
 " Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -68,7 +68,7 @@ set nobackup		" do not keep a backup file, use versions instead
 "set backupdir=~/.vim/backup
 set history=50		" keep 50 lines of command line history
 set ruler		" show the cursor position all the time
-set rulerformat=%20(%2*%<%f%=\ %m%r\ %3l\ %c\ %p%%%) 
+set rulerformat=%20(%2*%<%f%=\ %m%r\ %3l\ %c\ %p%%%)
 set showcmd		" Show (partial) command in status line.
 set showmatch		" Show matching brackets.
 set showmode		" show editing mode

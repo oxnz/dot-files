@@ -30,41 +30,13 @@
 # Skip all this for non-interactive shells
 [[ -z "$PS1" ]] && return
 
-if ! SHELL_UTILS_HOME="$(readlink "${(%):-%N}")"; then
-	echo "readlink failed: ${BASH_SOURCE}" >&2
-	return 1
-fi
-if ! SHELL_UTILS_HOME="$(dirname "$(dirname "${SHELL_UTILS_HOME}")")"; then
-	echo "dirname error: ${SHELL_UTILS_HOME}" >&2
-	return 1
-fi
-# source shell-utils
-SU::initialize() {
-	local mod f
-	for mod in core opt ext custom; do
-		mod="${SHELL_UTILS_HOME}/${mod}"
-		if [ -d "${mod}" ]; then
-			for f in "$mod"/*.sh(N); do
-				if [ -r "$f" ]; then
-					#echo "$f"
-					. "$f"
-				fi
-			done
-			for f in "${mod}"/*.zsh(N); do
-				if [ -r "$f" ]; then
-					#echo $f
-					. "$f"
-				fi
-			done
-		else
-			echo "module not found: [$i]" >&2
-			return 1
-		fi
-	done
-}
-SU::initialize
-unset -f SU::initialize
+export CLICOLOR=1
+export LC_ALL=en_US.UTF-8
 
-export PATH="/Applications/CMake.app/Contents/bin":"$PATH"
+PROMPT="%F{cyan}[%F{red}%n%F{green}@%F{blue}%m:%F{magenta}%1~:%F{red}%?%F{cyan}]%#%f "
+RPROMPT="%F{cyan}%*%f"
 
-export PATH="$PATH:/Library/Frameworks/Python.framework/Versions/3.8/bin"
+PATH="$HOME/.gem/ruby/2.6.0/bin:$PATH"
+PATH="/Applications/CMake.app/Contents/bin":"$PATH"
+PATH="$PATH:/Library/Frameworks/Python.framework/Versions/3.8/bin"
+export PATH
