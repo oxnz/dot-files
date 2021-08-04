@@ -1,4 +1,4 @@
-# Copyright (c) 2013-2016 Will Z
+# Copyright (c) 2013-2021 Will Z
 # All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,6 +30,7 @@ import sys
 import time
 import subprocess
 
+
 def dbgout(obj):
     with open(os.path.join(vim.eval('fnamemodify(resolve(expand("<sfile>:p")), ":h")'), 'debug.out'), 'a') as f:
         print >>f, obj
@@ -48,10 +49,12 @@ class OxnzVimUtils(object):
         vim.command('unlet {}'.format(vimvar))
         return answer
 
+
 class OxnzTemplateKitError(RuntimeError):
     '''general error class'''
     def __init__(self, message):
         super(OxnzTemplateKitError, self).__init__(message)
+
 
 class OxnzTemplateError(OxnzTemplateKitError):
     '''template error'''
@@ -77,6 +80,7 @@ class OxnzTemplateError(OxnzTemplateKitError):
     def __str__(self):
         return 'OxnzTemplateError(message:{}, template:{})'.format(self.message, self.filepath)
 
+
 class OxnzTemplateEngineError(RuntimeError):
     '''engine error'''
     def __init__(self, message, filetype):
@@ -89,6 +93,7 @@ class OxnzTemplateEngineError(RuntimeError):
 
     def __str__(self):
         return 'OxnzTemplateEngineError(type:{}, message:{})'.format(self.filetype, self.message)
+
 
 class OxnzTemplateCompileError(OxnzTemplateKitError):
     def __init__(self, template, code, message):
@@ -108,11 +113,13 @@ class OxnzTemplateCompileError(OxnzTemplateKitError):
     def __str__(self):
         return self._strfmt.format(self._template, self._template.compcmd, self._code, self.message)
 
+
 class OxnzExecutor(object):
     @classmethod
     def execute(command):
         pass
     pass
+
 
 class OxnzWriter(object):
     def __init__(self):
@@ -124,6 +131,7 @@ class OxnzWriter(object):
 
     def write(self, obj):
         self._output += str(obj)
+
 
 class OxnzTemplateKitRedirect(object):
     def __init__(self, output, errput):
@@ -145,6 +153,7 @@ class OxnzTemplateKitRedirect(object):
 
     def __del__(self):
         pass
+
 
 class OxnzTemplate(object):
     '''template entity
@@ -298,6 +307,7 @@ class OxnzTemplate(object):
     def __str__(self):
         return self._filepath
 
+
 class OxnzTemplateRenderer(object):
     '''template renderer'''
     def __init__(self, template, strict=True):
@@ -376,11 +386,11 @@ class OxnzTemplateRenderer(object):
     def __load_vim_var(self, name, *default):
         '''return value for name if exists, otherwise throw NameError if default is not given
         expand:
-			:p		expand to full path
-			:h		head (last path component removed)
-			:t		tail (last path component only)
-			:r		root (one extension removed)
-			:e		extension only
+            :p		expand to full path
+            :h		head (last path component removed)
+            :t		tail (last path component only)
+            :r		root (one extension removed)
+            :e		extension only
         '''
         defcnt = len(default)
         try:
@@ -459,6 +469,7 @@ class OxnzTemplateRenderer(object):
         subfunc = self._optdct.get(optc, self.__erronf)
         return esch + subfunc(pats, optc, expr)
 
+
 class OxnzTemplateEngine(object):
     '''template engine
     [compile] -> render -> insert
@@ -519,10 +530,12 @@ class OxnzTemplateEngine(object):
             raise OxnzTemplateKitError("command '{}' not found".format(command))
         return errfunc
 
+
 class OxnzTemplateKitErrpro(object):
     def __init__(self, ex):
         pass
     pass
+
 
 class erreport(object):
     '''report error'''
@@ -548,18 +561,15 @@ if __name__ == '__main__':
         engine = OxnzTemplateEngine()
         engine.do(cmdname, cmdargs)
     except OxnzTemplateError as e:
-        #erreport()(e)
+        # erreport()(e)
         print >>sys.stderr, e
-        pass
     except OxnzTemplateCompileError as e:
-        pass
         print >>sys.stderr, e
     except OxnzTemplateKitError as e:
-        pass
         print >>sys.stderr, e
     except vim.error as e:
-        pass
         print >>sys.stderr, e
-    except:
-        #raise vim.error('Unexpected error:', sys.exc_info()[0])
+    except Exception as e:
+        print >>sys.stderr, e
+        # raise vim.error('Unexpected error:', sys.exc_info()[0])
         raise

@@ -1,6 +1,6 @@
 ;; -*-mode: Emacs-Lisp-*-
 ;
-; Copyright (c) 2012-2015 Z
+; Copyright (c) 2012-2021 Z
 ; All rights reserved.
 ;
 ; Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -156,7 +156,7 @@
 ;在模式栏中显示当前光标所在函数
 ;(which-function-mode)
 
-;-------------------------------theme or color---------------- 
+;-------------------------------theme or color----------------
 ;theme{
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
