@@ -1,40 +1,66 @@
-[user]
-	name = oxnz
-	email = yunxinyi@gmail.com
-[filter "media"]
-	required = true
-	clean = git media clean %f
-	smudge = git media smudge %f
-[filter "hawser"]
-	clean = git hawser clean %f
-	smudge = git hawser smudge %f
-	required = true
-[alias]
-	unadd = reset HEAD --
-	unstage = reset HEAD --
-	st = status
-	ci = commit
-	br = branch
-	co = checkout
-	df = diff
-	dc = diff --cached
-#	lg = log -p
-	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset \
-		%s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit \
-		--date=relative
-	who = shortlog -s --
+#!/bin/sh
 
-	undo = reset --HEAD
-	llog = log --date=local
-	lc = log ORIG_HEAD.. --stat --no-merges
-	changes = diff --name-status -r
-	diffstat = diff --stat -r
-[color]
-	ui = true
-[push]
-	default = simple
-[pack]
-	threads = 1
-	deltaCacheSize = 128m
-	packSizeLimit = 128m
-	windowMemory = 128m
+# [user]
+
+case "$(uname -s)" in
+	Darwin)
+		git config --global user.name "$(id -F)"
+		;;
+	Linux)
+		git config --global user.name "$USER"
+		;;
+esac
+git config --global user.email 'errpro+bitbucket@icloud.com'
+
+# [alias]
+
+git config --global alias.who 'shortlog -s --'
+
+git config --global alias.undo 'reset --HEAD'
+git config --global alias.unadd 'reset HEAD --'
+git config --global alias.unstage 'reset HEAD --'
+
+git config --global alias.st status
+git config --global alias.ci commit
+git config --global alias.br branch
+git config --global alias.co checkout
+git config --global alias.ls 'diff --name-status -r'
+git config --global alias.df 'diff --stat -r'
+git config --global alias.dc 'diff --cached'
+git config --global alias.dv diff
+
+git config --global alias.llog 'log --date=local'
+git config --global alias.lc 'log ORIG_HEAD.. --stat --no-merges'
+git config --global alias.lv 'log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit --date=relative'
+
+# [color]
+git config --global color.ui true
+git config --global push.default simple
+
+# [pack]
+git config --global pack.threads 1
+git config --global pack.deltaCacheSize 128m
+git config --global pack.packSizeLimit 128m
+git config --global pack.windowMemory 128m
+
+# [core]
+git config --global core.excludesfile "${HOME}/.gitignore"
+
+# [filter "lfs"]
+
+git config --global filter.lfs.required true
+git config --global filter.lfs.clean "git-lfs clean -- %f"
+git config --global filter.lfs.smudge "git-lfs smudge -- %f"
+git config --global filter.lfs.process "git-lfs filter-process"
+
+# [filter "media"]
+git config --global filter.media.required true
+git config --global filter.media.clean 'git media clean %f'
+git config --global filter.media.smudge 'git media smudge %f'
+
+# [filter "hawser"]
+git config --global filter.hawser.required true
+git config --global filter.hawser.clean 'git hawser clean %f'
+git config --global filter.hawser.smudge 'git hawser smudge %f'
+
+# [difftool]
