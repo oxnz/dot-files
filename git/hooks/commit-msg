@@ -30,6 +30,8 @@ def proc(f):
     max_line_length = 72
     max_line_count = 30
     for line in f:
+        if line.startswith('#'):
+            continue
         n += 1
         if n > max_line_count:
             raise ValueError(f'body line count exceeds {max_line_count}, use a wiki instead')
