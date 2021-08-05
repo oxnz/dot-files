@@ -10,8 +10,6 @@ def proc():
         return
     print("post-checkout: deleting all '.pyc' files in working directory ...")
     for root, dirs, files in os.walk('.'):
-        for d in {'.git', '.vscode'}:
-            dirs.remove(d)
         for filename in files:
             ext = os.path.splitext(filename)[1]
             if ext == '.pyc':

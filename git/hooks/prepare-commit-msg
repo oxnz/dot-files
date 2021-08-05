@@ -1,40 +1,50 @@
 #!/usr/bin/env python3
 
-import sys, os
+import re
+import sys
+import subprocess
 
-commit_msg_filepath = sys.argv[1]
-with open(commit_msg_filepath, 'w') as f:
-    f.write("# Please include a useful commit message!")
 
-#!/usr/bin/env python
+def current_branch():
+    # figure out which branch we're on
+    output = subprocess.check_output(['git', 'symbolic-ref', '--short', 'HEAD']).rstrip()
+    return output.decode('utf-8')
 
-import sys, os, re
-from subprocess import check_output
 
-# Collect the parameters
-commit_msg_filepath = sys.argv[1]
-if len(sys.argv) > 2:
-    commit_type = sys.argv[2]
-else:
-    commit_type = ''
-if len(sys.argv) > 3:
-    commit_hash = sys.argv[3]
-else:
-    commit_hash = ''
-
-print "prepare-commit-msg: File: %s\nType: %s\nHash: %s" % (commit_msg_filepath, commit_type, commit_hash)
-
-# Figure out which branch we're on
-branch = check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip()
-print "prepare-commit-msg: On branch '%s'" % branch
-
-# Populate the commit message with the issue #, if there is one
-if branch.startswith('issue-'):
-    print "prepare-commit-msg: Oh hey, it's an issue branch."
-    result = re.match('issue-(.*)', branch)
-    issue_number = result.group(1)
-
+def proc(commit_msg_filepath, commit_type, commit_hash):
+    # figure out which branch we're on
+    branch = current_branch()
+    # populate the commit message with the issue #, if there is one
+    r = re.fullmatch(r'(?P<category>\w+)-(?P<name>\w+)', branch)
+    if branch == 'master':
+        raise ValueError('commit directly to master branch is prohibited')
+    elif r is None:
+        raise ValueError(f'invalid branch name: {branch}')
+    category = r['category']
+    name = r['name']
+    required_message = f'{category.upper()}-{name}'
+    print(f'prepare-commit-msg: [{commit_type}]({commit_msg_filepath})')
     with open(commit_msg_filepath, 'r+') as f:
         content = f.read()
-        f.seek(0, 0)
-        f.write("ISSUE-%s %s" % (issue_number, content))
+        if not content.startswith(required_message):
+            f.seek(0, 0)
+            f.write(required_message)
+
+
+if __name__ == '__main__':
+    # collect the parameters
+    commit_msg_filepath = sys.argv[1]
+    argc = len(sys.argv)
+    if argc > 2:
+        commit_type = sys.argv[2]
+    else:
+        commit_type = ''
+    if argc > 3:
+        commit_hash = sys.argv[3]
+    else:
+        commit_hash = ''
+    try:
+        proc(commit_msg_filepath, commit_type, commit_hash)
+    except Exception as e:
+        print(f'prepare-commit-msg: ERROR! {e}')
+        sys.exit(1)

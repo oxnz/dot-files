@@ -1,5 +1,5 @@
 #!/bin/sh
 
-# Disallow all rebasing
-echo "pre-rebase: Rebasing is dangerous. Don't do it."
+# disallow all rebasing
+echo "pre-rebase: rebasing is dangerous. don't do it." >&2
 exit 1

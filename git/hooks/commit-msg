@@ -7,16 +7,16 @@ import subprocess
 
 def current_branch():
     # figure out which branch we're on
-    return subprocess.check_output(['git', 'symbolic-ref', '--short', 'HEAD']).rstrip()
+    output = subprocess.check_output(['git', 'symbolic-ref', '--short', 'HEAD']).rstrip()
+    return output.decode('utf-8')
 
 
 def proc(commit_msg_filepath):
     branch = current_branch()
-    print(f'commit-msg: branch-<{branch}')
     # check the commit message if we're on an issue branch
-    r = re.fullmatch(r'(?P<category>-(?P<name>\w+)', branch)
+    r = re.fullmatch(r'(?P<category>\w+)-(?P<name>\w+)', branch)
     if branch == 'master':
-        raise ValueError('commit on master branch is prohibited')
+        raise ValueError('commit directly to master branch is prohibited')
     elif r is None:
         raise ValueError(f'invalid branch name: {branch}')
     category = r['category']
