@@ -8,7 +8,7 @@ import subprocess
 def proc():
     # check if this is the initial commit
     cmd = 'git rev-parse --verify HEAD'
-    # retcode = subprocess.call(cmd.split, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    retcode = subprocess.call(cmd.split, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     retcode = 0
     against = 'HEAD'
     if retcode != 0:
@@ -17,7 +17,7 @@ def proc():
 
     # use git diff-index to check for whitespace errors
     cmd = f'git diff-index --check --cached {against}'
-    # retcode = subprocess.call(cmd.split, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, )
+    retcode = subprocess.call(cmd.split, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, )
     if retcode != 0:
         raise ValueError('whitespace error(s) found')
 
@@ -26,5 +26,5 @@ if __name__ == '__main__':
     try:
         proc()
     except Exception as e:
-        print('[ERROR] pre-commit: {e}', file=sys.stderr)
+        print(f'[ERROR] pre-commit: {e}', file=sys.stderr)
         sys.exit(1)

@@ -2,7 +2,31 @@
 
 import re
 import sys
+import enum
 import subprocess
+
+
+class CommitCategory(enum.Enum):
+    # PARTIAL => work in progress
+    PARTIAL = 'partial'
+    FEATURE = 'feature'
+    CHORE = 'chore'
+    ISSUE = 'issue'
+    BUGFIX = 'bugfix'
+    REFACTOR = 'refactor'
+
+
+class CommitScope(enum.Enum):
+    # wiki => FEATURE/REFACTOR
+    WIKI = 'documentation'
+    # test => REFACTOR
+    TEST = 'test'
+    # conf => CHORE
+    CONF = 'config'
+    # perf => REFACTOR
+    PERF = 'performance'
+    # revert should be considered as category: BUGFIX
+    UNDO = 'revert'
 
 
 def current_branch():
@@ -30,15 +54,12 @@ def proc(f, commit_source, commit_hash):
         raise ValueError('commit directly to master branch is prohibited')
     branch_pattern = r'^(?P<category>[a-z]{3,10})-(?P<subject>\w{20,50})'
     r = re.fullmatch(branch_pattern, branch)
-    expected_categories = {'wip', 'exp', 'doc', 'wiki', 'feature', 'format', 'chore',
-        'issue', 'bugfix', 'refactor', 'test', 'revert', 'perf'}
     if r is None:
         category = 'category'
         summary = '<brief summary>'
     else:
         category, summary = r.groups()
-        if category not in expected_categories:
-            category = 'category'
+        category = CommitCategory(category)
         max_summary_length = 50
         summary = summary[:max_summary_length]
         summary = summary.replace('_', ' ')
@@ -50,7 +71,7 @@ def proc(f, commit_source, commit_hash):
 # The prev line is left blank as a separation of subject and body
 # Enforcing policy checking criteria:
 # 1. subject line pattern: {subject_pattern}
-# 2. expected categories: {expected_categories}
+# 2. expected categories: {[cat.name for cat in CommitCategory]}
 # 3. expected summary length: [20, 50]
 # 4. body should wrapped at {max_line_length}
 # 5. body line count should keep under {max_line_count}
