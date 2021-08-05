@@ -19,7 +19,7 @@ Editors
     * vim (plugins)
 
 Shells
---------
+------
 
 * dotfm.pl
 
@@ -31,9 +31,21 @@ Shells
     * profile (``PATH``)
 
 * zshrc
-* git
 
-    * gitignore
+
+git
+---
+
+* gitconfig (shell script)
+* gitignore
+* hooks
+
+    * pre-commit
+    * prepare-commit-msg
+    * commit-msg
+    * post-commit
+    * post-checkout
+    * pre-rebase
 
 git and vim
 -----------
