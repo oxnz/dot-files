@@ -6,17 +6,17 @@ import subprocess
 
 
 def current_branch():
-    # figure out which branch we're on
     output = subprocess.check_output(['git', 'symbolic-ref', '--short', 'HEAD']).rstrip()
     return output.decode('utf-8')
 
 
-def proc(f, commit_type, commit_hash):
+def proc(f, commit_source, commit_hash):
     '''
     a well-crafted commit message is the best way to communicate context about a change to fellow developers
     and indeed to their future selves
     a diff will tell you what changed, but only the commit message can properly tell you why.
     a commit message shows whether a developer is a good collaborator.
+    subject -> [{type}] (scopre) summary
 
     1. separate subject from body with a blank line
     2. limit the subject line to 50 characters
@@ -30,12 +30,13 @@ def proc(f, commit_type, commit_hash):
         raise ValueError('commit directly to master branch is prohibited')
     branch_pattern = r'^(?P<category>[a-z]{3,10})-(?P<subject>\w{20,50})'
     r = re.fullmatch(branch_pattern, branch)
+    expected_categories = {'wip', 'exp', 'doc', 'wiki', 'feature', 'format', 'chore',
+        'issue', 'bugfix', 'refactor', 'test', 'revert', 'perf'}
     if r is None:
         category = 'category'
         summary = '<brief summary>'
     else:
         category, summary = r.groups()
-        expected_categories = {'wip', 'exp', 'feature', 'issue', 'bugfix'}
         if category not in expected_categories:
             category = 'category'
         max_summary_length = 50
@@ -61,20 +62,22 @@ def proc(f, commit_type, commit_hash):
 
 
 if __name__ == '__main__':
-    # collect the parameters
-    commit_msg_filepath = sys.argv[1]
+    commit_msg_fpath = sys.argv[1]
     argc = len(sys.argv)
     if argc > 2:
-        commit_type = sys.argv[2]
+        commit_source = sys.argv[2]
     else:
-        commit_type = ''
+        commit_source = ''
     if argc > 3:
         commit_hash = sys.argv[3]
     else:
         commit_hash = ''
+    if commit_source != 'template':
+        # git commit -m -> source = 'message'
+        print(f'[WARN] prepare-commit-msg: unsupported commit source: [{commit_source}]')
     try:
-        with open(commit_msg_filepath, 'r+') as f:
-            proc(f, commit_type, commit_hash)
+        with open(commit_msg_fpath, 'r+') as f:
+            proc(f, commit_source, commit_hash)
     except Exception as e:
-        print(f'prepare-commit-msg: ERROR! {e}')
+        print(f'[ERROR] prepare-commit-msg: {e}', file=sys.stderr)
         sys.exit(1)

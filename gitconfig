@@ -66,6 +66,7 @@ git config --global pack.windowMemory 128m
 # [core]
 git config --global core.excludesfile "${HOME}/.gitignore"
 git config --global core.pager less
+git config --global core.hooksPath "${HOME}/.git/hooks"
 
 # [filter "lfs"]
 

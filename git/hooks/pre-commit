@@ -1,22 +1,30 @@
-#!/bin/sh
+#!/usr/bin/env python3
 
-# Check if this is the initial commit
-if git rev-parse --verify HEAD >/dev/null 2>&1
-then
-    echo "pre-commit: About to create a new commit..."
-    against=HEAD
-else
-    echo "pre-commit: About to create the first commit..."
-    against=4b825dc642cb6eb9a060e54bf8d69288fbee4904
-fi
 
-# Use git diff-index to check for whitespace errors
-echo "pre-commit: Testing for whitespace errors..."
-if ! git diff-index --check --cached $against
-then
-    echo "pre-commit: Aborting commit due to whitespace errors"
-    exit 1
-else
-    echo "pre-commit: No whitespace errors :)"
-    exit 0
-fi
+import sys
+import subprocess
+
+
+def proc():
+    # check if this is the initial commit
+    cmd = 'git rev-parse --verify HEAD'
+    # retcode = subprocess.call(cmd.split, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    retcode = 0
+    against = 'HEAD'
+    if retcode != 0:
+        # "pre-commit: About to create the first commit..."
+        against = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
+
+    # use git diff-index to check for whitespace errors
+    cmd = f'git diff-index --check --cached {against}'
+    # retcode = subprocess.call(cmd.split, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, )
+    if retcode != 0:
+        raise ValueError('whitespace error(s) found')
+
+
+if __name__ == '__main__':
+    try:
+        proc()
+    except Exception as e:
+        print('[ERROR] pre-commit: {e}', file=sys.stderr)
+        sys.exit(1)

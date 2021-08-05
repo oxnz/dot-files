@@ -1,10 +1,22 @@
-#!/bin/sh
+#!/usr/bin/env python3
 
-case "$(git rev-parse --abbrev-ref HEAD)" in
-    master)
-        echo 'commit directly to master branch is prohibited' >&2
-        exit 1
-        ;;
-    *)
-    ;;
-esac
+import sys
+import subprocess
+
+
+def current_branch():
+    output = subprocess.check_output(['git', 'symbolic-ref', '--short', 'HEAD']).rstrip()
+    return output.decode('utf-8')
+
+
+def proc():
+    if current_branch() == 'master':
+        raise ValueError('commit directly to master branch is prohibited')
+
+
+if __name__ == '__main__':
+    try:
+        proc()
+    except Exception as e:
+        print(f'[ERROR] pre-push: {e}', file=sys.stderr)
+        sys.exit(1)

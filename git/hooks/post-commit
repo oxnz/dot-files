@@ -1,4 +1,19 @@
-#!/bin/sh
+#!/usr/bin/env python3
 
-# show breif info about what's committed
-git log -1 --stat HEAD
+
+import sys
+import subprocess
+
+
+def proc():
+    # show breif info about what's committed
+    cmd = 'git log -1 --stat HEAD'
+    subprocess.call(cmd.split(' '), stdin=subprocess.DEVNULL)
+
+
+if __name__ == '__main__':
+    try:
+        proc()
+    except Exception as e:
+        print(f'[ERROR] post-commit: {e}', file=sys.stderr)
+        sys.exit(1)

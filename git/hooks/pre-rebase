@@ -1,5 +1,16 @@
-#!/bin/sh
+#!/usr/bin/env python3
 
-# disallow all rebasing
-echo "pre-rebase: rebasing is dangerous. don't do it." >&2
-exit 1
+import sys
+
+
+def proc():
+    # disallow all rebasing
+    raise ValueError("pre-rebase: rebasing is dangerous. don't do it.")
+
+
+if __name__ == '__main__':
+    try:
+        proc()
+    except Exception as e:
+        print(f'[ERROR] pre-rebase: {e}', file=sys.stderr)
+        sys.exit(1)

@@ -5,9 +5,6 @@ import sys
 
 
 def proc():
-    if is_branch_checkout == "0":
-        print("post-checkout: This is a file checkout. Nothing to do.")
-        return
     print("post-checkout: deleting all '.pyc' files in working directory ...")
     for root, dirs, files in os.walk('.'):
         for filename in files:
@@ -17,8 +14,13 @@ def proc():
 
 
 if __name__ == '__main__':
-    # collect the parameters
     previous_head = sys.argv[1]
     new_head = sys.argv[2]
     is_branch_checkout = sys.argv[3]
-    proc()
+    if is_branch_checkout == '0':
+        # this is a file checkout. Nothing to do
+        sys.exit(0)
+    try:
+        proc()
+    except Exception as e:
+        print(f'[ERROR] post-checkout: {e}', file=sys.stderr)

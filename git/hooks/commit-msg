@@ -9,9 +9,9 @@ def proc(f):
     subject_pattern = r'^\[(?P<category>[a-z]{3,10})\] (?P<subject>.{20,50})'
     r = re.fullmatch(subject_pattern, subject)
     if not r:
-        raise ValueError(f'subject does match pattern: [{subject_pattern}]')
+        raise ValueError(f'subject ({subject}) does match pattern: [{subject_pattern}]')
     category, summary = r.groups()
-    expected_categories = {'wip', 'exp', 'feature', 'issue', 'bugfix'}
+    expected_categories = {'wip', 'exp', 'feature', 'issue', 'bugfix', 'refactor'}
     if category not in expected_categories:
         raise ValueError(f'unrecognised category: [{category}], one of {expected_categories} is expected')
     if not 20 <= len(summary) <= 50:
@@ -26,25 +26,24 @@ def proc(f):
             raise ValueError(f'a blank line is expected to separate the subject from body, but found line: [{line}]')
         else:
             break
-    n = 2
+    line_count = 2
     max_line_length = 72
     max_line_count = 30
     for line in f:
         if line.startswith('#'):
             continue
-        n += 1
-        if n > max_line_count:
+        line_count += 1
+        if line_count > max_line_count:
             raise ValueError(f'body line count exceeds {max_line_count}, use a wiki instead')
         if len(line) > max_line_length:
             raise ValueError(f'body should wrapped at {max_line_length} characters, {len(line)} got')
 
 
 if __name__ == '__main__':
-    # collect the parameters
-    commit_msg_filepath = sys.argv[1]
+    commit_msg_fpath = sys.argv[1]
     try:
-        with open(commit_msg_filepath, 'r') as f:
+        with open(commit_msg_fpath) as f:
             proc(f)
     except Exception as e:
-        print(f'commit-msg: ERROR! {e}')
+        print(f'[ERROR] commit-msg: {e}', file=sys.stderr)
         sys.exit(1)
