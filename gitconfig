@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# [init]
+
+git config --global init.templatedir ~/.git
+
 # [user]
 
 case "$(uname -s)" in
