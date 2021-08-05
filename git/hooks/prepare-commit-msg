@@ -12,23 +12,52 @@ def current_branch():
 
 
 def proc(commit_msg_filepath, commit_type, commit_hash):
-    # figure out which branch we're on
+    '''
+    a well-crafted commit message is the best way to communicate context about a change to fellow developers
+    and indeed to their future selves
+    a diff will tell you what changed, but only the commit message can properly tell you why.
+    a commit message shows whether a developer is a good collaborator.
+
+    1. separate subject from body with a blank line
+    2. limit the subject line to 50 characters
+    3. do not end the subject line with a period
+    4. use the imperative mood in the subject line
+    5. wrap the body at 72 characters
+    6. use the body to explain what and why vs. how
+    '''
     branch = current_branch()
-    # populate the commit message with the issue #, if there is one
-    r = re.fullmatch(r'(?P<category>\w+)-(?P<name>\w+)', branch)
     if branch == 'master':
         raise ValueError('commit directly to master branch is prohibited')
-    elif r is None:
-        raise ValueError(f'invalid branch name: {branch}')
-    category = r['category']
-    name = r['name']
-    required_message = f'{category.upper()}-{name}'
-    print(f'prepare-commit-msg: [{commit_type}]({commit_msg_filepath})')
+    branch_pattern = r'^(?P<category>[a-z]{3,10})-(?P<subject>\w{20,50})'
+    r = re.fullmatch(branch_pattern, branch)
+    if r is None:
+        category = 'category'
+        summary = '<brief summary>'
+    else:
+        category, summary = r.groups()
+        expected_categories = {'wip', 'exp', 'feature', 'issue', 'bugfix'}
+        if category not in expected_categories:
+            category = 'category'
+        max_summary_length = 50
+        summary = summary[:max_summary_length]
+        summary = summary.replace('_', ' ')
+    max_line_length = 72
+    max_line_count = 30
+    subject_pattern = r'^\[(?P<category>[a-z]{3,10})\] (?P<subject>.{20,50})'
+    msg = f'''# subject line pattern: {subject_pattern}
+# expected categories: {expected_categories}
+# expected summary length: [20, 50]
+[{category}] {summary}
+# this net line is left blank as a separation of subject and body
+
+# body should wrapped at {max_line_length}
+# body line count should keep under {max_line_count}
+'''
     with open(commit_msg_filepath, 'r+') as f:
         content = f.read()
-        if not content.startswith(required_message):
-            f.seek(0, 0)
-            f.write(required_message)
+        f.seek(0, 0)
+        f.write(msg)
+        f.write(content)
 
 
 if __name__ == '__main__':

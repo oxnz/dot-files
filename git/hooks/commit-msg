@@ -2,37 +2,41 @@
 
 import re
 import sys
-import subprocess
 
 
-def current_branch():
-    # figure out which branch we're on
-    output = subprocess.check_output(['git', 'symbolic-ref', '--short', 'HEAD']).rstrip()
-    return output.decode('utf-8')
-
-
-def proc(commit_msg_filepath):
-    branch = current_branch()
-    # check the commit message if we're on an issue branch
-    r = re.fullmatch(r'(?P<category>\w+)-(?P<name>\w+)', branch)
-    if branch == 'master':
-        raise ValueError('commit directly to master branch is prohibited')
-    elif r is None:
-        raise ValueError(f'invalid branch name: {branch}')
-    category = r['category']
-    name = r['name']
-    required_message = f'{category.upper()}-{name}'
-    with open(commit_msg_filepath, 'r') as f:
-        content = f.read()
-        if not content.startswith(required_message):
-            raise ValueError(f'the commit message must start with "{required_message}"')
+def proc(f):
+    subject = f.readline().rstrip()
+    subject_pattern = r'^\[(?P<category>[a-z]{3,10})\] (?P<subject>.{20,50})'
+    r = re.fullmatch(subject_pattern, subject)
+    if not r:
+        raise ValueError(f'subject does match pattern: [{subject_pattern}]')
+    category, summary = r.groups()
+    expected_categories = {'wip', 'exp', 'feature', 'issue', 'bugfix'}
+    if category not in expected_categories:
+        raise ValueError(f'unrecognised category: [{category}], one of {expected_categories} is expected')
+    if not 20 <= len(summary) <= 50:
+        raise ValueError(f'the length of summary is expected to be in the range [20, 50], {len(summary)} got')
+    if subject.endswith('.'):
+        raise ValueError('do not end the subject line with any period')
+    if f.readline().rstrip():
+        raise ValueError('a blank line is expected to separate the subject from body, but found none')
+    n = 2
+    max_line_length = 72
+    max_line_count = 30
+    for line in f:
+        n += 1
+        if n > max_line_count:
+            raise ValueError(f'body line count exceeds {max_line_count}, use a wiki instead')
+        if len(line) > max_line_length:
+            raise ValueError(f'body should wrapped at {max_line_length} characters, {len(line)} got')
 
 
 if __name__ == '__main__':
     # collect the parameters
     commit_msg_filepath = sys.argv[1]
     try:
-        proc(commit_msg_filepath)
+        with open(commit_msg_filepath, 'r') as f:
+            proc(commit_msg_filepath)
     except Exception as e:
         print(f'commit-msg: ERROR! {e}')
         sys.exit(1)
