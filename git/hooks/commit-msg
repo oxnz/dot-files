@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+
+import re
+import sys
+import subprocess
+
+
+def current_branch():
+    # figure out which branch we're on
+    return subprocess.check_output(['git', 'symbolic-ref', '--short', 'HEAD']).rstrip()
+
+
+def proc(commit_msg_filepath):
+    branch = current_branch()
+    print(f'commit-msg: branch-<{branch}')
+    # check the commit message if we're on an issue branch
+    r = re.fullmatch(r'(?P<category>-(?P<name>\w+)', branch)
+    if branch == 'master':
+        raise ValueError('commit on master branch is prohibited')
+    elif r is None:
+        raise ValueError(f'invalid branch name: {branch}')
+    category = r['category']
+    name = r['name']
+    required_message = f'{category.upper()}-{name}'
+    with open(commit_msg_filepath, 'r') as f:
+        content = f.read()
+        if not content.startswith(required_message):
+            raise ValueError(f'the commit message must start with "{required_message}"')
+
+
+if __name__ == '__main__':
+    # collect the parameters
+    commit_msg_filepath = sys.argv[1]
+    try:
+        proc(commit_msg_filepath)
+    except Exception as e:
+        print(f'commit-msg: ERROR! {e}')
+        sys.exit(1)
