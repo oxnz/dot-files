@@ -35,6 +35,46 @@ Shells
 
     * gitignore
 
+git and vim
+-----------
+
+Resolve conflicts
+
+.. code-block::
+
+    git mergetool
+    +--------------------------------+
+    | LOCAL  |     BASE     | REMOTE |
+    +--------------------------------+
+    |             MERGED             |
+    +--------------------------------+
+
+LOCAL
+    this is file from the current branch BASE – common ancestor, how file looked before both changes
+
+REMOTE
+    file you are merging into your branch
+
+MERGED
+    merge result, this is what gets saved in the repo
+
+Let’s assume that we want to keep the “octodog” change (from REMOTE). For that, move to the MERGED file (Ctrl + w, j), move your cursor to a merge conflict area and then:
+
+.. code-block:: shell
+
+    :diffget RE
+
+This gets the corresponding change from REMOTE and puts it in MERGED file. You can also:
+
+.. code-block:: shell
+
+    :diffg RE  " get from REMOTE
+    :diffg BA  " get from BASE
+    :diffg LO  " get from LOCAL
+
+Save the file and quit (a fast way to write and quit multiple files is :wqa).
+
+Run git commit and you are all set!
 
 Notes
 =====

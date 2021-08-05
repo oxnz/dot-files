@@ -6,11 +6,27 @@ case "$(uname -s)" in
 	Darwin)
 		git config --global user.name "$(id -F)"
 		;;
-	Linux)
+	*)
 		git config --global user.name "$USER"
 		;;
 esac
-git config --global user.email 'errpro+bitbucket@icloud.com'
+git config --global user.email "$(id -u -n)@$(hostname)"
+
+# [editor]
+
+git config --global core.editor vim
+
+# [commit]
+
+cat <<EOF>$HOME/.stCommitMsg
+Subject line (try to keep under 50 characters)
+
+Multi-line description of commit,
+feel free to be detailed.
+
+# [Ticket: X]
+EOF
+git config --global commit.template ~/.stCommitMsg
 
 # [alias]
 
@@ -30,12 +46,12 @@ git config --global alias.dc 'diff --cached'
 git config --global alias.dv diff
 
 git config --global alias.llog 'log --date=local'
+git config --global alias.lo 'log --oneline'
 git config --global alias.lc 'log ORIG_HEAD.. --stat --no-merges'
 git config --global alias.lv 'log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit --date=relative'
 
-# [color]
-git config --global color.ui true
-git config --global push.default simple
+# [push]
+git config --global push.default matching
 
 # [pack]
 git config --global pack.threads 1
@@ -45,6 +61,7 @@ git config --global pack.windowMemory 128m
 
 # [core]
 git config --global core.excludesfile "${HOME}/.gitignore"
+git config --global core.pager less
 
 # [filter "lfs"]
 
@@ -63,4 +80,15 @@ git config --global filter.hawser.required true
 git config --global filter.hawser.clean 'git hawser clean %f'
 git config --global filter.hawser.smudge 'git hawser smudge %f'
 
-# [difftool]
+# [diff]
+git config --global diff.tool vimdiff
+git config --global difftool.prompt false
+git config --global diff.guitool code
+git config --global difftool.code.cmd 'code --wait --diff $LOCAL REMOTE'
+git config --global difftool.code.path '/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code'
+
+# [merge]
+
+git config --global merge.tool vimdiff
+git config --global merge.conflictstyle diff3
+git config --global mergetool.prompt false

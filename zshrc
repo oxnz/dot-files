@@ -40,6 +40,9 @@ PATH="/Applications/CMake.app/Contents/bin":"$PATH"
 PATH="$PATH:/Library/Frameworks/Python.framework/Versions/3.8/bin"
 export PATH
 
+EDITOR=vim
+export EDITOR
+
 
 #zstyle ':vcs_info:*' enable git
 #zstyle ':vcs_info:git*:*' git-revision true

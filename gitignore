@@ -25,7 +25,8 @@
 *.a
 
 # Vim swap files
-*.swp
+*~
+.*.swp
 
 # LaTeX generated files
 *.aux
