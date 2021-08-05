@@ -11,7 +11,7 @@ def current_branch():
     return output.decode('utf-8')
 
 
-def proc(commit_msg_filepath, commit_type, commit_hash):
+def proc(f, commit_type, commit_hash):
     '''
     a well-crafted commit message is the best way to communicate context about a change to fellow developers
     and indeed to their future selves
@@ -44,20 +44,20 @@ def proc(commit_msg_filepath, commit_type, commit_hash):
     max_line_length = 72
     max_line_count = 30
     subject_pattern = r'^\[(?P<category>[a-z]{3,10})\] (?P<subject>.{20,50})'
-    msg = f'''# subject line pattern: {subject_pattern}
-# expected categories: {expected_categories}
-# expected summary length: [20, 50]
-[{category}] {summary}
-# this net line is left blank as a separation of subject and body
+    msg = f'''[{category}] {summary}
 
-# body should wrapped at {max_line_length}
-# body line count should keep under {max_line_count}
+# The prev line is left blank as a separation of subject and body
+# Enforcing policy checking criteria:
+# 1. subject line pattern: {subject_pattern}
+# 2. expected categories: {expected_categories}
+# 3. expected summary length: [20, 50]
+# 4. body should wrapped at {max_line_length}
+# 5. body line count should keep under {max_line_count}
 '''
-    with open(commit_msg_filepath, 'r+') as f:
-        content = f.read()
-        f.seek(0, 0)
-        f.write(msg)
-        f.write(content)
+    content = f.read()
+    f.seek(0, 0)
+    f.write(msg)
+    f.write(content)
 
 
 if __name__ == '__main__':
@@ -73,7 +73,8 @@ if __name__ == '__main__':
     else:
         commit_hash = ''
     try:
-        proc(commit_msg_filepath, commit_type, commit_hash)
+        with open(commit_msg_filepath, 'r+') as f:
+            proc(f, commit_type, commit_hash)
     except Exception as e:
         print(f'prepare-commit-msg: ERROR! {e}')
         sys.exit(1)

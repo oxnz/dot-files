@@ -18,8 +18,14 @@ def proc(f):
         raise ValueError(f'the length of summary is expected to be in the range [20, 50], {len(summary)} got')
     if subject.endswith('.'):
         raise ValueError('do not end the subject line with any period')
-    if f.readline().rstrip():
-        raise ValueError('a blank line is expected to separate the subject from body, but found none')
+    for line in f:
+        if line.startswith('#'):
+            continue
+        line = line.rstrip()
+        if line:
+            raise ValueError(f'a blank line is expected to separate the subject from body, but found line: [{line}]')
+        else:
+            break
     n = 2
     max_line_length = 72
     max_line_count = 30
@@ -36,7 +42,7 @@ if __name__ == '__main__':
     commit_msg_filepath = sys.argv[1]
     try:
         with open(commit_msg_filepath, 'r') as f:
-            proc(commit_msg_filepath)
+            proc(f)
     except Exception as e:
         print(f'commit-msg: ERROR! {e}')
         sys.exit(1)
