@@ -20,6 +20,8 @@ install -dv ~/.vim/plugin
 install -bCSv vim/plugin/* ~/.vim/plugin
 install -dv ~/.vim/templates
 install -bCSv vim/templates/* ~/.vim/templates
+install -dv ~/.vim/pythonx/maxprod
+install -bCSv vim/pythonx/maxprod/* ~/.vim/pythonx/maxprod
 
 install -bCSv vimrc ~/.vimrc
 

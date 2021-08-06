@@ -55,11 +55,8 @@ def common(shebang, encoding = None, codelines = None):
 # Revision history:	[None]
 # Date Author Remarks:	[None]
 #
-# License:
 # Copyright (c) [=time.strftime('%Y')] [$AUTHOR]
 #
-# Distributed under terms of the [LICENSE] license.
-# [license]
 #
 # ===============================================================
 #
