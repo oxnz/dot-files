@@ -6,7 +6,7 @@ import sys
 
 def proc(f):
     subject = f.readline().rstrip()
-    subject_pattern = r'^\[(?P<category>[a-z]{3,10})\] (?P<subject>.{20,50})'
+    subject_pattern = r'^\[(?P<category>[a-z]{3,10})\] (?P<summary>.{20,50})'
     r = re.fullmatch(subject_pattern, subject)
     if not r:
         raise ValueError(f'subject ({subject}) does match pattern: [{subject_pattern}]')

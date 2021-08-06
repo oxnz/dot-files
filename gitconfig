@@ -1,4 +1,12 @@
 #!/bin/sh
+#
+# Copyright (c) 2021, Max Zhang, All rights reserved.
+#
+# This file is part of the dot-files project.
+#
+# debug:
+# 1. git config --list --show-origin
+# 2. git config --show-origin core.hooksPath
 
 # [init]
 
@@ -22,37 +30,44 @@ git config --global core.editor vim
 
 # [commit]
 
-cat <<EOF>$HOME/.stCommitMsg
-Subject line (try to keep under 50 characters)
-
-Multi-line description of commit,
-feel free to be detailed.
-
-# [Ticket: X]
-EOF
 git config --global commit.template ~/.stCommitMsg
 
 # [alias]
 
 git config --global alias.who 'shortlog -s --'
 
-git config --global alias.undo 'reset --HEAD'
+git config --global alias.undo 'reset -- HEAD'
 git config --global alias.unadd 'reset HEAD --'
-git config --global alias.unstage 'reset HEAD --'
+git config --global alias.unstage 'restore --staged'
 
+git config --global alias.ss 'status --short'
 git config --global alias.st status
 git config --global alias.ci commit
+git config --global alias.cm 'commit -m'
+git config --global alias.ca 'commit --amend'
 git config --global alias.br branch
+git config --global alias.bl 'branch -v'
+git config --global alias.bm 'branch --merged'
+git config --global alias.bn 'branch --no-merged'
 git config --global alias.co checkout
-git config --global alias.ls 'diff --name-status -r'
+git config --global alias.dr 'diff --name-status -r'
 git config --global alias.df 'diff --stat -r'
-git config --global alias.dc 'diff --cached'
+# --staged and --cached are synonyms
+git config --global alias.ds 'diff --staged'
 git config --global alias.dv diff
+git config --global alias.rr 'rm -r'
+git config --global alias.rc 'rm --cached'
 
+git config --global alias.last 'log -1 --stat HEAD'
+git config --global alias.lastv 'log -1 --patch HEAD'
 git config --global alias.llog 'log --date=local'
 git config --global alias.lo 'log --oneline'
 git config --global alias.lc 'log ORIG_HEAD.. --stat --no-merges'
 git config --global alias.lv 'log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit --date=relative'
+git config --global alias.ls 'log --since=2.weeks'
+
+# [pull]
+git config --global pull.rebase false
 
 # [push]
 git config --global push.default matching

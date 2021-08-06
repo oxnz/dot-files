@@ -6,14 +6,26 @@ import enum
 import subprocess
 
 
+class CommitSource(enum.Enum):
+    TEMPLATE = 'template'
+    MESSAGE = 'message'  # triggered by -m/-F
+    MERGE = 'merge'
+    SQUASH = 'squash'  # squash commits in a branch with --squash
+    COMMIT = 'commit'  # triggered by -c/-C/--amend
+    UNSPECIFIED = ''
+
+
 class CommitCategory(enum.Enum):
     # PARTIAL => work in progress
     PARTIAL = 'partial'
     FEATURE = 'feature'
+    # Changes to the build process or auxiliary tools and libraries such as documentation generation
     CHORE = 'chore'
     ISSUE = 'issue'
+    HOTFIX = 'hotfix'
     BUGFIX = 'bugfix'
     REFACTOR = 'refactor'
+    MERGE = 'merge'
 
 
 class CommitScope(enum.Enum):
@@ -53,52 +65,61 @@ def proc(f, commit_source, commit_hash):
     if branch == 'master':
         raise ValueError('commit directly to master branch is prohibited')
     branch_pattern = r'^(?P<category>[a-z]{3,10})-(?P<subject>\w{20,50})'
-    r = re.fullmatch(branch_pattern, branch)
-    if r is None:
-        category = 'category'
-        summary = '<brief summary>'
+    subject_pattern = r'^\[(?P<category>[a-z]{3,10})\] (?P<summary>.{20,50})'
+    category = 'category'
+    summary = '<brief summary>'
+    content = ''
+    if commit_source == CommitSource.MESSAGE:
+        subject = f.readline().rstrip()
+        r = re.fullmatch(subject_pattern, subject)
+        if r:
+            category, summary = r.groups()
+    elif commit_source == CommitSource.TEMPLATE:
+        r = re.fullmatch(branch_pattern, branch)
+        if r:
+            category, summary = r.groups()
+            summary = summary.replace('_', ' ')
+        content = f.read()
+    elif commit_source is CommitSource.UNSPECIFIED:
+        raise ValueError('unspecified commit source')
     else:
-        category, summary = r.groups()
-        category = CommitCategory(category)
-        max_summary_length = 50
-        summary = summary[:max_summary_length]
-        summary = summary.replace('_', ' ')
+        print(f'[DEBUG] prepare-commit-msg: no changes made to commit msg, commit source: [{commit_source}]')
+    category = CommitCategory(category)
+    max_summary_length = 50
+    summary = summary[:max_summary_length]
     max_line_length = 72
     max_line_count = 30
-    subject_pattern = r'^\[(?P<category>[a-z]{3,10})\] (?P<subject>.{20,50})'
-    msg = f'''[{category}] {summary}
+    msg = f'''[{category.value}] {summary}
 
-# The prev line is left blank as a separation of subject and body
+# The previous line is left blank as a separation of subject and body
+
+Multi-line description of commit,
+feel free to be detailed.
+
+# * [wiki]
+# * [issue]
+# * [references]
+#
+# Notes:
 # Enforcing policy checking criteria:
 # 1. subject line pattern: {subject_pattern}
-# 2. expected categories: {[cat.name for cat in CommitCategory]}
+# 2. expected categories: {[cat.value for cat in CommitCategory]}
 # 3. expected summary length: [20, 50]
 # 4. body should wrapped at {max_line_length}
 # 5. body line count should keep under {max_line_count}
 '''
-    content = f.read()
     f.seek(0, 0)
     f.write(msg)
     f.write(content)
 
 
 if __name__ == '__main__':
-    commit_msg_fpath = sys.argv[1]
-    argc = len(sys.argv)
-    if argc > 2:
-        commit_source = sys.argv[2]
-    else:
-        commit_source = ''
-    if argc > 3:
-        commit_hash = sys.argv[3]
-    else:
-        commit_hash = ''
-    if commit_source != 'template':
-        # git commit -m -> source = 'message'
-        print(f'[WARN] prepare-commit-msg: unsupported commit source: [{commit_source}]')
+    argv = sys.argv[1:]
+    argv.extend([''] * (3 - len(argv)))
+    commit_msg_fpath, commit_source, commit_hash = argv
     try:
         with open(commit_msg_fpath, 'r+') as f:
-            proc(f, commit_source, commit_hash)
+            proc(f, CommitSource(commit_source), commit_hash)
     except Exception as e:
         print(f'[ERROR] prepare-commit-msg: {e}', file=sys.stderr)
         sys.exit(1)
