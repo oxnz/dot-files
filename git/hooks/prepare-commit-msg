@@ -69,12 +69,7 @@ def proc(f, commit_source, commit_hash):
     category = 'category'
     summary = '<brief summary>'
     content = ''
-    if commit_source == CommitSource.MESSAGE:
-        subject = f.readline().rstrip()
-        r = re.fullmatch(subject_pattern, subject)
-        if r:
-            category, summary = r.groups()
-    elif commit_source == CommitSource.TEMPLATE:
+    if commit_source == CommitSource.TEMPLATE:
         r = re.fullmatch(branch_pattern, branch)
         if r:
             category, summary = r.groups()
@@ -84,6 +79,7 @@ def proc(f, commit_source, commit_hash):
         raise ValueError('unspecified commit source')
     else:
         print(f'[DEBUG] prepare-commit-msg: no changes made to commit msg, commit source: [{commit_source}]')
+        return
     category = CommitCategory(category)
     max_summary_length = 50
     summary = summary[:max_summary_length]
