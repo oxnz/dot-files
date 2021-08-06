@@ -1,4 +1,14 @@
 #!/usr/bin/env python3
+#
+# This hook is invoked by git-commit(1), and can be bypassed with the --no-verify option.
+#
+# This hook enforcing policy check:
+#   1. nonascii filenames
+#       * this can cause problems on different platforms.
+#       * to be portable it is advisable to rename the file.
+#       * this can be disabled by cmd: git config hooks.allownonascii true
+#   2. whitespace errors
+#
 
 
 import sys
@@ -9,15 +19,26 @@ def proc():
     # check if this is the initial commit
     cmd = 'git rev-parse --verify HEAD'
     retcode = subp.call(cmd.split(), stdin=subp.DEVNULL, stdout=subp.DEVNULL, stderr=subp.DEVNULL)
-    retcode = 0
     against = 'HEAD'
-    if retcode != 0:
-        # "pre-commit: About to create the first commit..."
+    if retcode != 0:  # "pre-commit: About to create the first commit..."
+        # git hash-object -t tree --stdin </dev/null
         against = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
-
+    #  to allow non-ASCII filenames set this variable to true.
+    cmd = 'git config --type=bool hooks.allownonascii'
+    output = subp.check_output(cmd.split(' ')).rstrip().decode('utf-8')
+    if output != 'true':
+        # Cross platform projects tend to avoid non-ASCII filenames
+        # prevent them from being added to the repository
+        # We exploit the fact that the printable range starts at the space character and ends with tilde.
+        cmd = f'git diff --cached --name-only --diff-filter=A -z {against}'
+        null_char = bytes(1)
+        for fpath in subp.check_output(cmd.split(' '))[:-1].split(null_char):
+            fpath = fpath.decode('utf-8')
+            if not fpath.isprintable():
+                print(f'[ERROR] pre-commit: non-printable filename found: [{fpath}]', file=sys.stderr)
     # use git diff-index to check for whitespace errors
-    cmd = f'git diff-index --check --cached {against}'
-    retcode = subp.call(cmd.split(), stdin=subp.DEVNULL, stdout=subp.DEVNULL, stderr=subp.DEVNULL)
+    cmd = f'git diff-index --check --cached {against} --'
+    retcode = subp.call(cmd.split(), stdin=subp.DEVNULL)
     if retcode != 0:
         raise ValueError('whitespace error(s) found')
 

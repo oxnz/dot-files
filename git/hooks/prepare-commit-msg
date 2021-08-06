@@ -65,8 +65,8 @@ def proc(f, commit_source, commit_hash):
     branch = current_branch()
     if branch == 'master':
         raise ValueError('commit directly to master branch is prohibited')
-    branch_pattern = r'^(?P<category>[a-z]{3,10})-(?P<subject>\w{20,50})'
-    subject_pattern = r'^\[(?P<category>[a-z]{3,10})\] (?P<summary>.{20,50})'
+    branch_pattern = r'(?P<category>[a-z]{3,10})-(?P<summary>\w{20,50})'
+    subject_pattern = r'\[(?P<category>[a-z]{3,10})\] (?P<summary>.{20,50})'
     category = 'category'
     summary = '<brief summary>'
     content = ''
@@ -75,6 +75,8 @@ def proc(f, commit_source, commit_hash):
         if r:
             category, summary = r.groups()
             summary = summary.replace('_', ' ')
+        else:
+            print(f'[WARN] prepare-commit-msg: branch name ({branch}) does not match pattern: [{branch_pattern}]')
         content = f.read()
     elif commit_source is CommitSource.UNSPECIFIED:
         raise ValueError('unspecified commit source')

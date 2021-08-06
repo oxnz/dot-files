@@ -83,6 +83,10 @@ git config --global core.excludesfile "${HOME}/.gitignore"
 git config --global core.pager less
 git config --global core.hooksPath "${HOME}/.git/hooks"
 
+# [hooks]
+# set this variable to true to allow non-ASCII filenames
+git config hooks.allownonascii false
+
 # [filter "lfs"]
 
 git config --global filter.lfs.required true
