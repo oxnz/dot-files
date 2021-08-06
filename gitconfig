@@ -32,11 +32,19 @@ git config --global core.editor vim
 
 git config --global commit.template ~/.stCommitMsg
 
+# [branch]
+
+# tells git-branch and git-checkout to setup new branches so that git-pull(1)
+# will appropriately merge from that remote branch. Recommended. Without this,
+# you will have to add —track to your branch command or manually merge remote
+# tracking branches with “fetch” and then “merge”.
+git config --global branch.autosetupmerge true
+
 # [alias]
 
 git config --global alias.who 'shortlog -s --'
 
-git config --global alias.undo 'reset -- HEAD'
+git config --global alias.undo 'reset --soft HEAD^'
 git config --global alias.unadd 'reset HEAD --'
 git config --global alias.unstage 'restore --staged'
 
@@ -50,21 +58,36 @@ git config --global alias.bl 'branch -v'
 git config --global alias.bm 'branch --merged'
 git config --global alias.bn 'branch --no-merged'
 git config --global alias.co checkout
+
+# these two aliases wrap commonly used options to git diff,
+# and accept the full range of arguments that diff accepts
 git config --global alias.dr 'diff --name-status -r'
 git config --global alias.df 'diff --stat -r'
 # --staged and --cached are synonyms
 git config --global alias.ds 'diff --staged'
 git config --global alias.dv diff
 git config --global alias.rr 'rm -r'
+# untrack a particular file
 git config --global alias.rc 'rm --cached'
 
 git config --global alias.last 'log -1 --stat HEAD'
 git config --global alias.lastv 'log -1 --patch HEAD'
-git config --global alias.llog 'log --date=local'
 git config --global alias.lo 'log --oneline'
+# list all new commits after fetched, with stats, but excluding merges
 git config --global alias.lc 'log ORIG_HEAD.. --stat --no-merges'
 git config --global alias.lv 'log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit --date=relative'
 git config --global alias.ls 'log --since=2.weeks'
+
+# TODO: commands may fail, need revise
+git config --global alias.pu = '!"git fetch origin -v && git fetch upstream -v && git merge upstream/master"'
+
+
+git config --global alias.rs 'remote show origin'
+git config --global alias.rb rebase
+
+git config --global alias.tl 'tag --list'
+# list tag matching pattern 'v*'
+git config --global alias.tv "tag --list 'v*'"
 
 # [pull]
 git config --global pull.rebase false
