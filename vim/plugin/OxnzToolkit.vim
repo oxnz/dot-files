@@ -23,7 +23,7 @@
 " Description: Vim global plugin for utils functions
 " Author: Will Z
 " Maintainer: Will Z<yunxinyi@gmail.com>
-" Version: 1.0.0
+" Version: 1.1.0
 " Last Change: Thu May  5 22:45:17 CST 2016
 "
 " Feature:
@@ -35,10 +35,8 @@
 " - unique blank lines
 "
 " TODO:
-" 0. SEE help template
 " 1. add control option for autocmds
-" 2. Split file header into single template file, and crated a tempaltes dir
-" 3. use dict to save user config
+" 2. use dict to save user config
 "
 " Use:
 " - Type OxnzHeader to generate header by filetype
@@ -57,7 +55,7 @@
 if exists("g:OxnzToolkitVersion") || &cp
 	finish
 endif
-let g:OxnzToolkitVersion = '1.0.0'
+let g:OxnzToolkitVersion = '1.1.0'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Display Error Message

@@ -22,12 +22,12 @@
 "===============================================================================
 " Filename	: .vimrc
 " Author	: 0xnz
-" Version	: 0.2
+" Version	: 0.3
 " Email		: <yunxinyi AT gmail DOT com>
 " Created	: 2010-03-20 18:00:12
 " Copying	: Copyright (C) 2013 0xnz, All rights reserved.
 "
-" Last-update: 2015-04-13 10:39:42
+" Last-update: 2021-08-06 10:39:42
 "
 " Description: compatible vimrc for Linux/Windows/OSX, GUI/Console
 "
@@ -87,7 +87,7 @@ set smarttab		" Be smart when using tabs
 " Set font according to system
 if has("gui_running")
 	if has("unix")
-		set gfn=Menlo:h15
+		set gfn=SF\ Mono:h15
 	elseif has("win16") || has("win32")
 		set gfn=Bitstream\ Vera\ Sans\ Mono:h11
 	elseif has("linux")
@@ -96,6 +96,12 @@ if has("gui_running")
 	" statusline color
 	highlight StatusLine guifg=SlateBlue guibg=Yellow
 	highlight StatusLineNC guifg=Gray guibg=White
+endif
+
+if has('python')
+  set pyx=2
+elseif has('python3')
+  set pyx=3
 endif
 
 set wildmenu		" show autocomplete menus
