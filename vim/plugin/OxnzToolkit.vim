@@ -35,7 +35,9 @@
 " - unique blank lines
 "
 " TODO:
+" 0. SEE help template
 " 1. add control option for autocmds
+" 2. Split file header into single template file, and crated a tempaltes dir
 " 3. use dict to save user config
 "
 " Use:
