@@ -26,6 +26,7 @@ class CommitCategory(enum.Enum):
     BUGFIX = 'bugfix'
     REFACTOR = 'refactor'
     MERGE = 'merge'
+    UNSPECIFIED = 'category'
 
 
 class CommitScope(enum.Enum):
@@ -69,7 +70,7 @@ def proc(f, commit_source, commit_hash):
     category = 'category'
     summary = '<brief summary>'
     content = ''
-    if commit_source == CommitSource.TEMPLATE:
+    if commit_source in {CommitSource.TEMPLATE, CommitSource.COMMIT}:
         r = re.fullmatch(branch_pattern, branch)
         if r:
             category, summary = r.groups()
@@ -117,5 +118,5 @@ if __name__ == '__main__':
         with open(commit_msg_fpath, 'r+') as f:
             proc(f, CommitSource(commit_source), commit_hash)
     except Exception as e:
-        print(f'[ERROR] prepare-commit-msg: {e}', file=sys.stderr)
+        print(f'[ERROR] prepare-commit-msg: {e}, source: [{commit_source}]', file=sys.stderr)
         sys.exit(1)
