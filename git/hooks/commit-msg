@@ -11,7 +11,7 @@ def proc(f):
     if not r:
         raise ValueError(f'subject ({subject}) does match pattern: [{subject_pattern}]')
     category, summary = r.groups()
-    expected_categories = {'wip', 'exp', 'feature', 'issue', 'bugfix', 'refactor'}
+    expected_categories = {'wip', 'exp', 'feature', 'issue', 'bugfix', 'refactor', 'merge'}
     if category not in expected_categories:
         raise ValueError(f'unrecognised category: [{category}], one of {expected_categories} is expected')
     if not 20 <= len(summary) <= 50:
