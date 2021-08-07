@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 #
 # This hook is invoked by git-commit(1), and can be bypassed with the --no-verify option.
+# The pre commit hook is executed before git asks the developer for a commit message
+# or creates a commit package.
+# This hook can be used to make sure certain checks pass before a commit
+# can be considered worthy to be made to the remote.
+# No arguments are passed to the pre-commit script
+# and if the script exists with a non zero value, the commit event will be aborted.
+#
 #
 # This hook enforcing policy check:
 #   1. nonascii filenames

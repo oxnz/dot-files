@@ -95,6 +95,10 @@ feel free to be detailed.
 
 
 if __name__ == '__main__':
+    # This hook takes one, two or three arguments:
+    # 1. The name of the file that contains the commit message to be used.
+    # 2. The type/source of commit. This can be message, template, merge or squash.
+    # 3. The SHA-1/hash of a commit (when operating on an existing commit).
     argv = sys.argv[1:]
     argv.extend([''] * (3 - len(argv)))
     commit_msg_fpath, commit_source, commit_hash = argv

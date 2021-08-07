@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
 import sys
+import common
 
 
 def proc():
-    # disallow all rebasing
-    raise ValueError("pre-rebase: rebasing is dangerous. don't do it.")
+    branch = common.current_branch()
+    if branch == 'master':
+        # rebase on master is dangerous. don't do it.
+        raise ValueError("rebasing on master is prohibited")
 
 
 if __name__ == '__main__':
