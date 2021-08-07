@@ -1,0 +1,10 @@
+#!/bin/sh
+
+curr_version="$1"
+echo "[release/${curr_version}] with features and performance improvements"
+prev_version="$(git describe --tags --abbrev=0)"
+echo
+echo "changes made since previous version [${prev_version}]"
+git log --pretty=oneline "${prev_version}"..HEAD
+git log --pretty=format:"%h - %an, %ar : %s" $prev_version..HEAD
+echo "released by $USER"
