@@ -1,0 +1,87 @@
+[init]
+	templatedir = /Users/max_zhang/.git
+[user]
+	name = Max Zhang
+	email = max_zhang@max-z-mac
+[core]
+	editor = vim
+	excludesfile = /Users/max_zhang/.gitignore
+	pager = less
+	hooksPath = /Users/max_zhang/.git/hooks
+[commit]
+	template = /Users/max_zhang/.stCommitMsg
+[branch]
+	autosetupmerge = true
+[branch "develop"]
+	remote = origin
+	merge = refs/heads/develop
+[branch "release"]
+	remote = origin
+	merge = refs/heads/release
+[alias]
+	who = shortlog -s --
+	undo = reset --soft HEAD^
+	unadd = reset HEAD --
+	unstage = restore --staged
+	ss = status --short
+	st = status
+	ci = commit
+	cm = commit -m
+	ca = commit --amend
+	br = branch
+	bl = branch -v
+	bm = branch --merged
+	bn = branch --no-merged
+	co = checkout
+	dr = diff --name-status -r
+	df = diff --stat -r
+	ds = diff --staged
+	dv = diff
+	rr = rm -r
+	rc = rm --cached
+	last = log -1 --stat HEAD
+	lastv = log -1 --patch HEAD
+	lo = log --oneline
+	lc = log ORIG_HEAD.. --stat --no-merges
+	lv = log --graph --pretty=format:\"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --abbrev-commit --date=relative
+	ls = log --since=2.weeks
+	pu = =
+	rs = remote show origin
+	rb = rebase
+	tl = tag --list
+	tv = tag --list 'v*'
+[pull]
+	rebase = false
+[push]
+	default = matching
+[pack]
+	threads = 1
+	deltaCacheSize = 128m
+	packSizeLimit = 128m
+	windowMemory = 128m
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+[filter "media"]
+	required = true
+	clean = git media clean %f
+	smudge = git media smudge %f
+[filter "hawser"]
+	required = true
+	clean = git hawser clean %f
+	smudge = git hawser smudge %f
+[diff]
+	tool = vimdiff
+	guitool = code
+[difftool]
+	prompt = false
+[difftool "code"]
+	cmd = code --wait --diff $LOCAL REMOTE
+	path = /Applications/Visual Studio Code.app/Contents/Resources/app/bin/code
+[merge]
+	tool = vimdiff
+	conflictstyle = diff3
+[mergetool]
+	prompt = false
