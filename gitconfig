@@ -40,6 +40,11 @@ git config --global commit.template ~/.stCommitMsg
 # tracking branches with “fetch” and then “merge”.
 git config --global branch.autosetupmerge true
 
+git config --global branch.develop.remote origin
+git config --global branch.develop.merge 'refs/heads/develop'
+git config --global branch.release.remote origin
+git config --global branch.release.merge 'refs/heads/release'
+
 # [alias]
 
 git config --global alias.who 'shortlog -s --'
