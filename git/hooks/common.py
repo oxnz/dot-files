@@ -1,4 +1,5 @@
 import enum
+import subprocess
 
 
 class CommitCategory(enum.Enum):
@@ -21,3 +22,8 @@ class CommitCategory(enum.Enum):
     REFACTOR = 'refactor'
     MERGE = 'merge'
     UNSPECIFIED = 'category'
+
+
+def current_branch():
+    output = subprocess.check_output(['git', 'symbolic-ref', '--short', 'HEAD']).rstrip()
+    return output.decode('utf-8')
