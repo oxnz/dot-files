@@ -2,7 +2,14 @@ import enum
 
 
 class CommitCategory(enum.Enum):
-    # PARTIAL => work in progress
+    '''
+    commit category used in commit msg subject line
+
+    keep value short
+    '''
+    # WIP => work in progress
+    WIP = 'wip'
+    EXP = 'exp'
     PARTIAL = 'part'
     DOC = 'doc'
     FEATURE = 'feature'

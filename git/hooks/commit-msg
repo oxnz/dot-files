@@ -2,6 +2,7 @@
 
 import re
 import sys
+from common import CommitCategory
 
 
 def proc(f):
@@ -11,9 +12,7 @@ def proc(f):
     if not r:
         raise ValueError(f'subject ({subject}) does match pattern: [{subject_pattern}]')
     category, summary = r.groups()
-    expected_categories = {'wip', 'exp', 'feature', 'issue', 'bugfix', 'refactor', 'merge'}
-    if category not in expected_categories:
-        raise ValueError(f'unrecognised category: [{category}], one of {expected_categories} is expected')
+    category = CommitCategory(category)
     if not 20 <= len(summary) <= 50:
         raise ValueError(f'the length of summary is expected to be in the range [20, 50], {len(summary)} got')
     if subject.endswith('.'):
