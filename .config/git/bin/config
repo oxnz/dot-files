@@ -10,7 +10,7 @@
 
 # [init]
 
-git config --global init.templatedir ~/.git
+: > ~/.config/git/config
 
 # [user]
 
@@ -109,7 +109,7 @@ git config --global pack.windowMemory 128m
 # [core]
 git config --global core.excludesfile "${HOME}/.gitignore"
 git config --global core.pager less
-git config --global core.hooksPath "${HOME}/.git/hooks"
+git config --global core.hooksPath "${HOME}/.config/git/hooks"
 
 # [hooks]
 # set this variable to true to allow non-ASCII filenames
