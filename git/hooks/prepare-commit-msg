@@ -4,6 +4,7 @@ import re
 import sys
 import enum
 import subprocess
+from common import CommitCategory
 
 
 class CommitSource(enum.Enum):
@@ -15,9 +16,10 @@ class CommitSource(enum.Enum):
     UNSPECIFIED = ''
 
 
-class CommitCategory(enum.Enum):
+class XCommitCategory(enum.Enum):
     # PARTIAL => work in progress
-    PARTIAL = 'partial'
+    PARTIAL = 'part'
+    DOC = 'doc'
     FEATURE = 'feature'
     # Changes to the build process or auxiliary tools and libraries such as documentation generation
     CHORE = 'chore'
@@ -30,8 +32,6 @@ class CommitCategory(enum.Enum):
 
 
 class CommitScope(enum.Enum):
-    # wiki => FEATURE/REFACTOR
-    WIKI = 'documentation'
     # test => REFACTOR
     TEST = 'test'
     # conf => CHORE
@@ -40,6 +40,8 @@ class CommitScope(enum.Enum):
     PERF = 'performance'
     # revert should be considered as category: BUGFIX
     UNDO = 'revert'
+    # commit does not involve visible change
+    INTERNAL = 'internal'
 
 
 def current_branch():
