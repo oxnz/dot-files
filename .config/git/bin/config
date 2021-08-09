@@ -82,6 +82,8 @@ git config --global alias.lo 'log --oneline'
 git config --global alias.lc 'log ORIG_HEAD.. --stat --no-merges'
 git config --global alias.lv 'log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit --date=relative'
 git config --global alias.ls 'log --since=2.weeks'
+git config --global alias.ln 'log --no-merges --oneline'
+git config --global alias.lm 'log --merges --oneline'
 
 # TODO: commands may fail, need revise
 git config --global alias.pu = '!"git fetch origin -v && git fetch upstream -v && git merge upstream/master"'
@@ -107,7 +109,6 @@ git config --global pack.packSizeLimit 128m
 git config --global pack.windowMemory 128m
 
 # [core]
-git config --global core.excludesfile "${HOME}/.gitignore"
 git config --global core.pager less
 git config --global core.hooksPath "${HOME}/.config/git/hooks"
 
