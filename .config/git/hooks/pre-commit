@@ -20,6 +20,7 @@
 
 import sys
 import subprocess as subp
+from common import msgdump
 
 
 def proc():
@@ -42,7 +43,7 @@ def proc():
         for fpath in subp.check_output(cmd.split(' '))[:-1].split(null_char):
             fpath = fpath.decode('utf-8')
             if not fpath.isprintable():
-                print(f'[ERROR] pre-commit: non-printable filename found: [{fpath}]', file=sys.stderr)
+                msgdump('error', f'non-printable filename found: [{fpath}]')
     # use git diff-index to check for whitespace errors
     cmd = f'git diff-index --check --cached {against} --'
     retcode = subp.call(cmd.split(), stdin=subp.DEVNULL)
@@ -54,5 +55,5 @@ if __name__ == '__main__':
     try:
         proc()
     except Exception as e:
-        print(f'[ERROR] pre-commit: {e}', file=sys.stderr)
+        msgdump('error', f'{e}')
         sys.exit(1)

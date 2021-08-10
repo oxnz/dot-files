@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 import sys
-import common
+from common import current_branch, msgdump
 
 
 def proc():
-    branch = common.current_branch()
+    branch = current_branch()
     if branch == 'master':
         # rebase on master is dangerous. don't do it.
         raise ValueError("rebasing on master is prohibited")
@@ -15,5 +15,5 @@ if __name__ == '__main__':
     try:
         proc()
     except Exception as e:
-        print(f'[ERROR] pre-rebase: {e}', file=sys.stderr)
+        msgdump('error', f'{e}')
         sys.exit(1)

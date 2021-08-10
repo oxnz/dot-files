@@ -11,7 +11,7 @@
 
 import re
 import sys
-from common import CommitCategory
+from common import CommitCategory, msgdump
 
 
 def proc(f):
@@ -53,5 +53,5 @@ if __name__ == '__main__':
         with open(commit_msg_fpath) as f:
             proc(f)
     except Exception as e:
-        print(f'[ERROR] commit-msg: {e}', file=sys.stderr)
+        msgdump('error', f'{e}')
         sys.exit(1)

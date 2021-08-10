@@ -4,7 +4,7 @@ import re
 import sys
 import enum
 from common import CommitCategory
-from common import current_branch
+from common import current_branch, msgdump
 
 
 class CommitSource(enum.Enum):
@@ -58,10 +58,10 @@ def proc(f, commit_source, commit_hash):
             category, summary = r.groups()
             summary = summary.replace('_', ' ')
         else:
-            print(f'[WARN] prepare-commit-msg: branch name ({branch}) does not match pattern: [{branch_pattern}]')
+            msgdump('warn', f'branch name ({branch}) does not match pattern: [{branch_pattern}]')
         content = f.read()
     else:
-        print(f'[DEBUG] prepare-commit-msg: no changes made to commit msg, commit source: [{commit_source}]')
+        msgdump('debug', (f'no changes made to commit msg, commit source: [{commit_source}]'))
         return
     category = CommitCategory(category)
     max_summary_length = 50
@@ -104,5 +104,5 @@ if __name__ == '__main__':
         with open(commit_msg_fpath, 'r+') as f:
             proc(f, CommitSource(commit_source), commit_hash)
     except Exception as e:
-        print(f'[ERROR] prepare-commit-msg: {e}, source: [{commit_source}]', file=sys.stderr)
+        msgdump('error', f'{e}, source: [{commit_source}]')
         sys.exit(1)

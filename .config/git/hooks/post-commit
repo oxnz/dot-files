@@ -3,6 +3,7 @@
 
 import sys
 import subprocess
+from common import msgdump
 
 
 def proc():
@@ -15,5 +16,5 @@ if __name__ == '__main__':
     try:
         proc()
     except Exception as e:
-        print(f'[ERROR] post-commit: {e}', file=sys.stderr)
+        msgdump('error', f'{e}')
         sys.exit(1)

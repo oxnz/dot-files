@@ -3,10 +3,11 @@
 import os
 import sys
 import subprocess
+from common import msgdump
 
 
 def clean_pyc():
-    print("post-checkout: deleting all '.pyc' files in working directory ...")
+    msgdump('info', 'deleting all ".pyc" files in working directory ...')
     for root, dirs, files in os.walk('.'):
         for filename in files:
             ext = os.path.splitext(filename)[1]
@@ -20,14 +21,16 @@ def proc(previous_head, new_head, is_branch_checkout):
     cmdlets = {
             'base': 'git merge-base @ @{u}',
             'local': 'git rev-parse @',
-            'remote' 'git rev-parse @{u}',
+            'remote': 'git rev-parse @{u}',
     }
-    info = [key: subprocess.check_output(cmd).decode('utf-8') for key, cmd in cmdlets.items()]
-    print(f'[INFO] post-checkout: base:{info["base"]} local: {info["local"]} remote: {info["remote"]}')
+    info = {key: subprocess.check_output(cmd).decode('utf-8') for key, cmd in cmdlets.items()}
+    msgdump('info', f'base: {info["base"]} local: {info["local"]} remote: {info["remote"]}')
+
 
 if __name__ == '__main__':
     previous_head, new_head, is_branch_checkout = sys.argv[1:]
     try:
         proc(previous_head, new_head, is_branch_checkout == '1')
     except Exception as e:
-        print(f'[ERROR] post-checkout: {e}', file=sys.stderr)
+        msgdump('error', f'{e}')
+        sys.exit(1)

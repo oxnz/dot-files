@@ -1,3 +1,4 @@
+import sys
 import enum
 import subprocess
 
@@ -27,3 +28,9 @@ class CommitCategory(enum.Enum):
 def current_branch():
     output = subprocess.check_output(['git', 'symbolic-ref', '--short', 'HEAD']).rstrip()
     return output.decode('utf-8')
+
+
+def msgdump(level, msg):
+    name = sys.argv[0]
+    msg = f'[{level} {name}: {msg}]'
+    print(msg, file=sys.stderr if level in ['WARN', 'ERROR'] else sys.stdout)
