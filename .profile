@@ -1,7 +1,10 @@
-# .bash_profile is executed for login shells, while .bashrc is executed
-# for interactive non-login shells. When you login (type username and password)
-# via console, either sitting at the machine, or remotely via ssh:
-# .bash_profile is executed to configure your shell before the initial command prompt.
+# important for language settings, see below.
+#
+# This file is read each time a login shell is started.
+# All other interactive shells will only read .bashrc
+# When you login (type username and password) via console,
+# either sitting at the machine, or remotely via ssh:
+# .profile is executed to configure your shell before the initial command prompt.
 
 case $(uname -s) in
 	Darwin) # macOS Terminal.app run login shell, which read bash_profile instead
@@ -9,6 +12,19 @@ case $(uname -s) in
 			source ~/.bashrc
 		fi
 		;;
+	Linux)
+		test -z "$PROFILEREAD" && . /etc/profile || true
+		;;
 	*)
 		;;
 esac
+
+
+
+# Most applications support several languages for their output.
+# To make use of this feature, simply uncomment one of the lines below or
+# add your own one (see /usr/share/locale/locale.alias for more codes)
+# This overwrites the system default set in /etc/sysconfig/language
+# in the variable RC_LANG.
+#
+export LANG=en_US.UTF-8
