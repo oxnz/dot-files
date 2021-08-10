@@ -77,46 +77,16 @@ export EDITOR=/usr/bin/vim
 export LESS='--no-init --RAW-CONTROL-CHARS --quit-if-one-screen'
 
 man() {
-#color
-# 0: black 1: red 2 : green 3: yellow 4->blue 5:magenta, 6: cyan, 7:white # man terminfo
-# LESS_TERMCAP_md: Start bold effect (double-bright).
-# LESS_TERMCAP_me: Stop bold effect.
-# LESS_TERMCAP_us: Start underline effect.
-# LESS_TERMCAP_ue: Stop underline effect.
-# LESS_TERMCAP_so: Start stand-out effect (similar to reverse text).
-# LESS_TERMCAP_se: Stop stand-out effect (similar to reverse text).
-# The format of the color code is easy to read once you understand it:
-#
-# The “\e” at the beginning identifies the sequence as a control code or escape sequence.
-# The “m” at the end of the sequence command indicates the end of the command. It also causes the control code to be actioned.
-# The numbers between the “[” and “m” dictate which colors will be used. The colors are identified by number. Some numbers represent background colors and some represent foreground (text) colors.
-# These are the codes we’ll use to start a color sequence, and how to turn them all off:
-#
-# ‘\e[01;31m’: Black background, red text.
-# ‘\e[01;32m’: Black background, green text.
-# ‘\e[45;93m’: Magenta background, bright yellow text.
-# ’‘\e[0m’: Turn off all effects.
-	env LESS_TERMCAP_mb=$(tput bold; tput setaf 2) \
-		LESS_TERMCAP_md=$(tput bold; tput setaf 6) \
-		LESS_TERMCAP_me=$(tput sgr0)               \
-		LESS_TERMCAP_so=$(tput bold; tput setaf 3; tput setab 4) \
-		LESS_TERMCAP_se=$(tput rmso; tput sgr0)            \
-		LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 7) \
-		LESS_TERMCAP_ue=$(tput rmul; tput sgr0)            \
-		LESS_TERMCAP_mr=$(tput rev)                        \
-		LESS_TERMCAP_mh=$(tput dim)                        \
-		LESS_TERMCAP_ZN=$(tput ssubm)                      \
-		LESS_TERMCAP_ZV=$(tput rsubm)                      \
-		LESS_TERMCAP_ZO=$(tput ssupm)                      \
-		LESS_TERMCAP_ZW=$(tput rsupm)                      \
-		GROFF_NO_SGR=1 \
-		man "$@"
-}                                                  \
-		#GROFF_SGR=1 \
-	#LESS_TERMCAP_md=$'\e[01;31m' \                 \
-	#LESS_TERMCAP_me=$'\e[0m' \                     \
-	#LESS_TERMCAP_us=$'\e[01;32m' \                 \
-	#LESS_TERMCAP_ue=$'\e[0m' \                     \
-	#LESS_TERMCAP_so=$'\e[45;93m' \                 \
-	#LESS_TERMCAP_se=$'\e[0m' \                     \
-	#GROFF_NO_SGR=1 \                               \
+   env \
+   LESS_TERMCAP_mb=$'\E[01;32m' \
+   LESS_TERMCAP_md=$'\E[01;36m' \
+   LESS_TERMCAP_me=$'\E[0m' \
+   LESS_TERMCAP_us=$'\E[01;04;32m' \
+   LESS_TERMCAP_ue=$'\E[0;10m' \
+   LESS_TERMCAP_so=$'\E[01;45;93m' \
+   LESS_TERMCAP_se=$'\E[0;10m' \
+   LESS_TERMCAP_mr=$'\E[7m' \
+   LESS_TERMCAP_mh=$'\E[2m' \
+   GROFF_NO_SGR=1 \
+   man "$@"
+}
