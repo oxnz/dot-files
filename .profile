@@ -11,6 +11,8 @@ case $(uname -s) in
 		if [ -f ~/.bashrc ]; then
 			source ~/.bashrc
 		fi
+		export GEM_HOME="$(ruby -e 'puts Gem.user_dir')"
+		export PATH="$GEM_HOME/bin:$PATH"
 		;;
 	Linux)
 		test -z "$PROFILEREAD" && . /etc/profile || true
