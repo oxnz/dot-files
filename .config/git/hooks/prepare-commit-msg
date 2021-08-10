@@ -13,7 +13,7 @@ class CommitSource(enum.Enum):
     MERGE = 'merge'
     SQUASH = 'squash'  # squash commits in a branch with --squash
     COMMIT = 'commit'  # triggered by -c/-C/--amend
-    UNSPECIFIED = ''
+    UNSPECIFIED = '' # normal ci without template
 
 
 class CommitScope(enum.Enum):
@@ -52,7 +52,7 @@ def proc(f, commit_source, commit_hash):
     category = 'category'
     summary = '<brief summary>'
     content = ''
-    if commit_source in {CommitSource.TEMPLATE, CommitSource.COMMIT}:
+    if commit_source in {CommitSource.TEMPLATE, CommitSource.COMMIT, CommitSource.UNSPECIFIED}:
         r = re.fullmatch(branch_pattern, branch)
         if r:
             category, summary = r.groups()
@@ -60,8 +60,6 @@ def proc(f, commit_source, commit_hash):
         else:
             print(f'[WARN] prepare-commit-msg: branch name ({branch}) does not match pattern: [{branch_pattern}]')
         content = f.read()
-    elif commit_source is CommitSource.UNSPECIFIED:
-        raise ValueError('unspecified commit source')
     else:
         print(f'[DEBUG] prepare-commit-msg: no changes made to commit msg, commit source: [{commit_source}]')
         return
@@ -77,9 +75,9 @@ def proc(f, commit_source, commit_hash):
 Multi-line description of commit,
 feel free to be detailed.
 
-# * [wiki]
-# * [issue]
-# * [references]
+# - [wiki]
+# - [issue]
+# - [references]
 #
 # Notes:
 # Enforcing policy checking criteria:
