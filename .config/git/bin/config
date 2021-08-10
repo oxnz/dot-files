@@ -30,7 +30,7 @@ git config --global core.editor vim
 
 # [commit]
 
-git config --global commit.template ~/.stCommitMsg
+# git config --global commit.template ~/.stCommitMsg
 
 # [branch]
 
