@@ -1,5 +1,14 @@
 # Copyright (c) 2014-2021 oxnz. All rights reserved.
 #
+# There are 3 different types of shells in bash: the login shell, normal shell
+# and interactive shell. Login shells read ~/.profile and interactive shells
+# read ~/.bashrc; in [openSUSE] setup, /etc/profile sources ~/.bashrc - thus all
+# settings made here will also take effect in a login shell.
+#
+# NOTE: It is recommended to make language settings in ~/.profile rather than
+# here, since multilingual X sessions would not work properly if LANG is over-
+# ridden in every subshell.
+#
 # you also need to put \[ and \] around any color codes so that bash does not
 # take them into account when calculating line wraps. Also you can make use
 # of the tput command to have this work in any terminal as long as the TERM
@@ -61,3 +70,35 @@ fi
 
 # this may cause bash prompt messed up
 #PROMPT_COMMAND=prompt_command
+
+
+# Some applications read the EDITOR variable to determine the favourite editor
+export EDITOR=/usr/bin/vim
+
+man() {
+#color
+# 0: black 1: red 2 : green 3: yellow 4->blue 5:magenta, 6: cyan, 7:white # man terminfo
+	env LESS_TERMCAP_mb=$(tput bold; tput setaf 2) \
+		LESS_TERMCAP_md=$(tput bold; tput setaf 6) \
+		LESS_TERMCAP_me=$(tput sgr0)               \
+		LESS_TERMCAP_so=$(tput bold; tput setaf 3; tput setab 4) \
+		LESS_TERMCAP_se=$(tput rmso; tput sgr0)            \
+		LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 7) \
+		LESS_TERMCAP_ue=$(tput rmul; tput sgr0)            \
+		LESS_TERMCAP_mr=$(tput rev)                        \
+		LESS_TERMCAP_mh=$(tput dim)                        \
+		LESS_TERMCAP_ZN=$(tput ssubm)                      \
+		LESS_TERMCAP_ZV=$(tput rsubm)                      \
+		LESS_TERMCAP_ZO=$(tput ssupm)                      \
+		LESS_TERMCAP_ZW=$(tput rsupm)                      \
+		GROFF_NO_SGR=1 \
+		man "$@"
+}                                                  \
+		#GROFF_SGR=1 \
+	#LESS_TERMCAP_md=$'\e[01;31m' \                 \
+	#LESS_TERMCAP_me=$'\e[0m' \                     \
+	#LESS_TERMCAP_us=$'\e[01;32m' \                 \
+	#LESS_TERMCAP_ue=$'\e[0m' \                     \
+	#LESS_TERMCAP_so=$'\e[45;93m' \                 \
+	#LESS_TERMCAP_se=$'\e[0m' \                     \
+	#GROFF_NO_SGR=1 \                               \
