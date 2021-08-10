@@ -31,6 +31,7 @@ def current_branch():
 
 
 def msgdump(level, msg):
+    level = level.upper()
     name = sys.argv[0]
-    msg = f'[{level} {name}: {msg}]'
+    msg = f'[{level}] {name}: {msg}'
     print(msg, file=sys.stderr if level in ['WARN', 'ERROR'] else sys.stdout)

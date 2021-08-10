@@ -23,7 +23,7 @@ def proc(previous_head, new_head, is_branch_checkout):
             'local': 'git rev-parse @',
             'remote': 'git rev-parse @{u}',
     }
-    info = {key: subprocess.check_output(cmd).decode('utf-8') for key, cmd in cmdlets.items()}
+    info = {key: subprocess.check_output(cmd.split(' ')).decode('utf-8') for key, cmd in cmdlets.items()}
     msgdump('info', f'base: {info["base"]} local: {info["local"]} remote: {info["remote"]}')
 
 
