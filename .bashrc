@@ -78,7 +78,6 @@ export EDITOR=/usr/bin/vim
 export LESS='--no-init --RAW-CONTROL-CHARS --quit-if-one-screen'
 
 man() {
-   env \
    LESS_TERMCAP_mb=$'\E[01;32m' \
    LESS_TERMCAP_md=$'\E[01;36m' \
    LESS_TERMCAP_me=$'\E[0m' \
@@ -89,7 +88,7 @@ man() {
    LESS_TERMCAP_mr=$'\E[7m' \
    LESS_TERMCAP_mh=$'\E[2m' \
    GROFF_NO_SGR=1 \
-   man "$@"
+   command man "$@"
 }
 
 
