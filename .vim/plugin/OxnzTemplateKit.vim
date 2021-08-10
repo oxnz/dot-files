@@ -83,7 +83,7 @@ set cpo&vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Dependencies Test
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if !has('python')
+if !or(has('python'), has('pythonx'))
 	call <SID>OxnzTemplateKitErrMsgFunc('OxnzTemplateKit requires vim compiled with +python')
 	finish
 endif
