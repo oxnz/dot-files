@@ -22,6 +22,7 @@ case $- in
     *) return;;
 esac
 
+export CLICOLOR=1
 PS1='\[\e[01;34m\][\[\e[00m\]\[\e[00;36m\]\u\[\e[00;33m\]@\[\e[00;32m\]\h\[\e[01;32m\]:\[\e[00;36m\]\W\[\e[01;32m\]:\[\e[00;3$(($?==0?2:1))m\]$?\[\e[01;34m\]]\$\[\e[00m\] '
 
 # set variable identifying the chroot you work in (used in the prompt below)
@@ -90,3 +91,72 @@ man() {
    GROFF_NO_SGR=1 \
    man "$@"
 }
+
+
+################################################################################
+# alias definitions.
+#-------------------------------------------------------------------------------
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+#-------------------------------------------------------------------------------
+
+# make colorful grep
+alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+
+# play safer
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+alias ln='ln -i'
+
+alias dir='dir --color=auto'
+alias vdir='vdir --color=auto'
+
+# format aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias df='df -h'
+alias du='du -h'
+
+# disable banner
+alias gdb='gdb --quiet'
+alias bc='bc --quiet'
+
+# typo
+alias cd..='cd ..'
+alias unmount='echo "Error: Try the command: umount" >&2 && false'
+
+# shortcuts
+alias e="${EDITOR:-vim}"
+alias o='less'
+alias h='history'
+alias j='jobs -l'
+alias -- +='pushd'
+alias -- -='popd'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias x='extract'
+alias rd='rmdir'
+alias md='mkdir -p'
+alias beep='printf "\007"'
+
+
+# new commands
+alias now='/bin/date +"%F %T"'
+alias netstat6='netstat -A inet6'
+
+# command not in PATH var {{{
+case "$(uname -s)" in
+	Linux)
+		# platform compatible
+		alias pbcopy='xsel --clipboard --input'
+		alias pbcopy='xsel --clipboard --output'
+		alias open='xdg-open'
+		;;
+esac
+
+# ex: ts=4 sw=4 et filetype=sh
