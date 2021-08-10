@@ -74,6 +74,7 @@ fi
 
 # Some applications read the EDITOR variable to determine the favourite editor
 export EDITOR=/usr/bin/vim
+export LESS='--no-init --RAW-CONTROL-CHARS --quit-if-one-screen'
 
 man() {
 #color

@@ -138,7 +138,7 @@ if &t_Co == 256 && $COLORTERM == 'gnome-terminal'
 	set t_Co=256
 endif
 "set background=dark
-"colorscheme default
+colorscheme default
 "colorscheme evening
 "colorscheme murphy
 "colorscheme molokai
