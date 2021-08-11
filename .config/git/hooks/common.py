@@ -43,6 +43,6 @@ def msgdump(level, msg):
     elif level == 'INFO':  # green
         level = f'\033[1;32m{level}\033[1;0m'
     else:  # cyan
-        level = f'\036[1;34m{level}\033[1;0m'
+        level = f'\033[1;34m{level}\033[1;0m'
     msg = f'[{level}] {name}: {msg}'
     print(msg, file=output)
