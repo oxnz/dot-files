@@ -88,6 +88,10 @@ man() {
     command man "$@"
 }
 
+hist() {
+	HISTTIMEFORMAT='[%FT%T] ' history
+}
+
 
 ################################################################################
 # alias definitions.
