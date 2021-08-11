@@ -1,3 +1,4 @@
+import os
 import sys
 import enum
 import subprocess
@@ -32,7 +33,7 @@ def current_branch():
 
 def msgdump(level, msg):
     level = level.upper()
-    name = sys.argv[0]
+    name = os.path.basename(sys.argv[0])
     output = sys.stdout
     if level == 'ERROR':  # red
         level = f'\033[1;31m{level}\033[1;0m'
