@@ -5,10 +5,6 @@
 # read ~/.bashrc; in [openSUSE] setup, /etc/profile sources ~/.bashrc - thus all
 # settings made here will also take effect in a login shell.
 #
-# NOTE: It is recommended to make language settings in ~/.profile rather than
-# here, since multilingual X sessions would not work properly if LANG is over-
-# ridden in every subshell.
-#
 # you also need to put \[ and \] around any color codes so that bash does not
 # take them into account when calculating line wraps. Also you can make use
 # of the tput command to have this work in any terminal as long as the TERM

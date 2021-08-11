@@ -23,6 +23,10 @@ esac
 
 
 
+# NOTE: It is recommended to make language settings in ~/.profile rather than
+# .bashrc, since multilingual X sessions would not work properly if LANG is over-
+# ridden in every subshell.
+#
 # Most applications support several languages for their output.
 # To make use of this feature, simply uncomment one of the lines below or
 # add your own one (see /usr/share/locale/locale.alias for more codes)
@@ -30,3 +34,4 @@ esac
 # in the variable RC_LANG.
 #
 export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
