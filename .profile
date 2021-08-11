@@ -34,3 +34,4 @@ esac
 # in the variable RC_LANG.
 #
 export LANG=en_US.UTF-8
+export LC_CTYPE=$LANG
