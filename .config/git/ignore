@@ -44,7 +44,6 @@
 INSTALL
 configure
 Makefile.in
-Makefile
 aclocal.m4
 config.status
 autom4te.cache/*
