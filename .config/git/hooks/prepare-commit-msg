@@ -45,8 +45,6 @@ def proc(f, commit_source, commit_hash):
     6. use the body to explain what and why vs. how
     '''
     branch = current_branch()
-    if branch == 'master':
-        raise ValueError('commit directly to master branch is prohibited')
     branch_pattern = r'(?P<category>[a-z]{3,10})-(?P<summary>\w{20,50})'
     subject_pattern = r'\[(?P<category>[a-z]{3,10})\] (?P<summary>.{20,50})'
     category = 'category'
