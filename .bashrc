@@ -18,6 +18,7 @@ case $- in
     *) return;;
 esac
 
+unset LC_CTYPE
 export CLICOLOR=1
 PS1='\[\e[01;34m\][\[\e[00m\]\[\e[00;36m\]\u\[\e[00;33m\]@\[\e[00;32m\]\h\[\e[01;32m\]:\[\e[00;36m\]\W\[\e[01;32m\]:\[\e[00;3$(($?==0?2:1))m\]$?\[\e[01;34m\]]\$\[\e[00m\] '
 
@@ -71,20 +72,20 @@ fi
 
 # Some applications read the EDITOR variable to determine the favourite editor
 export EDITOR=/usr/bin/vim
-export LESS='--no-init --RAW-CONTROL-CHARS --quit-if-one-screen'
+LESS='--LONG-PROMPT --RAW-CONTROL-CHARS --quit-if-one-screen'
 
 man() {
-   LESS_TERMCAP_mb=$'\E[01;32m' \
-   LESS_TERMCAP_md=$'\E[01;36m' \
-   LESS_TERMCAP_me=$'\E[0m' \
-   LESS_TERMCAP_us=$'\E[01;04;32m' \
-   LESS_TERMCAP_ue=$'\E[0;10m' \
-   LESS_TERMCAP_so=$'\E[01;45;93m' \
-   LESS_TERMCAP_se=$'\E[0;10m' \
-   LESS_TERMCAP_mr=$'\E[7m' \
-   LESS_TERMCAP_mh=$'\E[2m' \
-   GROFF_NO_SGR=1 \
-   command man "$@"
+    LESS_TERMCAP_mb=$'\E[01;32m' \
+    LESS_TERMCAP_md=$'\E[01;36m' \
+    LESS_TERMCAP_me=$'\E[0m' \
+    LESS_TERMCAP_us=$'\E[01;04;32m' \
+    LESS_TERMCAP_ue=$'\E[0;10m' \
+    LESS_TERMCAP_so=$'\E[01;45;93m' \
+    LESS_TERMCAP_se=$'\E[0;10m' \
+    LESS_TERMCAP_mr=$'\E[7m' \
+    LESS_TERMCAP_mh=$'\E[2m' \
+    GROFF_NO_SGR=1 \
+    command man "$@"
 }
 
 
