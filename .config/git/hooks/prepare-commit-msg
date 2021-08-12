@@ -70,8 +70,10 @@ def proc(f, commit_source, commit_hash):
 
 # The previous line is left blank as a separation of subject and body
 
-Multi-line description of commit,
-feel free to be detailed.
+Rationale
+
+1. Multi-line description of commit,
+2. feel free to be detailed.
 
 # - [wiki]
 # - [issue]
