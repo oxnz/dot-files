@@ -27,7 +27,7 @@ def proc():
     # check if this is the initial commit
     branch = current_branch()
     if branch == 'master':
-        raise ValueError('commit directly to master branch is prohibited')
+        msgdump('warn', 'commit directly to master branch is dangerous')
     cmd = 'git rev-parse --verify HEAD'
     retcode = subp.call(cmd.split(), stdin=subp.DEVNULL, stdout=subp.DEVNULL, stderr=subp.DEVNULL)
     against = 'HEAD'
