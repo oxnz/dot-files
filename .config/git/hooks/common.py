@@ -10,8 +10,7 @@ class CommitCategory(enum.Enum):
 
     keep value short
     '''
-    # WIP => work in progress
-    WIP = 'wip'
+    DRAFT = 'draft'
     EXP = 'exp'
     PARTIAL = 'part'
     DOC = 'doc'
