@@ -35,7 +35,7 @@ def proc(name, url):
             if output:
                 raise ValueError(f'found WIP commit in {local_ref}, pushing aborted')
     if current_branch() == 'master':
-        raise ValueError('commit directly to master branch is prohibited')
+        msgdump('warn', 'commit directly to master branch is dangerous')
 
 
 # This hook is called with the following parameters:
