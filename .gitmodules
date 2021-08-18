@@ -1,3 +1,0 @@
-[submodule "wiki"]
-	path = wiki
-	url = git@bitbucket.org:oxnz/dot-files.git/wiki
